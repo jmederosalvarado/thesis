@@ -1,1 +1,75 @@
 \chapter{Propuesta}\label{chapter:proposal}
+
+\section{Descripcion general}\label{section:overview}
+
+El sistema toma como entrada un dataset $D = \{(x_1, y_1), \dots , (x_n, y_n)\}$ y una funcion de perdida $L$ y una o varias metricas de equidad $F_1, F_2, \dots, F_n$. El objetivo del sistema es producir un modelo de clasificacion que es a la vez efectivo segun $L$ y justo segun $F_1, F_2, \dots, F_n$. El sistema consiste en dos fases fundamentales. La primera es responsable de generar una coleccionde modelos, cada uno llamado modelo base. Esta coleccion es construida optimizando una funcion de perdida $L_1$, mientras se asegura \emph{diversidad} a lo largo de toda la poblacion. La segunda fase es responsable de producir un modelo de clasificacion. Este modelo es generado ensamblando la coleccion de modelos base de forma tal que optimice su efectividad segun $L_2$, a la vez que es lo mas \emph{justo} posible segun $F_1, F_2, \dots, F_n$. En el contexto de esta tesis se asume $L = L_1 = L_2$. Las secciones \ref{section:first-phase} y \ref{section:second-phase} abordan con mas detalles la primera y segunda fase, respectivamente.
+
+% TODO
+% Figure 1 summarizes the architecture of the system.
+% Figure 2 and 3 provide an overview of the first and second phase, respectively.
+
+\section{Generacion de modelos base}\label{section:first-phase}
+
+% TODO
+% Figure 2 provides an overview of this phase.
+% Algoritmo
+
+En esta fase al sistema se le da la tarea de generar $N$ modelos para ajustar $D$ de acuerdo a la perdida $L$.
+
+La Definicion~\ref{equation:cash} se modifica para buscar una coleccion de modelos en lugar de un solo modelo, sujeto a una metrica de diversidad $\delta$. Esto es, se desea encontrar una coleccion de modelos base (modelos que optimicen la efectividad en el dataset $D$ de acuerdo a la funcion de perdida $L$) mientras garantiza algunas diferencias entre sus hipotesis utilizando la metrica $\delta$. Asegurar diversidad en la coleccion de modelos base es importante porque los metodos de ensemble no son capaces de mojorar su rendimiento si todos los modelos base tienen exactamente la misma hipotesis, i.e., todos realizan las mismas predicciones.
+
+El procedimiento aplicado para generar la coleccion de modelos base esta resumido por la funcion \textit{GenerateBaseModels}~\ref{code:generate-base-models}. El espacio de algoritmos y hiperparametros es explorado utilizando una estrategia de busqueda pre-seleccionada. Todo esto es capturado por la funcion \textbf{explore}. Luego de evaluar las arquitecturas generadas y estimar la diversidad entre los modelos actualmente seleccionados y la nueva generacion de modelos, la coleccion de modelos base es actualizada para ajustarse a su capacidad $N$. Todo esto es capturado por la funcion \textbf{reselect}.
+
+\begin{equation}
+\label{code:generate-base-models}
+\end{equation}
+
+% TODO Probablemente la parte de PGE queremos pasarla para el estado del arte
+Para explorar inteligentemente  el espacio de algoritmos y hiperparametros, i.e., para resolver el problema \textit{CASH} modificado, se utiliza la implementacion de \emph{Probabilistic Grammatical Evolution Search} presente en AutoGOAL. AutoGOAL se refiere a los modelos que construye como pipelines, dado que cada uno de ellos esta formado por algoritmos interconectados. La busqueda comienza con una estrategia de muestreo aleatorio, pero segun evalua mas pipelines, modifica el modelo de muestreo probabilista para que pipelines similares a los mejores encontrados hasta el momento, sean generados con mayor frecuencia. El espacio de algoritmos y hiperparametros utilizados es el utilizado por defecto en AutoGOAL, el cual incluye varios algoritmos clasicos de aprendizaje de maquina presentes en las diferentes bibliotecas utilizadas por AutoGOAL.
+
+% TODO Linkear aqui a recomendaciones de como mejorar la seleccion del conjunto mas diverso
+Para reseleccionar la coleccion de modelos base, i.e. la coleccion de pipelines de AutoGOAL, un enfoque greedy es utilizado y estudiado. La funcion \textbf{reselect}~\ref{code:reselect} resume la estrategia propuesta. El algoritmo siempre incluye el modelo que mejor se desempeña de acuerdo a $L$ en la seleccion. Cada iteracion siguiente añade el modelo no todavia seleccionado, que maximiza la diversidad respecto a todos los modelos anteriormente seleccionados. El enfoque greedy no garantiza que la coleccion final logre la mejor posible diversidad respecto a $\delta$. La precision tampoco es tomada en cuenta, excepto para seleccionar el modelo de mejor desempeño.
+
+\begin{equation}
+\label{code:reselect}
+\end{equation}
+
+Tres metodos \textit{reselect} de referencia fueron implementaods para realizar comparaciones entre las metricas de diversidad \textit{disagreement} y \textit{double-fault}, las cuales son presentadas en la seccion~\ref{section:diversity-meassures}.
+\begin{itemize}
+    \item Shuffle: La coleccion de modelso base es construida barajeando aleatoriamente la selecciona ctual de modelos base y los nuevos encontrados. Los primeros $N$ modelos luego de barajear son seleccionados para la siguiente generacion.
+    \item Arbitrary: La coleccion de modelos base es construida de la misma forma que con la estrategia \textit{shuffle}, pero el modelo de mejor rendimiento siempre es incluido en la coleccion de modelos base seleccionados.
+    \item Best: La coleccion de modelos base es construida a partir de seleccionar los modelos de mejor rendimiento entre los previamente seleccionados y los recien encontrados.
+\end{itemize}
+
+A continuacion, la seccion~\ref{section:diversity-meassures} provee algunos detalles acerca de las metricas de diversidad estudiadas en este trabajo.
+
+\section{Metricas de diversidad}\label{section:diversity-meassures}
+
+Dos metricas fueron implementadas para estimar la diversidad de una coleccion dada de modelos base. Ambas de ellas precomputan una matriz de clasificaciones incorrectas, la cual es usada entonces para computar una metrica que aporta informacion sobre la diversidad entre los modelos base dos a dos. La matriz de clasificaciones incorrectas se construye de la siguiente manera.
+
+\begin{equation}
+    M_{i,j} =
+    \begin{cases}
+        1 & \text{si el modelo j correctamente clasifica el ejemplo i ($D_valid$)} \\
+        -1 & \text{otherwise}
+    \end{cases}
+\end{equation}
+
+Las siguientes metricas son computadas entre pares de modelos base para estimar cuand diferentes son sus hipotesis, y por tanto la diversidad de la collecion incluyendo a ambos a la vez.
+
+\textbf{Disagreement}. Esta mide la frecuencia con la cual uno de los mdelos falla cuando el otro no lo hace, y viceversa. Mientras mas alto el valor de la metrica, mas diferentes son los modelos.
+
+\begin{equation}
+    disagreement(m^{(a)}, m^{(b)}) = \frac{\vert\{M_{i,a} \neq M{i,b} \vert s^{(i)} \in D^{(\star)}_{valid}\}\vert}{\vert D^{(\star)}_{valid} \vert}
+\end{equation}
+
+\textbf{Double Fault}. Esta mide cuan a menudo ambos modelos fallan a la vez. Mientras mas alta esta medida mayor la diferencia entre ambos.
+
+\begin{equation}
+    double-fault(m^{(a)}, m^{(b)}) = 1 - \frac{\vert\{M_{i,a} = M{i,b} = -1 \vert s^{(i)} \in D^{(\star)}_{valid}\}\vert}{\vert D^{(\star)}_{valid} \vert}
+\end{equation}
+
+\section{Ensamblado inteligente de modelos justos}\label{section:second-phase}
+
+
+

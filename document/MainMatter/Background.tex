@@ -1,1 +1,74 @@
 \chapter{Estado del Arte}\label{chapter:state-of-the-art}
+
+% - fairness. Parrafo q engloba el cap. Hablar en general. Intentan enganchar los ensembles.
+
+\section{Equidad}
+% - sec1. how to measure fairness. Statistical parity, WET (embedding), winoMT (machine transaltion). Hablar de la fuente de los sesgos.
+
+%% From FBO
+No existe en estos momentos una unica definicion ampliamnte aceptada de lo que es \textit{equidad}, sino que diferentes definiciones codifican diferentes caracteristicas que se muestran utiles en diferentes contextos. Incluso, algunas de las definiciones mas comunes presentan conflictos entre si.
+
+A continuacion se presentan algunas de las definiciones mas utilizadas. Sea $Y$ la clasificacion (binaria) correcta, $S$ el atributo protegido, y $Y^p$ la clasificacion obtenida del modelo. Las definiciones mas comunes pueden ser agrupadas en tres categorias: (i) considerando el resultado obtenido dada la clasificacion correcta; (ii) considerando la clasificacion correcta dada la clasificacion obtenida; (iii) considerando solamente el resultado obtenido. Los siguientes son ejemplos de estos tipos de metricas.
+
+\begin{itemize}
+    \item Equal Opportunity (EO) requiere que la proporcion de verdaderos positivos sea la misma en todos los subgrupos: $P(Y^p=1 | Y=1, S=0) = P(Y^p=1 | Y=1, S=1)$
+    \item Equalized Odds (EOdd) requiere igual proporcion de falsos positivos, ademas de EO
+    \item Statistical Parity (SP) require que las predicciones positivas no se vean afectadas por el valor del atributo protegido, sin tomar en cuenta la clasificacion correcta: $P(Y^p=1 | S=0) = P(Y^p=1 | S=1)$
+\end{itemize}
+
+Los tradoff inherentes a cada nocion de fairness han sido estudiados extensamente \cite{dwork2012fairness, friedler2016possibility, kleinberg2018inherent}. Escoger la definicion correcta para un problema determinado es dificil, y en la practica no puede ser delegado a un agente automatico. En su lugar, una decision humana es preferida para asegurar una decision informada.
+
+\section{Mitigacion de sesgos}\label{section:mitigation}
+% - sec2. Mitigation. Preproc, PostProc, inProc, meta. Ejemplos y explicar.
+
+%% From FBO
+
+Las tecnicas de mitigacion de sesges pueden ser divididas fundamentalmente en pre-procesamiento, in-procesamiento, post-procesamiento. 
+
+Los metodos del primer grupo logran equidad modificando la representacion de los datos, i.e., pre-procesando los datos, y luago adoptan una solucion de machine learning estandard \cite{nips2017preproc, Kamiran2011DataPT, zemel2013learning}. Por ejemplo aprender una representacion a partir de resolver un problema de optimzacion con dos objetivos, codificar la informacion preservando la mayor cantidad de informacion posible y ofuscar al mismo tiempo la pertenencia al conjunto de atributos protegidos \cite{zemel2013learning}. Los metodos de pre-procesamiento son agnosticos al modelo, pero sus hiperparametros, asi como los del modelos de aprendizaje de maquina seleccionado todavia necesitan ser ajustados para mejor rendimiento.
+
+El segundo grupo de la familia consiste de en metodos de in-procesamiento que se aseguran que se cumplan ciertas restricciones de equidad durante el entrenamiento (e.g. \cite{donini2018empirical, zafar2017fairness, zafar2019fairness}), sin embargo solo es aplicable a una cierta clase de modelos. Por ejemplo el algoritmo aplicado en \cite{donini2018empirical} solo puede ser aplicado a \textit{kernel machines} (tales como \textit{maquinas de soporte vectorial}), y solo a una unica definicion de equidad (i.e., EO). Aunque metodos de in-procesamiento pueden brindar muy buenos resultados para la clase del modelo que estan diseñados, frecuentemente son dificiles, o a veces imposible de extender para nuevas clases de modelos. Estos metodos tambien pueden introducir nuevos hiper-parametros que podrian requerir conocimiento especificos del dominio y experimentacion.
+
+Las tecnicas de post-procesamiento operan ajustando el umbral de decision de modelos pre-entrenados para eventualmente lograr resultados mas justos respecto a una metrica de equidad dada. El principal problema es que post-procecesar el umbral de decision es inherentemente suboptimo y puede llevar a peores tradeoffs de eficacia y equidad. Lo que es mas, estas tecnicas no son utilizables si la informacion sensible no esta disponible en el momento de realizar las predicciones, lo cual a su vez puede llevar a problemas legales por la utilizacion de informacion sensible para realizar predicciones \cite{MacCarthy2018StandardsOF}.
+
+% TODO
+% meta algortiemos
+
+\section{Metodos de ensamblado}\label{section:ensembles}
+
+Los metodos de ensamblado estan diseñados para intentar resolver el problema de \textit{low bias/high variance} que muestran la mayoria de los modelos de aprendizaje de maquina, haciendolos apropieados para modelos de clasificacion mas robustos \cite{polikar2006ensemble}. Un modelo de ensamblado esta diseñado de muchos modelos con \textit{low bias} cuyas predicciones son combinadas para producir una prediccion final. Se asume fundamentalemente que la combinacion de varias predicciones de bajo nivel producira una salida con baja varianza mientras mantiene un low bias. Tener un conjunto diverso de modelos de bajo nivel es una caracteristica fundamental para lograr esto \cite{polikar2006ensemble}. Sin embargo, esto requiere, que clasificadores individuales cometan errores en diferentes instancias. La intuicion es que si cada clasificador comete diferentes errores, entonces una combinacion estrategica de estos clasificadores puede reducir el error total. Luego, es necesario lograr que cada clasificador sea lo mas unico posible, particularmente con respecto a ejemplos erroneamente clasificados.
+
+La naturaleza de multiples hipotesis de estos modelos asegura que, si son ajustados lo suficiente, tendran resultados mejores que cualquiera de los modelos individuales en el caso general. Esto les permite tambien estimar el grado de confianza o calidad de las predicciones que producen. Las tecnicas clasicas de ensamblado incluyen \textit{voting} and \textit{weighted voting} \cite{dietterich2000ensemble}, boosting \cite{schapire1990strength}, y bagging \cite{breiman1996bagging}.
+
+En un problema de clasificacion, \textit{voting} produce como salidao la etiqueta que tiene la mayoria de los votos, tratando cada prediccion de los modelos ensamblados como un voto. \textit{Weighted-voting} funciona de forma similar a \textit{voting}, pero cada modelo del ensamblado es asignado un \textit{peso} que indica la importancia de su voto. \textit{Boosting} ejecuta un proceso iterativo donde los modelos son entrenados secuencialmente, cada uno tratando de mejorar su rendimineto en los ejemplos entrenantes donde los modelos anteriores tuvieron peor rendimiento. Durante este proceso, cada sub-modelo es tambien asignado un peso que marca la importancia de su prediccion. \textit{Bagging} entrena cada sub-modelo en una seleccion diferente (con reemplazo) de los ejemplos entrenantes originales. De esta forma, el modelo con una alta varianza deberia producir modelos entrenados con alta diversidad. Alternativamente, \textit{feature bagging} funciona de forma similar, seleccionando un subconjunto de los features en lugar de los ejemplos entrenantes, causando que features correlacionados sean analizados de forma separada en algunos sub-modelos.
+
+Las capacidad de los metodos de ensamblado para construir modelos mas robustos los ha hecho apropiados para multiples aplicaciones. El dominio de la salud es uno de los ejemplos donde estos metodos han sido aplicados con gran exito. Por ejemplo, una aplicacion hibrida de metodos de ensamblado con redes neuronales en un entorno de aprendizaje for reforzamiento es presentada para al prediccion de infeccion de COVID-19 con gran precision \cite{JIN2022105560}. De forma similar, un metodo de toma de decision multi-criterio basado en ensemblados es propuesto para la deteccion de COVID-19 a partir del sonido de la tos en pacientes \cite{CHOWDHURY2022105405}. Existen ejemplos tambien no relacionados a la medicina, por ejemplo, en \cite{livieris2020ensemble} se emplearon estrategias de ensamblado como \textit{ensemble-averaging}, \textit{bagging} y \textit{stacking} con metodologias avanzadas de aprendizaje profundo para predecir los precios, a nivel de hora, de criptomonedas como \textit{Ethereum}, \textit{Bitcoin} y \textit{Ripple}.
+
+Una simple pero poderosa tecnica en el contexto de los metodos de ensamblado es la llamada \textit{snapshot ensemble} \cite{huang17snapshot}. Esta tecnica genera multiples clasificadores base, entrenando una sola red neuronal mientras la hace converger de forma rapida y repetida a multiples optimos locales y salvando en cada uno de dichos puntos los parametros del modelo. Todas las redes neuronales son entonces ensambladas para producir el clasificador final. Estos \textit{snapshot ensemble} son mas robustos y precisos que las redes individuales dada su naturaleza de ensamblado, a ningun costo adicional de entrenamiento.
+
+\section{Metodos de Aprendizaje de Maquina Automatico}\label{section:automl}
+% - sec3o4. AutoML
+
+Aprendizaje de Maquina Automatico (Auto-ML) es el proceso de automatizar la solucino de problemas del mundo real a traves de tecnicas de aprendizaje de maquina. El proceso involucra eliminar la necesidad de humanos expertos en aprendizaje de maquina para seleccionar apropiadamente las caracteristicas, flujos, paradigmas, algoritmos y sus hiperparametros para resolver un problema \cite{Dimitrakakis_Liu_Parkes_Radanovic_2019}. Las prinicpales ventajas de las tecnologias de AutoML incluyen: (1) reducir el tiempo empleado en resolver problemas bien estudiados; y, (2) eliminar la necesidad de conocimiento experto. Adicionalmente, estas tecnologias tienden a generar soluciones mas simples que a menudo tienen mejor desempeño que soluciones diseñadas por humanos.
+
+Multiples tecnologias han sido propuestas para resolver el problema de Auto-ML. Auto-Weka~\cite{autoweka} fue una de las primeras soluciones presentadas. Esta está basada en el software Weka \cite{weka}, un software construido a partir de varias herramientas de visualizacion y algoritmos para analisis de datos y modelacion predictiva. \textit{Auto-Weka} resuelve el problema de \textit{Auto-ML} como un problema CASH segun definido a continuacion.
+
+\begin{definition}
+\label{equation:cash}
+    Sea $A = \{A^{(1)}, \dots, A^{(R)}\}$ un conjunto de algoritmos, y sea $\Lambda^{(j)}$ el dominio de los hiperparametros del algoritmo $A^{(j)}$. Sea, $D = \{(x_1, y_1), \dots, (x_n, y_n)\}$ el conjunto de entrenamiento, el cual es dividido en $K$ cross-validation folds de la forma $\{D_{valid}^{(1)}, \dots, D_{valid}^{(K)}\}$ y $\{D_{train}^{(1)}, \dots, D_{train}^{(K)}\}$ tal que $D_{train}^{(i)} = D \setminus D_{valid}^{(i)}$ para todo $i = 1, \dots, K$. Finalmente, denotese $L(A_{\lambda}^{(j)}, D_{train}^{(i)},D_{valid}^{(i)})$ la perdida del algoritmo $A^{(j)}$ en $D_{valid}^{(i)}$ con hiperparametros $\lambda$. Entonces, el problema de \textit{Seleccion de Algoritmo y Optimizacion de Hiperparametros Combinado (CASH)} es encontrar la configuracion conjunta de algoritmo e hiperparametros que minimiza la perdida:
+    \begin{equation}
+        A^{\star}, \lambda_{\star} \in argmin_{A^{(j)}, \lambda \in \Lambda^(j)} \frac{1}{K} \sum_{i=1}^K L(A_{\lambda}^{(j)}, D_{train}^{(i)},D_{valid}^{(i)})
+    \end{equation}
+\end{definition}
+
+Otros sistemas populares de Auto-ML son Auto-Sklearn \cite{feurer2015efficient} y Auto-Keras \cite{autoKeras}. Estos sistemas estan basados en las bibliotecas de aprendizaje de maquina, \textit{Scikit-Learn} \cite{pedregosa2011scikit} y \textit{Keras} \cite{chollet2015keras} respectivamente. Ambos sistemas proveen una interfaz para encontrar la mejor arquitectura de aprendizaje de maquina para resolver un problema. Una diferencia fundamental entre ellos es la forma en que sus espacios de busqueda son definidos. Mientras Auto-SkLearn explora espacio de busqueda condicional, i.e., un espacio con algunos hiperparametros condicionados a otros, Auto-Keras realiza una Busqueda de Arqutectura Neuronal (NAS \cite{NAS}), la cual implica explorar espacios jerarquicos de complejidad arbitraria.
+
+AutoGOAL \cite{autogoal, estevez2020general} es una de las mas recientes contribucinoes al campo del Auto-ML. AutoGOAL es un sistema que utiliza tecnicas heterogeneas para resolver el problema CASH. La escencia de AutoGOAL radica en su espacio personalizable de pipelines y su pool de algoritmos de busqueda, que son usados para encontrar la mejor configuracion para resolver un problema. Cada pipeline esta definido como un conjunto de algoritmos interconectados que traducen una entrada predefinida a su salida correspondiente. El espacio de pipelines comprende no solo el conjunto de algoritmos, sino tambien sus hiperparametros.
+
+Multiples fuentes de algoritmos estan incluidos en el espacio de AutoGOAL, tales como \textit{Scikit-Learn}\cite{pedregosa2011scikit}, \textit{NLTK}\cite{nltk}, \textit{Keras}\cite{chollet2015keras}, y \textit{Pytorch}\cite{paszke2019pytorch}. Sin embargo, AutoGOAL carece de la habilidad de combinar multiples end-to-end pipelines para generar una solucion. Esta limitacion puede ser superada con la utilizacion de ensamblados.
+
+\section{Optimizacion Multiobjetivo}\label{section:multiobjective}
+% - sec5. Opt multiobjetivo
+
+\section{Discusion}\label{discussion}
+% - discusion. Aqui donde se explica como se usa todo lo q acabo de explicar.

@@ -31,8 +31,12 @@ El segundo grupo de la familia consiste de en metodos de in-procesamiento que se
 
 Las tecnicas de post-procesamiento operan ajustando el umbral de decision de modelos pre-entrenados para eventualmente lograr resultados mas justos respecto a una metrica de equidad dada. El principal problema es que post-procecesar el umbral de decision es inherentemente suboptimo y puede llevar a peores tradeoffs de eficacia y equidad. Lo que es mas, estas tecnicas no son utilizables si la informacion sensible no esta disponible en el momento de realizar las predicciones, lo cual a su vez puede llevar a problemas legales por la utilizacion de informacion sensible para realizar predicciones \cite{MacCarthy2018StandardsOF}.
 
-% TODO
-% meta algortiemos
+Una clase de metodos recientemente propuesta para tareas de clasificacion justa, conocida como meta-algoritmos, reduce la tarea de clasificacion justa a una secuenia de problemas de clasificación con costo asociado a sus errores de predicción \cite{agarwal2018reductions, agarwal2019fair, kearns2018preventing}. Las soluciones a estos problemas producen un clasificador \textit{randomizado}. Contrario alos metodos de \textit{in-procesamiento}, los meta-algoritmos no dependen de la tipo del modelo que se utiliza en el clasificador, sino en la capacidad de los mismos para ser re-entrenados repetidamente. En el contexto de algoritmos de minimizacion del riesgo empirico, estos metodos son agnosticos al modelo de aprendizaje de maquina, pero aun necesitan implementaciones especificas basadas en la definicion de equidad seleccionada y necesitan producir un ensamblado de modelos. Limitaciones similares caracterizan un numero de enfoques que utilizan optimizacion \cite{chiappa2018causal,Dimitrakakis_Liu_Parkes_Radanovic_2019} o inferencia bayesiana \cite{kearns2018preventing,thomas2019preventing}, sus implementaciones tienen que estar diseñadas especificamente para ciertas definiciones de equidad.
+
+% TODO:
+% - Bayesian Optimization
+% - Ferm
+% - Zafar
 
 \section{Metodos de ensamblado}\label{section:ensembles}
 
@@ -54,8 +58,10 @@ Aprendizaje de Maquina Automatico (Auto-ML) es el proceso de automatizar la solu
 Multiples tecnologias han sido propuestas para resolver el problema de Auto-ML. Auto-Weka~\cite{autoweka} fue una de las primeras soluciones presentadas. Esta está basada en el software Weka \cite{weka}, un software construido a partir de varias herramientas de visualizacion y algoritmos para analisis de datos y modelacion predictiva. \textit{Auto-Weka} resuelve el problema de \textit{Auto-ML} como un problema CASH segun definido a continuacion.
 
 \begin{definition}
-\label{equation:cash}
+\label{definition:cash}
+
     Sea $A = \{A^{(1)}, \dots, A^{(R)}\}$ un conjunto de algoritmos, y sea $\Lambda^{(j)}$ el dominio de los hiperparametros del algoritmo $A^{(j)}$. Sea, $D = \{(x_1, y_1), \dots, (x_n, y_n)\}$ el conjunto de entrenamiento, el cual es dividido en $K$ cross-validation folds de la forma $\{D_{valid}^{(1)}, \dots, D_{valid}^{(K)}\}$ y $\{D_{train}^{(1)}, \dots, D_{train}^{(K)}\}$ tal que $D_{train}^{(i)} = D \setminus D_{valid}^{(i)}$ para todo $i = 1, \dots, K$. Finalmente, denotese $L(A_{\lambda}^{(j)}, D_{train}^{(i)},D_{valid}^{(i)})$ la perdida del algoritmo $A^{(j)}$ en $D_{valid}^{(i)}$ con hiperparametros $\lambda$. Entonces, el problema de \textit{Seleccion de Algoritmo y Optimizacion de Hiperparametros Combinado (CASH)} es encontrar la configuracion conjunta de algoritmo e hiperparametros que minimiza la perdida:
+
     \begin{equation}
         A^{\star}, \lambda_{\star} \in argmin_{A^{(j)}, \lambda \in \Lambda^(j)} \frac{1}{K} \sum_{i=1}^K L(A_{\lambda}^{(j)}, D_{train}^{(i)},D_{valid}^{(i)})
     \end{equation}
@@ -68,7 +74,34 @@ AutoGOAL \cite{autogoal, estevez2020general} es una de las mas recientes contrib
 Multiples fuentes de algoritmos estan incluidos en el espacio de AutoGOAL, tales como \textit{Scikit-Learn}\cite{pedregosa2011scikit}, \textit{NLTK}\cite{nltk}, \textit{Keras}\cite{chollet2015keras}, y \textit{Pytorch}\cite{paszke2019pytorch}. Sin embargo, AutoGOAL carece de la habilidad de combinar multiples end-to-end pipelines para generar una solucion. Esta limitacion puede ser superada con la utilizacion de ensamblados.
 
 \section{Optimizacion Multiobjetivo}\label{section:multiobjective}
-% - sec5. Opt multiobjetivo
+
+Los metodos de optimizacion multiobjetivo son aquellos que exploran el espacio de busqueda optimizando simultaneamente diferentes funciones.
+
+\begin{definition}[Optimizacion Multiobjetivo]
+\label{definition:multiobjective}
+
+    Dadas $m$ funciones objetivo $f_1: X \rightarrow \mathbf{R}, \dots, f_m: X \rightarrow \mathbf{R}$ las cuales traducen el espacion $X$ en $\mathbf{R}$, un problema de optimizacion multiobjetivo esta dado es expresado de la seguiente forma:
+
+    \begin{equation}
+        minimizar f_1(x), \dots, minimizar f_m(x), x \in X
+    \end{equation}
+\end{definition}
+
+Al trabajar con multiples funciones objetivos es necesario encontrar formas de comparar dos soluciones en el espacio de soluciones factibles. El concepto de \textit{Pareto dominaci\'on} juega un paper fundamental en el ambito de la optimizacion multiobjetivo, dado que permite comparar objetivamente dos vectores de forma precisa, sin requerir informacion adicional de preferencia.
+
+\begin{definition}[Pareto Dominaci\'on]
+\label{definition:pareto-dominance}
+
+    Dados dos vectores ene el espacio objetivo, digase $y^{(1)}, y^{(2)} \in \mathbf{R}^m$ , entonces el punto $y^{(1)}$ se dice que \emph{pareto-domina} a $y^{(2)}$ si y solo si:
+
+    \begin{equation}
+        \forall_{i\in\{1,\dots,m\}}: y_i^{(1)} \leq y_i^{(2)} y \exists_{j\in\{1,\dots,m\}}: y_j^{(1)} \le y_j^{(2)}
+    \end{equation}
+\end{definition}
+
+% TODO: Como introduzco NSGA-II aqui? tengo que hablar de scalarization, metodos numericos, etc, o puedo ir directo a geneticos y NSGA-II?
+
+\subsection{NSGA-II}
 
 \section{Discusion}\label{discussion}
 % - discusion. Aqui donde se explica como se usa todo lo q acabo de explicar.

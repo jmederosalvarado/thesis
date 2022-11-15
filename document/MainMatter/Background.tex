@@ -73,6 +73,37 @@ AutoGOAL \cite{autogoal, estevez2020general} es una de las mas recientes contrib
 
 Multiples fuentes de algoritmos estan incluidos en el espacio de AutoGOAL, tales como \textit{Scikit-Learn}\cite{pedregosa2011scikit}, \textit{NLTK}\cite{nltk}, \textit{Keras}\cite{chollet2015keras}, y \textit{Pytorch}\cite{paszke2019pytorch}. Sin embargo, AutoGOAL carece de la habilidad de combinar multiples end-to-end pipelines para generar una solucion. Esta limitacion puede ser superada con la utilizacion de ensamblados.
 
+El proceso fundamental de optimizacion utilizado en AutoGOAL en estos momentos esta baasado en una tecnica de continua optimizacion con Evolucion Gramatical para gramaticas probabilistas libres del contexto \cite{megane2021probabilistic}. El proceso consiste de un cilo de generacion y evaluacion, utilizando una gramatica $G$ apropiada para describir el problema de aprendizaje de maquina qe se intenta resolver. En cada iteracion un conjunto de $N$ pipelines es generados a partir de samplear la gramatica $G$ de acuerdo a las probabilidades $\theta$ asignadas a cada produccion. Estas probabilidades son inicializadas con una distribucion uniforme $\theta_0$ para todas las producciones. Cada pipeline es evaluado (lo cual consiste simplemente en entrenamiento y ejecucion), y los de mejor desempeño son utilizados para modificar $\theta$, con el objetivo de maximizar la probabilidad de que estos sean generados. Este proceso se ilustra en el algoritmo 
+
+\begin{algorithm}[htb!]
+    \caption{PGE\label{algorithm:pge}}
+
+    $N$ $\leftarrow$ tamaño de la poblacion \\
+    $n$ $\leftarrow$ numero de individuos seleccionados en cada iteracion \\
+    $\alpha$ $\leftarrow$ factor de aprendizaje \\
+    $G$ $\leftarrow$ gramatica que describe los pipelines de aprendizaje de maquina a explorar \\
+    $\theta_0$ $\leftarrow$ probabilidades iniciales (uniforme) \\
+    $f$ $\leftarrow$ funcion de fitness (entrenamiento y evaluacion de pipelines) \\
+
+    \SetKwData{best}{\textit{best}}
+
+    $\best \leftarrow none$
+
+    \For{cada iteracion $i$}{
+        $P_i$ $\leftarrow$ generar poblacion utilizando gramatica G, con probabilidades $\theta_{i-1}$ \\
+        \For{cada solucion $S \in P_i$}{
+            $f(S)$ $\leftarrow$ calcular fitness de $S$ (evaluar el pipeline) \\
+        }
+
+        $\best \leftarrow argmax_{S \in P \cup \{\best\}} \{f(S)\}$ \\
+        $P_{i}^{*}$ $\leftarrow$ seleccionar los $n$ mejores individuos de $P_i$ \\
+        $\theta_i^{*}$ $\leftarrow$ calcular la distribucion marginal de $P^{*}$ \\
+        $\theta_i \leftarrow \alpha \theta_i^{*} + (1-\alpha)\theta_{i-1}$ \\
+    }
+    \Return{\best} \\
+\end{algorithm}
+
+
 \section{Optimizacion Multiobjetivo}\label{section:multiobjective}
 
 Los metodos de optimizacion multiobjetivo son aquellos que exploran el espacio de busqueda optimizando simultaneamente diferentes funciones.

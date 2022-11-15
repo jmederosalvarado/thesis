@@ -87,21 +87,62 @@ Los metodos de optimizacion multiobjetivo son aquellos que exploran el espacio d
     \end{equation}
 \end{definition}
 
-Al trabajar con multiples funciones objetivos es necesario encontrar formas de comparar dos soluciones en el espacio de soluciones factibles. El concepto de \textit{Pareto dominaci\'on} juega un paper fundamental en el ambito de la optimizacion multiobjetivo, dado que permite comparar objetivamente dos vectores de forma precisa, sin requerir informacion adicional de preferencia.
+Al trabajar con multiples funciones objetivos es necesario encontrar formas de comparar dos soluciones en el espacio de soluciones factibles. El concepto de \textit{Pareto dominaci\'on} juega un papel fundamental en el ambito de la optimizacion multiobjetivo, dado que permite comparar objetivamente dos vectores de forma precisa, sin requerir informacion adicional de preferencia.
 
 \begin{definition}[Pareto Dominaci\'on]
 \label{definition:pareto-dominance}
 
-    Dados dos vectores ene el espacio objetivo, digase $y^{(1)}, y^{(2)} \in \mathbf{R}^m$ , entonces el punto $y^{(1)}$ se dice que \emph{pareto-domina} a $y^{(2)}$ si y solo si:
+    Dados dos vectores en el espacio objetivo, digase $y^{(1)}, y^{(2)} \in \mathbf{R}^m$ , entonces el punto $y^{(1)}$ se dice que \emph{pareto-domina} a $y^{(2)}$ si y solo si:
 
     \begin{equation}
         \forall_{i\in\{1,\dots,m\}}: y_i^{(1)} \leq y_i^{(2)} y \exists_{j\in\{1,\dots,m\}}: y_j^{(1)} \le y_j^{(2)}
     \end{equation}
 \end{definition}
 
-% TODO: Como introduzco NSGA-II aqui? tengo que hablar de scalarization, metodos numericos, etc, o puedo ir directo a geneticos y NSGA-II?
+\begin{definition}[Frente pareto]
+\label{definition:pareto-front}
+    Todos aquellos vectores $x$ del espacio objetivo tal que no exista otro vector $y$ en el espacio objetivo que pareto-domine a $x$.
+\end{definition}
+
+Tradicionalmente los problemas de optimizacion multiobjetivo han sido atacados utilizando tecnicas de escalarizacion (e.g. \cite{miettinen2012nonlinear}), estas tecnicas consisten en de alguna forma combinar todas las funciones objetivos en una sola, o reescribirlas como restricciones. Varias tecnicas existen en este contexto. \textit{Linear Weighting} es una de estas, en la cual se construye una nueva funcion objetivo a partir de la combinacion lineal de las funciones objetivo del problema original, i.e. $min \sum w_i f_i(x), x \in X$. Este enfoque tiene un problema fundamental y es que si el frente pareto no es convexo, no es posible encontrar soluciones en esta zona, no importa los pesos $w_i$ que se utilicen. Otra forma de escalarizacion es \textit{$\epsilon$-constrain}, esta tecnica selecciona una funcion como la \textit{principal} y las demas se establecen como restricciones al conjunto de soluciones factibles, exigiendo que sean menores que un $\epsilon$.
+
+Existen metodos numericos que intentan resolver el problema haciendo cumplir las condiciones de Karush-Kuhn-Tucker \cite{kuhn2014nonlinear}. La idea va de encontrar al menos una solucion del sistema de ecuaciones que se produce al tratar el problema de \textit{KKT}. Es posible utilizar metodos de continuacion y homotopia para obtener todas las soluciones \cite{hillermeier2001nonlinear, schutze2005continuation}. Estos metodos require que las soluciones satisfagan condiciones de convexidad local y diferenciabilidad.
 
 \subsection{NSGA-II}
+
+Los algoritmos geneticos utilizaan paradigmas basados en procesos evolutivos naturales, como \textit{seleccion natural}, \textit{mutaci\'on} y \textit{recombinaci\'on} para mover un poblacion (conjunto de vectores de decision) a soluciones optimas o casi optimas \cite{back1996evolutionary}. Los algoritmos geneticos multiobjetivos generalizan esta idea y son diseñados para en cada iteracion acercarse mas al frente pareto. En este contexto destaca \emph{NSGA-II} \cite{deb2002nsgaii}, el cual se explica en mayor detalle a continuacion.
+
+El algoritmo consiste basicamente de un ciclo generacional que se divide en dos partes. En la primera parte, la poblacion pasa por un proceso de variacion. En la segunda parte, un proceso de seleccion toma lugar, el cual resultaen la poblacion de la nueva generacion. Este proceso se repite hasta que se cumple algun criterio de convergencia o se excede una cantidad de computo predefinida.
+
+En la parte de la variacion, $\lambda$ nuevos individuos son generados. Para cada uno de ellos dos padres son seleccionados de la poblacion actual $P_t$. Para escoger estos, se utiliza una seleccion de torneo binario, es decir se escogen aleatoriamente dos individuos de la poblacion y se selecciona el mejor de acuerdo a su ranking en la poblacion. Los padres son entonces recombinados utilizando un operador de combinacion, el individuo resultante es luego mutado utilizando un operador de mutacion. De esta forma es creado un nuevo conjunto $Q_t$ de individuos, los cuales son añadidos junto a la poblacion actual al conjunto de individuos a considerar para la siguiente generacion.
+
+La segunda fase, fase de seleccion, los $\mu$ mejores individuos son seleccionados del conjunto $P_t \cup Q_t$ utilizando un mecanismo de ranking multiobjetivo, de esta forma la poblacion de la nueva generacion $P_{t+1}$ es formada. El mecanismo de seleccion de \emph{NSGA-II} es el ingrediente fundamental que lo distingue del resto de los algoritmos geneticos que son utilizados para resolver problemas de optimizacion de un unico objetivo. Este consiste de dos niveles. Primero se realiza un \emph{non-dominated sorting}. Este depende unicamente del \emph{pareto-orden} entre los individuos. Finalmente los individuos que comparten el mismo \emph{pareto-orden} son ordenados de acuerdo al \emph{crowding-distance}, la cual es una medidad de la diversidad.
+
+% TODO: annadir pseudocodigo de todo esto
+
+\subsubsection{Non-dominated sorting}\label{section:ndsorting}
+
+Sea $ND(P)$ el conjunto de soluciones no dominadas \ref{definition:pareto-dominance} en una poblacion $P$. \emph{Non-dominated sorting} particiona la poblacion en subconjuntos, pasado en la \emph{pareto dominacion} \ref{definition:pareto-dominance} como especifica la siguiente recursion.
+
+\begin{align}
+    R_1 &= ND(P) \\
+    R_{k+1} &= ND(P \setminus \cup_{i=1}^k R_i) \quad k = 1,2, \dots
+\end{align}
+
+Como en cada paso de la recursion al menos una solucion es eliminada de la poblacion, el numero maximo de \emph{capas} es $|P|$. El orden de una solucion esta dada por el subindice $k$ del $R_k$ en el cual queda dicha solucion.
+
+\subsubsection{Crownding distance}\label{section:crowding-distance}
+
+Si mas de una solucion quedan en el mismo subconjunto de la poblacion $R_k$ luego de realizar la ordenacion anterior, se procesde a ordenar las soluciones dentro de dichos subconjunto a partir de su \emph{crowding distance}. Esta es calculada para una solucion $x$ como la suma de las contribuciones $c_i$ a la i-\'esima funcion objetivo:
+
+\begin{align}
+    l_i(x) = \max \{ f_i(y) | y \in R \setminus \{x\} \wedge_i(y) \leq f_i(x) \} \cup \{-\infty\} \\
+    u_i(x) = \min \{ f_i(y) | y \in R \setminus \{x\} \wedge f_i(y) \geq f_i(x) \} \cup \{+\infty\} \\
+    c_i(x) = u_i - l_i, \quad i = 1, \dots, m \\
+    c(x)   = \frac{1}{m} \sum_{i=1}^m c_i(x), x \in R
+\end{align}
+
+Intuitivamente mientras mas \textit{espacio} exista alrededor de una solucion, mayor sera el \emph{crowding distance} de la misma. Por tanto, aquellas soluciones con elevado \emph{crowding distance} son preferidas a aquellas con baja distancia, con el proposito de mantener la diversidad en la poblacion.
 
 \section{Discusion}\label{discussion}
 % - discusion. Aqui donde se explica como se usa todo lo q acabo de explicar.

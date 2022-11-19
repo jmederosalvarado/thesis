@@ -1,43 +1,9 @@
-\chapter{Analisis Experimental}\label{chapter:experiments}
+\chapter{Análisis Experimental}\label{chapter:experiments}
 
-En este capitulo se evalua la capacidad de nuestro sistema de optimizacion de dos fases de resolver un problema de clasificacion y lograr buenos resultados en metricas de precision y equidad a partir de ensamblar modelos base. La experimentacion realizada consiste de dos etapas, en una se analiza la capacidad de la primera fase del sistema de obtener un conjunto de modelos base lo suficientemente diverso como para que ensamblar estos resultados en un modelo de mayor precision que los modelos base. En la segunda etapa, se estudia si el algoritmo propuesto permite encontrar formas de ensamblar los modelos base resultantes de la primera etapa de forma tal que se obtengan valores satisfactorios tanto de precisoin como en las metricas de equidad.
+En este capitulo se evalúa la capacidad de nuestro sistema de optimización de dos fases de resolver un problema de clasificación y lograr buenos resultados en métricas de precisión y equidad a partir de ensamblar modelos base. La experimentación realizada consiste de dos etapas, en una se analiza la capacidad de la primera fase del sistema de obtener un conjunto de modelos base lo suficientemente diverso como para que ensamblar estos resultados en un modelo de mayor precisión que los modelos base. En la segunda etapa, se estudia si el algoritmo propuesto permite encontrar formas de ensamblar los modelos base resultantes de la primera etapa de forma tal que se obtengan valores satisfactorios tanto de precisión como en las métricas de equidad.
 
-El sistema descrito ene este trabajo fue evaluado en corpus correspondiente a la tarea HAHA 2019 (Humor Analysis based on Human Annotation), con marco en el evento IberLEF 2019. El corpus contiene 30000 tweets clasificados manualmente en idioma Español, de loscuales 24000 son utilizados para entrenamiento y 6000 para evaluacion. Cada tweet es clasificado como humoroso o no. Para los experimentos que se reportan a continuacion, solamente el conjunto de entrenamiento es utilizado apara ajustar el sistema.
+El sistema descrito ene este trabajo fue evaluado en corpus correspondiente a la tarea \emph{HAHA 2019}(\textit{Humor Analysis based on Human Annotation}), con marco en el evento \emph{IberLEF 2019}. El corpus contiene 30000 tweets clasificados manualmente en idioma Español, de los cuales 24000 son utilizados para entrenamiento y 6000 para evaluación. Cada tweet es clasificado como humoroso o no. Para los experimentos que se reportan a continuación, solamente el conjunto de entrenamiento es utilizado apara ajustar el sistema.
 
-La coleccion de enternamiento fue dividida en tres grandes \emph{cross-validation folds} para la primera fase, utilizando splits de validacion del 30\%. Ademasn
-
-% %%
-% Background:
-% - Intro al cap explicando cuales son los temas que voy a tratar
-% - hablar al principio de equidad respecto a la fuente de los sesgos, word embeddings, etc hasta llegar a q estas metricas son pa medir sesgos de modelo respecto a un dataset
-%
-% %%
-% in-procesamiento -> durante el procesamiento
-%
-% machine learning
-% aprendizaje de maquinas -> automatico
-%
-% Automl es en ingles
-%
-% Estandard -> estandar
-%
-% %%
-% Post procesamiento que quede claro que se aplica sobre el modelo ya entrenado
-%
-% %%
-% Model agnostic y model specific en el sota + fbo en mode agnostic
-%
-% %%
-% Propuestas
-% - Permite usar multiples funciones de fairness
-% - Trabajar sobre colec de data heterogénea 
-% - Haber propuesto un sistema para resolver prob de clas arbitrarios con control sobre fairness y disponible pa la comunidad
-% - Agnostic del modelo
-%
-% %%
-% Espacio de hiperparametros
-% Algoritmo de optimizacion
-%
 % %%
 % Experimentos:
 %

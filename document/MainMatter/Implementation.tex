@@ -1,24 +1,63 @@
 \chapter{Análisis Experimental}\label{chapter:experiments}
 
-En este capitulo se evalúa la capacidad de nuestro sistema de optimización de dos fases de resolver un problema de clasificación y lograr buenos resultados en métricas de precisión y equidad a partir de ensamblar modelos base. La experimentación realizada consiste de dos etapas, en una se analiza la capacidad de la primera fase del sistema de obtener un conjunto de modelos base lo suficientemente diverso como para que ensamblar estos resultados en un modelo de mayor precisión que los modelos base. En la segunda etapa, se estudia si el algoritmo propuesto permite encontrar formas de ensamblar los modelos base resultantes de la primera etapa de forma tal que se obtengan valores satisfactorios tanto de precisión como en las métricas de equidad.
+En este capitulo se evalúa la capacidad de nuestro sistema de optimización de dos fases de resolver un problema de clasificación y lograr buenos resultados en métricas de precisión y equidad a partir de ensamblar modelos base.
+La experimentación realizada consiste de dos etapas, en una se analiza la capacidad de la primera fase del sistema de obtener un conjunto de modelos base lo suficientemente diverso como para que ensamblar estos resultados en un modelo de mayor precisión que los modelos base.
+En la segunda etapa, se estudia si el algoritmo propuesto permite encontrar formas de ensamblar los modelos base resultantes de la primera etapa de forma tal que se obtengan valores satisfactorios tanto de precisión como en las métricas de equidad.
 
-El sistema descrito ene este trabajo fue evaluado en corpus correspondiente a la tarea \emph{HAHA 2019}(\textit{Humor Analysis based on Human Annotation}), con marco en el evento \emph{IberLEF 2019}. El corpus contiene 30000 tweets clasificados manualmente en idioma Español, de los cuales 24000 son utilizados para entrenamiento y 6000 para evaluación. Cada tweet es clasificado como humoroso o no. Para los experimentos que se reportan a continuación, solamente el conjunto de entrenamiento es utilizado apara ajustar el sistema.
+\section{Marco Experimental}
 
-% %%
-% Experimentos:
-%
-% Los datasets van todos juntos
-%
-% Primera etapa:
-%
-% Capacidad del sistema de generalizar/ generar soluciones que generilicen
-%
-% Influencia de las metricas de diversidad en esto
-%
-% Encontrar la mejor combinacion de hiper que garantiza improvement
-%
-% Segunda etapa:
-%
-% Capacidad  del sistema para generar modelos justos con una sola fairness
-%
-% Multiples fairness a la vez
+Una primera etapa experimental se lleva a cabo con el objetivo de estudiar la capacidad del sistema de producir un conjunto de modelos base capaz de, al ser ensamblado, generalizar y obtener mejores resultados que dichos modelos base.
+Adicionalmente se desea estudiar que influencia tienen las distintas métricas de diversidad utilizadas en esta capacidad del sistema.
+
+Para estimar el mejor rendimiento obtenible a partir de ensamblar el conjunto de modelos base encontrado, dos medidas son propuestas a continuación.
+Estas medidas estiman el rendimiento que logran modelos de ensemble de prueba, esto es, modelos de ensemble que conocen los resultados correctos a priori, y por tanto son modelos que no tienen utilidad real fuera de ser utilizados con propósitos de comparación.
+Dichos modelos de ensemble son llamados \emph{Oráculo Optimista} y \emph{Oráculo Sobre-ajustado}.
+
+\begin{description}
+
+\item[Oráculo Optimista.]
+Este modelo oráculo devuelve la etiqueta correcta si al menos uno delos modelos base predijo dicha etiqueta.
+La única forma de que este modelo falle es si ninguno de los modelos base fue capaz de sugerir la etiqueta correcta.
+
+\begin{equation*}
+O_{optimista}^{(i)}(M) =
+    \begin{cases}
+        y_i & \textrm{si $y_i \in \{\,y^{(j)}_i \mid m^{(j)} \in M \,\}$} \\
+        y^{(0)}_i & \textrm{en otro caso} \\
+    \end{cases}
+\end{equation*}
+
+Los resultados alcanzados por este ensemble reflejan el grado de cobertura de los modelos base sobre la colección de evaluación, esto es, cuantos ejemplos son correctamente predichos por al menos uno de los clasificadores base.
+
+\item[Oráculo Sobre-ajustado.]
+Este modelo oráculo computa todas las combinaciones de salidas de los modelos base y asigna a cada combinación la etiqueta mas frecuente encontrada en el conjunto correspondiente de etiquetas correctas.
+Este modelo falla cuando la misma combinación de modelos base tiene que producir diferentes etiquetas para que todas las posibles entradas sean clasificadas correctamente.
+
+\begin{equation*}
+O_{sobreajustado}^{(i)}(M) =
+    \textbf{max\_count}\left(\left\{\, y_k \,\middle\vert\, (x_k, y_k) \in D, \, \underset{m^{(j)} \in M}{\forall} y^{(j)}_k = y^{(j)}_i \,\right\}\right)
+\end{equation*}
+
+La función \textbf{max\_count} devuelve el elemento mas frecuente de la colección (en caso de un empate, siempre devuelve el primero que encuentra).
+
+Los resultados que obtiene este ensemble, proveen una cota superior del mejor rendimiento que puede ser obtenido utilizando un conjunto de reglas \textbf{consistente} para ensamblar la colección de modelos base.
+
+\end{description}
+
+Primeramente se desea validar que nuestro sistema es capaz de generar modelos base en la primera fase que al ser ensamblados en la segunda fase dan lugar a un ensemble que obtiene mejores resultados sobre el conjunto de evaluación que cualquiera de los modelos base de los que se compone.
+Para ello, los resultados obtenidos por el ensemble producido por nuestro sistema son comparados con los obtenidos por el mejor de los modelos base, y analizados respecto a los resultados obtenidos por el \emph{Oráculo Sobre-ajustado} descrito anteriormente.
+
+Además en esta etapa experimental se desea también comprobar la influencia de las diferentes métricas de diversidad utilizadas en la capacidad del sistema para producir modelos base que generalicen luego de ser ensamblados.
+Con este propósito, se realiza un análisis de que tan bien los modelos base cubren el espacio de entrada de nuestro problema.
+Para este análisis resulta de suma utilidad el concepto de \emph{Oráculo Optimista}, el cual nos darán información acerca de la influencia de las distintas métricas de diversidad en la distribución de los distintos modelos base sobre el espacio de entrada de nuestros datos.
+Los resultados obtenidos por nuestro sistema son entonces comparados con aquellos del \emph{Oráculo Optimista} para cada una de las métricas de diversidad utilizadas.
+
+Finalmente, se analiza también en esta etapa el comportamiento del sistema bajo diferentes combinaciones de otros hiper-parámetros como la cantidad de modelos base.
+La mejor configuración de dichos hiper-parámetros, incluyendo la métrica de diversidad que mejores resultados proporciona al sistema, son utilizados en la segunda etapa experimental.
+
+La segunda etapa experimental consiste del estudio de la capacidad del sistema para lograr producir modelos de ensemble que son precisos de acuerdo a una función de perdida determinada y justos según una o varias métricas de equidad. 
+Con este fin se realiza una comparación entre los resultados obtenidos por nuestro sistema y los obtenidos por varios otros sistemas que resultan relevantes en la literatura para la solución de este problema.
+
+\section{Escenarios de Evaluación}
+
+% El sistema descrito ene este trabajo fue evaluado en corpus correspondiente a la tarea \emph{HAHA 2019}(\textit{Humor Analysis based on Human Annotation}), con marco en el evento \emph{IberLEF 2019}. El corpus contiene 30000 tweets clasificados manualmente en idioma Español, de los cuales 24000 son utilizados para entrenamiento y 6000 para evaluación. Cada tweet es clasificado como humoroso o no. Para los experimentos que se reportan a continuación, solamente el conjunto de entrenamiento es utilizado apara ajustar el sistema.

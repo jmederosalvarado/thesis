@@ -58,7 +58,7 @@ La mejor configuración de dichos hiper-parámetros, incluyendo la métrica de d
 La segunda etapa experimental consiste del estudio de la capacidad del sistema para lograr producir modelos de ensemble que son precisos de acuerdo a una función de perdida determinada y justos según una o varias métricas de equidad. 
 Con este fin se realiza una comparación entre los resultados obtenidos por nuestro sistema y los obtenidos por varios otros sistemas que resultan relevantes en la literatura para la solución de este problema.
 
-\section{Escenarios de Evaluación}
+\subsection{Escenarios de Evaluación}
 
 La primera etapa experimental evalúa el sistema en la tarea \emph{HAHA 2019}(\textit{Humor Analysis based on Human Annotation}), con marco en el evento \textit{IberLEF 2019} \parencite{chiruzzo2019overview}.
 El proceso de evaluación consiste primero de la ejecución de la primera fase de nuestro sistema, esto es, la exploración del espacio de modelos y obtención del conjunto de modelos base a ser ensamblados.
@@ -69,7 +69,7 @@ Finalmente la segunda etapa experimental consiste de la ejecución de extremo a 
 En esta etapa se utiliza la mejor configuración de hiper-parámetros acorde a los resultados de la primera fase.
 Ambas fases optimizan la precisión del modelo, en particular la segunda fase incorpora al proceso de optimización métricas de equidad, dígase \emph{Statistical Parity} y \emph{Equalized Opportunity}, como funciones objetivo adicionales a optimizar simultáneamente con la precisión.
 
-\section{Corpus de Evaluación}
+\subsection{Corpus de Evaluación}
 
 Dos conjuntos de datos son utilizados para la evaluación del sistema en los experimentos realizados.
 
@@ -111,6 +111,44 @@ Existen dos clases en las cuales clasificar a los individuos dependiendo de su s
 Las clases están desbalanceadas, con una tendencia hacia la etiqueta '$\leq50K$', la cual representa aproximadamente el $75\%$ de los ejemplos.
 
 \end{description}
+
+\subsection{Configuración Experimental}
+
+En todos los experimentos, el sistema fue configurado para permitir que cada fase ejecutara a lo sumo $10\,000$ iteraciones o por una hora.
+Los parámetros de búsqueda de AutoGOAL fueron los siguientes:
+\begin{itemize}
+    \item \texttt{popsize=50}
+    \item \texttt{selection=10}
+    \item \texttt{cross\_validation\_steps=3}
+    \item \texttt{validation\_split=0.3}
+\end{itemize}
+
+Debido a limitaciones de infraestructura, los algoritmos de \emph{Aprendizaje Profundo} fueron excluidos del conjunto de algoritmos disponibles para AutoGOAL, esto significa que flujos basados en \emph{Keras} y \emph{BERTA fueron excluidos y fundamentalmente} flujos basados en \emph{ScikitLearn} fueron utilizados.
+AutoGOAL es una herramienta aun en desarrollo y la ultima versión estable en el momento de realizar los experimentos (\texttt{v0.6.0}) no soporta completamente algoritmos de  \emph{Aprendizaje Profundo} en todas las arquitecturas.
+
+No incluir los algoritmos de \emph{Aprendizaje Profundo} en la configuración experimental puede tener un impacto negativo en el mejor rendimiento que puede ser alcanzado por el sistema.
+Es decir, el rendimiento del sistema mientras resuelve el problema puede no ser directamente comparado con otras soluciones reportadas que utilizan técnicas de \emph{Aprendizaje Profundo}.
+Sin embargo, la ausencia de estos algoritmos no deberían afectar la capacidad del sistema de mejorar la capacidad de los modelos base que son encontrados en la primera fase.
+
+% TODO: Esto aun es relevante?
+%Not including deep learning algorithms in the experimental setup
+%may have a negative impact on the maximum performance achieved by the system.
+%That is, the scored performance of the system while solving a problem cannot be directly compared to other reported solutions that use deep learning techniques.
+%However, the lack of such algorithms should not affect the capacity of the system to improve
+%the performance of the pipelines found in the first phase, i.e. the base models.
+%Therefore, if  the system improves the performance of the base models, then the top performance is expected to further increase once the deep learning architectures become compatible.
+%This is expected to happen not only because the base models will now perform better, but also because more powerful ensemble architectures will be seamlessly added at the same time.
+%AutoGOAL has already be proven to achieve competitive results when set up properly~\cite{estevez2020automatic}
+
+\subsubsection{Biblioteca}
+
+El sistema propuesto en este trabajo es parte de la biblioteca en desarrollo \texttt{BFair}\footnote{https://github.com/bfair-ml/bfair}
+La biblioteca tiene como objetivo atacar los problemas de sesgos que emergen de entrenar modelos de \emph{Aprendizaje Automático} que en datos que muestran sesgos de los humanos.
+
+\subsubsection{Hardware}
+
+Los experimentos fueron ejecutados en un equipo con las siguientes propiedades:
+CPU Intel Core i9-9900K (-MT-MCP-) con velocidad máxima de 3651/5000 MHz, cache de 16384 KB y RAM de 64GB.
 
 \section{Resultados}
 

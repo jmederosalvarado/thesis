@@ -1,24 +1,38 @@
 \chapter{Propuesta}\label{chapter:proposal}
 
-\section{Descripcion general}\label{section:overview}
+\section{Descripción general}\label{section:overview}
 
-El sistema toma como entrada un dataset $D = \{(x_1, y_1), \dots , (x_n, y_n)\}$ y una funcion de perdida $\mathcal{L}$ y una o varias metricas de equidad $F_1, F_2, \dots, F_n$. El objetivo del sistema es producir un modelo de clasificacion que es a la vez efectivo segun $L$ y justo segun $F_1, F_2, \dots, F_n$. El sistema consiste en dos fases fundamentales. La primera es responsable de generar una coleccionde modelos, cada uno llamado modelo base. Esta coleccion es construida optimizando una funcion de perdida $\mathcal{L}_1$, mientras se asegura \emph{diversidad} a lo largo de toda la poblacion. La segunda fase es responsable de producir un modelo de clasificacion. Este modelo es generado ensamblando la coleccion de modelos base de forma tal que optimice su efectividad segun $L_2$, a la vez que es lo mas \emph{justo} posible segun $F_1, F_2, \dots, F_n$. En el contexto de esta tesis se asume $L = L_1 = L_2$. Las secciones \ref{section:first-phase} y \ref{section:second-phase} abordan con mas detalles la primera y segunda fase, respectivamente.
+El sistema toma como entrada una colección de datos $D = \{(x_1, y_1), \dots , (x_n, y_n)\}$ y una función de pérdida $\mathcal{L}$ y una o varias métricas de equidad $F_1, F_2, \dots, F_n$.
+El objetivo del sistema es producir un modelo de clasificación que es a la vez efectivo según $L$ y justo según $F_1, F_2, \dots, F_n$.
+El sistema consiste en dos fases fundamentales.
+La primera es responsable de generar una colección de modelos, cada uno llamado modelo base.
+Esta colección es construida optimizando una función de perdida $\mathcal{L}_1$, mientras se asegura \emph{diversidad} a lo largo de toda la población.
+La segunda fase es responsable de producir un conjunto de modelos de clasificación.
+Estos modelos son generados ensamblando la colección de modelos base de forma tal que optimice su efectividad según $L_2$, a la vez que es lo mas \emph{justo} posible según $F_1, F_2, \dots, F_n$.
+En el contexto de esta tesis se asume $L = L_1 = L_2$.
+Las secciones \ref{section:first-phase} y \ref{section:second-phase} abordan con mas detalles la primera y segunda fase, respectivamente.
 
 % TODO
 % Figure 1 summarizes the architecture of the system.
 % Figure 2 and 3 provide an overview of the first and second phase, respectively.
 
-\section{Generacion de modelos base}\label{section:first-phase}
+\section{Generación de modelos base}\label{section:first-phase}
 
 % TODO
 % Figure 2 provides an overview of this phase.
 % Algoritmo
 
-En esta fase al sistema se le da la tarea de generar $N$ modelos para ajustar $D$ de acuerdo a la perdida $\mathcal{L}$.
+En esta fase al sistema se le da la tarea de generar $N$ modelos para ajustar $D$ de acuerdo a la pérdida $\mathcal{L}$.
 
-La Definicion~\ref{definition:cash} se modifica para buscar una coleccion de modelos en lugar de un solo modelo, sujeto a una metrica de diversidad $\mathcal{D}$. Esto es, se desea encontrar una coleccion de modelos base (modelos que optimicen la efectividad en el dataset $D$ de acuerdo a la funcion de perdida $\mathcal{L}$) mientras garantiza algunas diferencias entre sus hipotesis utilizando la metrica $\mathcal{D}$. Asegurar diversidad en la coleccion de modelos base es importante porque los metodos de ensemble no son capaces de mojorar su rendimiento si todos los modelos base tienen exactamente la misma hipotesis, i.e., todos realizan las mismas predicciones.
+La Definición~\ref{definition:cash} se modifica para buscar una colección de modelos en lugar de un solo modelo, sujeto a una métrica de diversidad $\mathcal{D}$.
+Esto es, se desea encontrar una colección de modelos base (modelos que optimicen la efectividad en el conjunto de datos $D$ de acuerdo a la función de pérdida $\mathcal{L}$) mientras garantiza algunas diferencias entre sus hipótesis utilizando la métrica $\mathcal{D}$.
+Asegurar diversidad en la colección de modelos base es importante porque los métodos de ensemble no son capaces de mejorar su rendimiento si todos los modelos base tienen exactamente la misma hipótesis, es decir si todos realizan las mismas predicciones.
 
-El procedimiento aplicado para generar la coleccion de modelos base esta resumido por la funcion \textit{GenerateBaseModels}~\ref{code:generate-base-models}. El espacio de algoritmos y hiperparametros es explorado utilizando una estrategia de busqueda pre-seleccionada. Todo esto es capturado por la funcion \textbf{explore}. Luego de evaluar las arquitecturas generadas y estimar la diversidad entre los modelos actualmente seleccionados y la nueva generacion de modelos, la coleccion de modelos base es actualizada para ajustarse a su capacidad $N$. Todo esto es capturado por la funcion \textbf{reselect}.
+El procedimiento aplicado para generar la colección de modelos base esta resumido por la función \ref{code:generate-base-models}.
+El espacio de algoritmos e hiperparámetros es explorado utilizando una estrategia de búsqueda pre-seleccionada.
+Todo esto es capturado por la función \textbf{explore}.
+Luego de evaluar las arquitecturas generadas y estimar la diversidad entre los modelos actualmente seleccionados y la nueva generación de modelos, la colección de modelos base es actualizada para ajustarse a su capacidad $N$.
+Todo esto es capturado por la función \ref{code:reselect}.
 
 \begin{function}[htb!]
     \caption{GenerateBaseModels($N, D, A, \Lambda, \mathcal{L}, \mathcal{D}$)\label{code:generate-base-models}}
@@ -28,7 +42,7 @@ El procedimiento aplicado para generar la coleccion de modelos base esta resumid
     \SetKwData{generation}{generation}
     \SetKwData{init}{\bf set}
     \SetKwData{sample}{\bf explore}
-    \SetKwData{reselect}{\bf reselect}
+    \SetKwData{reselect}{\textbf{\ref{code:reselect}}}
 
     \init $\output \leftarrow \emptyset$ \\
     \For{$\generation \in \sample(A, \Lambda)$}{
@@ -43,10 +57,17 @@ El procedimiento aplicado para generar la coleccion de modelos base esta resumid
 \end{function}
 
 % TODO Probablemente la parte de PGE queremos pasarla para el estado del arte
-Para explorar inteligentemente  el espacio de algoritmos y hiperparametros, i.e., para resolver el problema \textit{CASH} modificado, se utiliza la implementacion de \emph{Probabilistic Grammatical Evolution Search} \ref{algorithm:pge} presente en AutoGOAL. AutoGOAL se refiere a los modelos que construye como pipelines, dado que cada uno de ellos esta formado por algoritmos interconectados. La busqueda comienza con una estrategia de muestreo aleatorio, pero segun evalua mas pipelines, modifica el modelo de muestreo probabilista para que pipelines similares a los mejores encontrados hasta el momento, sean generados con mayor frecuencia. El espacio de algoritmos y hiperparametros utilizados es el utilizado por defecto en AutoGOAL, el cual incluye varios algoritmos clasicos de aprendizaje de maquina presentes en las diferentes bibliotecas utilizadas por AutoGOAL.
+Para explorar inteligentemente  el espacio de algoritmos y hiperparámetros, es decir, para resolver el problema \textit{CASH} modificado, se utiliza la implementación de \emph{Probabilistic Grammatical Evolution Search}~(algoritmo \ref{algorithm:pge}) presente en AutoGOAL.
+AutoGOAL se refiere a los modelos que construye como flujos, dado que cada uno de ellos esta formado por algoritmos interconectados.
+La búsqueda comienza con una estrategia de muestreo aleatorio, pero según evalúa mas flujos, modifica el modelo de muestreo probabilista para que flujos similares a los mejores encontrados hasta el momento, sean generados con mayor frecuencia.
+El espacio de algoritmos y hiperparámetros utilizados es el utilizado por defecto en AutoGOAL, el cual incluye varios algoritmos clásicos de aprendizaje automático presentes en las diferentes bibliotecas utilizadas por AutoGOAL.
 
 % TODO Linkear aqui a recomendaciones de como mejorar la seleccion del conjunto mas diverso
-Para reseleccionar la coleccion de modelos base, i.e. la coleccion de pipelines de AutoGOAL, un enfoque greedy es utilizado y estudiado. La funcion \textbf{reselect}~\ref{code:reselect} resume la estrategia propuesta. El algoritmo siempre incluye el modelo que mejor se desempeña de acuerdo a $L$ en la seleccion. Cada iteracion siguiente añade el modelo no todavia seleccionado, que maximiza la diversidad respecto a todos los modelos anteriormente seleccionados. El enfoque greedy no garantiza que la coleccion final logre la mejor posible diversidad respecto a $\mathcal{D}$. La precision tampoco es tomada en cuenta, excepto para seleccionar el modelo de mejor desempeño.
+Para reseleccionar la colección de modelos base, o sea, la colección de flujos de AutoGOAL, un enfoque goloso es utilizado y estudiado.
+La función \textbf{reselect}~\ref{code:reselect} resume la estrategia propuesta.
+El algoritmo siempre incluye el modelo que mejor se desempeña de acuerdo a $L$ en la selección. Cada iteración siguiente añade el modelo, no todavía seleccionado, que maximiza la diversidad respecto a todos los modelos anteriormente seleccionados.
+El enfoque goloso no garantiza que la colección final logre la mejor posible diversidad respecto a $\mathcal{D}$.
+La precisión tampoco es tomada en cuenta, excepto para seleccionar el modelo de mejor desempeño.
 
 \begin{function}[htb!]
     \caption{reselect($M,\ scores,\ diversity,\ N$)\label{code:reselect}}
@@ -61,51 +82,80 @@ Para reseleccionar la coleccion de modelos base, i.e. la coleccion de pipelines 
     \Return{$R^{(0)} \cdots R^{(N)}$}
 \end{function}
 
-Tres metodos \textit{reselect} de referencia fueron implementaods para realizar comparaciones entre las metricas de diversidad \textit{disagreement} y \textit{double-fault}, las cuales son presentadas en la seccion~\ref{section:diversity-meassures}.
-\begin{itemize}
-    \item Shuffle: La coleccion de modelso base es construida barajeando aleatoriamente la selecciona ctual de modelos base y los nuevos encontrados. Los primeros $N$ modelos luego de barajear son seleccionados para la siguiente generacion.
-    \item Arbitrary: La coleccion de modelos base es construida de la misma forma que con la estrategia \textit{shuffle}, pero el modelo de mejor rendimiento siempre es incluido en la coleccion de modelos base seleccionados.
-    \item Best: La coleccion de modelos base es construida a partir de seleccionar los modelos de mejor rendimiento entre los previamente seleccionados y los recien encontrados.
-\end{itemize}
+Tres métodos \textit{reselect} de referencia fueron implementados para realizar comparaciones entre las métricas de diversidad \textit{disagreement} y \textit{double-fault}, las cuales son presentadas en la sección~\ref{section:diversity-meassures}.
+\begin{description}
+    \item[Shuffle.]
+    La colección de modelos base es construida barajando aleatoriamente la selecciona actual de modelos base y los nuevos encontrados.
+    Los primeros $N$ modelos luego de barajar son seleccionados para la siguiente generación.
+    \item[Arbitrary.]
+    La colección de modelos base es construida de la misma forma que con la estrategia \textit{shuffle}, pero el modelo de mejor rendimiento siempre es incluido en la colección de modelos base seleccionados.
+    \item[Best.]
+    La colección de modelos base es construida a partir de seleccionar los modelos de mejor rendimiento entre los previamente seleccionados y los recién encontrados.
+\end{description}
 
-A continuacion, la seccion~\ref{section:diversity-meassures} provee algunos detalles acerca de las metricas de diversidad estudiadas en este trabajo.
+A continuación, la sección~\ref{section:diversity-meassures} provee algunos detalles acerca de las métricas de diversidad estudiadas en este trabajo.
 
-\section{Metricas de diversidad}\label{section:diversity-meassures}
+\section{Métricas de diversidad}\label{section:diversity-meassures}
 
-Dos metricas fueron implementadas para estimar la diversidad de una coleccion dada de modelos base. Ambas de ellas precomputan una matriz de clasificaciones incorrectas, la cual es usada entonces para computar una metrica que aporta informacion sobre la diversidad entre los modelos base dos a dos. La matriz de clasificaciones incorrectas se construye de la siguiente manera.
+Dos métricas fueron implementadas para estimar la diversidad de una colección dada de modelos base.
+Ambas de ellas precomputan una matriz de clasificaciones incorrectas, la cual es utilizada entonces para computar una métrica que aporta información sobre la diversidad entre los modelos base dos a dos.
+La matriz de clasificaciones incorrectas se construye de la siguiente manera.
 
 \begin{equation}
     M_{i,j} =
     \begin{cases}
         1 & \text{si el modelo j correctamente clasifica el ejemplo i ($D_valid$)} \\
-        -1 & \text{otherwise}
+        -1 & \text{en otro caso}
     \end{cases}
 \end{equation}
 
-Las siguientes metricas son computadas entre pares de modelos base para estimar cuand diferentes son sus hipotesis, y por tanto la diversidad de la collecion incluyendo a ambos a la vez.
+Las siguientes métricas son computadas entre pares de modelos base para estimar cuando diferentes son sus hipótesis, y por tanto la diversidad de la colección incluyendo a ambos a la vez.
 
-\textbf{Disagreement}. Esta mide la frecuencia con la cual uno de los mdelos falla cuando el otro no lo hace, y viceversa. Mientras mas alto el valor de la metrica, mas diferentes son los modelos.
+\begin{description}
 
-\begin{equation}
-    disagreement(m^{(a)}, m^{(b)}) = \frac{\vert\{M_{i,a} \neq M{i,b} \vert s^{(i)} \in D^{(\star)}_{valid}\}\vert}{\vert D^{(\star)}_{valid} \vert}
-\end{equation}
+    \item[Disagreement.]
+    Esta mide la frecuencia con la cual uno de los modelos falla cuando el otro no lo hace, y viceversa.
+    Mientras mas alto el valor de la métrica, mas diferentes son los modelos.
 
-\textbf{Double Fault}. Esta mide cuan a menudo ambos modelos fallan a la vez. Mientras mas alta esta medida mayor la diferencia entre ambos.
+    \begin{equation}
+        disagreement(m^{(a)}, m^{(b)}) = \frac{\vert\{M_{i,a} \neq M{i,b} \vert s^{(i)} \in D^{(\star)}_{valid}\}\vert}{\vert D^{(\star)}_{valid} \vert}
+    \end{equation}
 
-\begin{equation}
-    double-fault(m^{(a)}, m^{(b)}) = 1 - \frac{\vert\{M_{i,a} = M{i,b} = -1 \vert s^{(i)} \in D^{(\star)}_{valid}\}\vert}{\vert D^{(\star)}_{valid} \vert}
-\end{equation}
+    \item[Double Fault.]
+    Esta mide cuan a menudo ambos modelos fallan a la vez.
+    Mientras mas alta esta medida mayor la diferencia entre ambos.
+
+    \begin{equation}
+        double-fault(m^{(a)}, m^{(b)}) = 1 - \frac{\vert\{M_{i,a} = M{i,b} = -1 \vert s^{(i)} \in D^{(\star)}_{valid}\}\vert}{\vert D^{(\star)}_{valid} \vert}
+    \end{equation}
+    
+\end{description}
 
 \section{Ensamblado inteligente de modelos justos}\label{section:second-phase}
 
-En esta fase el sistema tiene la tarea de combinar las predicciones de $N$ modelos para ajustar $D$ de acuerdo tanto a la perdida $\mathcal{L}$ como a las metricas de equidad $F_1, \dots, F_n$.
+En esta fase el sistema tiene la tarea de combinar las predicciones de $N$ modelos para ajustar $D$ de acuerdo tanto a la perdida $\mathcal{L}$ como a las métricas de equidad $F_1, \dots, F_n$.
 
-El sistema una vez mas resuelve un problema de \emph{CASH} como se presenta en \ref{definition:cash}. En lugar de trabajar directamente en $D = \{(x_1,y_1),\dots, (x_n,y_n)\}$, esta vez el sistema trabaja sobre $D^e = \{(y_1^{(*)}, y_1),\dots,(y_n^{(*)}, y_n)\}$, donde $y_i^{(*)} = [y_i^{(0)},\dots,y_i^{(n)}]$ y cada $y_i^{(j)}$ es la salida de un modelo base $j$ para el ejemplo $i$, $i\in[1 \dots n]$, $j\in[1 \dots N]$. En otras palabras, al sistema se le pide encontrar la mejor combinacion $E^*$ de algoritmos y sus hiperparametros para ensamblar las salidas de los modelos base. Particularmente, un espacio de algoritmos especializados en estrategias de ensamblados y sus hiperparametros es utilizado en esta fase. Estas estrategias son presentadas a continuacion.
+El sistema una vez mas resuelve un problema de \emph{CASH} como se presenta en \ref{definition:cash}.
+En lugar de trabajar directamente en $D = \{(x_1,y_1),\dots, (x_n,y_n)\}$, esta vez el sistema trabaja sobre $D^e = \{(y_1^{(*)}, y_1),\dots,(y_n^{(*)}, y_n)\}$, donde $y_i^{(*)} = [y_i^{(0)},\dots,y_i^{(n)}]$ y cada $y_i^{(j)}$ es la salida de un modelo base $j$ para el ejemplo $i$, $i\in[1 \dots n]$, $j\in[1 \dots N]$.
+En otras palabras, al sistema se le pide encontrar la mejor combinación $E^*$ de algoritmos y sus hiperparámetros para ensamblar las salidas de los modelos base.
+Particularmente, un espacio de algoritmos especializados en estrategias de ensamblados y sus hiperparámetros es utilizado en esta fase.
+Estas estrategias son presentadas a continuación.
 
-\begin{itemize}
-    \item \emph{Voting Classifiers}. Asigna la etiqueta mas comun entre las predichas por los modelos base. En caso de empate,  se selecciona la etiqueta producida por el modelo mas preciso entre los modelos base.
-    \item \emph{Overfitted Voting Classifiers}. Asigna a cada combinacion de salida de los modelos base la etiqueta que asegura el mejor desempeño en $D_{train}^e$. En el momento de prediccion, si una combinacion no antes vista es encontrada, este selecciona la etiqueta predicha por el modelo base mas preciso ( ignorando si esta fue la etiqueta mas votada).
-    \item \emph{ML Voting Classifiers}. Ajusta un modelo de aprendizaje de maquina sobre $D_{train}^e$ para optimizar $\mathcal{L}$. La arquitectura del modelo de aprendizaje de maquina es tomado del pool de algoritmos por defecto de AutoGOAL.
-\end{itemize}
+\begin{description}
 
-Para explorar el espacio de algoritmos e hiperparametros se realiza una modificacion a \emph{Probabilistic Grammatical Evolution}(\ref{algorithm:pge}), en la cual la fase de seleccionar los $n$ individuos de la poblacion actual que pasan a la siguiente generacion, se realiza utilizando \emph{Non-dominated sorting} \ref{section:ndsorting} y \emph{Crowding distance} \ref{section:crowding-distance}, de la misma forma en que se utiliza en \emph{NSGA-II}. De esta forma la funcion de seleccion, y por tanto la exploracion del espacio, optimizan simultaneamente las metricas de equidad y la funcion de peridida.
+    \item[Voting Classifiers.]
+    Asigna la etiqueta mas común entre las predichas por los modelos base.
+    En caso de empate, se selecciona la etiqueta producida por el modelo mas preciso entre los modelos base.
+    
+    \item[Overfitted Voting Classifiers.]
+    Asigna a cada combinación de salida de los modelos base la etiqueta que asegura el mejor desempeño en $D_{train}^e$.
+    En el momento de predicción, si una combinación no antes vista es encontrada, este selecciona la etiqueta predicha por el modelo base mas preciso (ignorando si esta fue la etiqueta mas votada).
+    
+    \item[ML Voting Classifiers.]
+    Ajusta un modelo de aprendizaje automático sobre $D_{train}^e$ para optimizar $\mathcal{L}$.
+    La arquitectura del modelo de aprendizaje automático es tomado del conjunto de algoritmos disponibles por defecto a AutoGOAL.
+    
+\end{description}
+
+Para explorar el espacio de algoritmos e hiperparámetros se realiza una modificación a \emph{Probabilistic Grammatical Evolution}(\ref{algorithm:pge}), en la cual la fase de seleccionar los $n$ individuos de la población actual que pasan a la siguiente generación, se realiza utilizando \emph{Non-dominated sorting}~(sección \ref{section:ndsorting}) y \emph{Crowding distance}~(sección \ref{section:crowding-distance}), de la misma forma en que se utiliza en \emph{NSGA-II}.
+De esta forma la función de selección, y por tanto la exploración del espacio, optimizan simultáneamente las métricas de equidad y la función de pérdida.

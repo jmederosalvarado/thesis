@@ -2,128 +2,179 @@
 
 % - fairness. Parrafo q engloba el cap. Hablar en general. Intentan enganchar los ensembles.
 
-\section{Equidad}
+\section{Definiciones de Equidad}
 % - sec1. how to measure fairness. Statistical parity, WET (embedding), winoMT (machine transaltion). Hablar de la fuente de los sesgos.
 
 %% From FBO
-No existe en estos momentos una unica definicion ampliamnte aceptada de lo que es \textit{equidad}, sino que diferentes definiciones codifican diferentes caracteristicas que se muestran utiles en diferentes contextos. Incluso, algunas de las definiciones mas comunes presentan conflictos entre si.
+No existe en estos momentos una única definición ampliamente aceptada de lo que es \textit{equidad}, sino que diferentes definiciones codifican diferentes características que se muestran útiles en diferentes contextos.
+Incluso, algunas de las definiciones más comunes presentan conflictos entre si.
 
-A continuacion se presentan algunas de las definiciones mas utilizadas. Sea $Y$ la clasificacion (binaria) correcta, $S$ el atributo protegido, y $Y^p$ la clasificacion obtenida del modelo. Las definiciones mas comunes pueden ser agrupadas en tres categorias: (i) considerando el resultado obtenido dada la clasificacion correcta; (ii) considerando la clasificacion correcta dada la clasificacion obtenida; (iii) considerando solamente el resultado obtenido. Los siguientes son ejemplos de estos tipos de metricas.
+A continuación se presentan algunas de las definiciones mas utilizadas. Sea $Y$ la clasificación (binaria) correcta, $S$ el atributo protegido, y $Y^p$ la clasificación obtenida del modelo.
+Las definiciones más comunes pueden ser agrupadas en tres categorías:
+(i) considerando el resultado obtenido dada la clasificación correcta;
+(ii) considerando la clasificación correcta dada la clasificación obtenida;
+(iii) considerando solamente el resultado obtenido.
+Los siguientes son ejemplos de estos tipos de métricas.
 
 \begin{itemize}
-    \item Equal Opportunity (EO) requiere que la proporcion de verdaderos positivos sea la misma en todos los subgrupos: $P(Y^p=1 | Y=1, S=0) = P(Y^p=1 | Y=1, S=1)$
-    \item Equalized Odds (EOdd) requiere igual proporcion de falsos positivos, ademas de EO
-    \item Statistical Parity (SP) require que las predicciones positivas no se vean afectadas por el valor del atributo protegido, sin tomar en cuenta la clasificacion correcta: $P(Y^p=1 | S=0) = P(Y^p=1 | S=1)$
+    \item \textbf{Equal Opportunity (EO)} requiere que la proporción de verdaderos positivos sea la misma en todos los subgrupos: $P(Y^p=1 | Y=1, S=0) = P(Y^p=1 | Y=1, S=1)$
+    \item \textbf{Equalized Odds (EOdd)} requiere igual proporción de falsos positivos, además de EO
+    \item \textbf{Statistical Parity (SP)} requiere que las predicciones positivas no se vean afectadas por el valor del atributo protegido, sin tomar en cuenta la clasificación correcta: $P(Y^p=1 | S=0) = P(Y^p=1 | S=1)$
 \end{itemize}
 
-Los tradoff inherentes a cada nocion de fairness han sido estudiados extensamente \parencite{dwork2012fairness, friedler2016possibility, kleinberg2018inherent}. Escoger la definicion correcta para un problema determinado es dificil, y en la practica no puede ser delegado a un agente automatico. En su lugar, una decision humana es preferida para asegurar una decision informada.
+Las concesiones inherentes a utilizar cada noción de equidad han sido estudiados extensamente \parencite{dwork2012fairness, friedler2016possibility, kleinberg2018inherent}.
+Escoger la definición correcta para un problema determinado es difícil, y en la práctica no puede ser delegado a un agente automático.
+En su lugar, una decisión humana es preferida para asegurar una decisión informada.
 
-\section{Mitigacion de sesgos}\label{section:mitigation}
-% - sec2. Mitigation. Preproc, PostProc, inProc, meta. Ejemplos y explicar.
+\section{Mitigación de sesgos}\label{section:mitigation}
 
 %% From FBO
 
-Las tecnicas de mitigacion de sesges pueden ser divididas fundamentalmente en pre-procesamiento, in-procesamiento, post-procesamiento. 
+Las técnicas de mitigación de sesgos pueden ser divididas fundamentalmente en técnicas de pre-procesamiento, post-procesamiento y técnicas durante el procesamiento. Adicionalmente un conjunto de técnicas llamadas meta-algoritmos han surgido recientemente, presentando muy buenos resultados.
 
-Los metodos del primer grupo logran equidad modificando la representacion de los datos, i.e., pre-procesando los datos, y luago adoptan una solucion de machine learning estandard \parencite{nips2017preproc, Kamiran2011DataPT, zemel2013learning}. Por ejemplo aprender una representacion a partir de resolver un problema de optimzacion con dos objetivos, codificar la informacion preservando la mayor cantidad de informacion posible y ofuscar al mismo tiempo la pertenencia al conjunto de atributos protegidos \parencite{zemel2013learning}. Los metodos de pre-procesamiento son agnosticos al modelo, pero sus hiperparametros, asi como los del modelos de aprendizaje de maquina seleccionado todavia necesitan ser ajustados para mejor rendimiento.
+Las técnicas de pre-procesamiento logran equidad modificando la representación de los datos, es decir, pre-procesando los datos, y luego adoptan una solución de aprendizaje automático estándar \parencite{nips2017preproc, Kamiran2011DataPT, zemel2013learning}.
+Por ejemplo, aprender una representación a partir de resolver un problema de optimización con dos objetivos, codificar la información preservando la mayor cantidad de información posible y ofuscar al mismo tiempo la pertenencia al conjunto de atributos protegidos \parencite{zemel2013learning}.
+Los métodos de pre-procesamiento son agnósticos al modelo, pero sus hiperparámetros, así como los del modelos de aprendizaje automático seleccionado todavía necesitan ser ajustados para mejor rendimiento.
 
-El segundo grupo de la familia consiste de en metodos de in-procesamiento que se aseguran que se cumplan ciertas restricciones de equidad durante el entrenamiento (e.g. \parencite{donini2018empirical, zafar2017fairness, zafar2019fairness}), sin embargo solo es aplicable a una cierta clase de modelos. Por ejemplo el algoritmo aplicado en \parencite{donini2018empirical} solo puede ser aplicado a \textit{kernel machines} (tales como \textit{maquinas de soporte vectorial}), y solo a una unica definicion de equidad (i.e., EO). Aunque metodos de in-procesamiento pueden brindar muy buenos resultados para la clase del modelo que estan diseñados, frecuentemente son dificiles, o a veces imposible de extender para nuevas clases de modelos. Estos metodos tambien pueden introducir nuevos hiper-parametros que podrian requerir conocimiento especificos del dominio y experimentacion.
+Los métodos aplicados durante el procesamiento se aseguran que se cumplan ciertas restricciones de equidad durante el entrenamiento (e.g. \parencite{donini2018empirical, zafar2017fairness, zafar2019fairness}), sin embargo solo es aplicable a una cierta clase de modelos.
+Por ejemplo el algoritmo aplicado en \parencite{donini2018empirical} solo puede ser aplicado a \emph{kernel machines} (tales como \emph{maquinas de soporte vectorial}), y solo a una única definición de equidad (i.e., \emph{EO}).
+Aunque las técnicas de mitigación durante el procesamiento pueden brindar muy buenos resultados para la clase del modelo que están diseñados, frecuentemente son difíciles, o a veces imposible de extender para nuevas clases de modelos.
+Estos métodos también pueden introducir nuevos hiperparámetros que podrían requerir conocimiento específicos del dominio y experimentación.
 
-Las tecnicas de post-procesamiento operan ajustando el umbral de decision de modelos pre-entrenados para eventualmente lograr resultados mas justos respecto a una metrica de equidad dada. El principal problema es que post-procecesar el umbral de decision es inherentemente suboptimo y puede llevar a peores tradeoffs de eficacia y equidad. Lo que es mas, estas tecnicas no son utilizables si la informacion sensible no esta disponible en el momento de realizar las predicciones, lo cual a su vez puede llevar a problemas legales por la utilizacion de informacion sensible para realizar predicciones \parencite{MacCarthy2018StandardsOF}.
+Las técnicas de post-procesamiento operan ajustando el umbral de decisión de modelos pre-entrenados para eventualmente lograr resultados más justos respecto a una métrica de equidad dada.
+El principal problema es que post-procesar el umbral de decisión es inherentemente subóptimo y puede llevar a peores balances de eficacia y equidad.
+Adicionalmente, estas técnicas no son utilizables si la información sensible no esta disponible en el momento de realizar las predicciones, lo cual a su vez puede llevar a problemas legales por la utilización de información sensible para realizar predicciones \parencite{MacCarthy2018StandardsOF}.
 
-Una clase de metodos recientemente propuesta para tareas de clasificacion justa, conocida como meta-algoritmos, reduce la tarea de clasificacion justa a una secuenia de problemas de clasificación con costo asociado a sus errores de predicción \parencite{agarwal2018reductions, agarwal2019fair, kearns2018preventing}. Las soluciones a estos problemas producen un clasificador \textit{randomizado}. Contrario alos metodos de \textit{in-procesamiento}, los meta-algoritmos no dependen de la tipo del modelo que se utiliza en el clasificador, sino en la capacidad de los mismos para ser re-entrenados repetidamente. En el contexto de algoritmos de minimizacion del riesgo empirico, estos metodos son agnosticos al modelo de aprendizaje de maquina, pero aun necesitan implementaciones especificas basadas en la definicion de equidad seleccionada y necesitan producir un ensamblado de modelos. Limitaciones similares caracterizan un numero de enfoques que utilizan optimizacion \parencite{chiappa2018causal,Dimitrakakis_Liu_Parkes_Radanovic_2019} o inferencia bayesiana \parencite{kearns2018preventing,thomas2019preventing}, sus implementaciones tienen que estar diseñadas especificamente para ciertas definiciones de equidad.
+Una clase de métodos recientemente propuesta para tareas de clasificación justa, conocida como meta-algoritmos, reduce la tarea de clasificación justa a una secuencia de problemas de clasificación con costo asociado a sus errores de predicción \parencite{agarwal2018reductions, agarwal2019fair, kearns2018preventing}.
+Las soluciones a estos problemas producen un clasificador \emph{randomizado}. Contrario a los métodos que funcionan durante el procesamiento, los meta-algoritmos no dependen del tipo de los modelos que se utilizan en el clasificador, sino en la capacidad de los mismos para ser reentrenados repetidamente.
+En el contexto de algoritmos de minimización del riesgo empírico, estos métodos son agnósticos al modelo de aprendizaje automático, pero aun necesitan implementaciones específicas basadas en la definición de equidad seleccionada y necesitan producir un ensamblado de modelos. Limitaciones similares caracterizan un número de enfoques que utilizan optimización \parencite{chiappa2018causal,Dimitrakakis_Liu_Parkes_Radanovic_2019} o inferencia bayesiana \parencite{kearns2018preventing,thomas2019preventing}, sus implementaciones tienen que estar diseñadas específicamente para ciertas definiciones de equidad.
 
 % TODO:
 % - Bayesian Optimization
 % - Ferm
 % - Zafar
 
-\section{Metodos de ensamblado}\label{section:ensembles}
+\section{Métodos de ensamblado}\label{section:ensembles}
 
-Los metodos de ensamblado estan diseñados para intentar resolver el problema de \textit{low bias/high variance} que muestran la mayoria de los modelos de aprendizaje de maquina, haciendolos apropieados para modelos de clasificacion mas robustos \parencite{polikar2006ensemble}. Un modelo de ensamblado esta diseñado de muchos modelos con \textit{low bias} cuyas predicciones son combinadas para producir una prediccion final. Se asume fundamentalemente que la combinacion de varias predicciones de bajo nivel producira una salida con baja varianza mientras mantiene un low bias. Tener un conjunto diverso de modelos de bajo nivel es una caracteristica fundamental para lograr esto \parencite{polikar2006ensemble}. Sin embargo, esto requiere, que clasificadores individuales cometan errores en diferentes instancias. La intuicion es que si cada clasificador comete diferentes errores, entonces una combinacion estrategica de estos clasificadores puede reducir el error total. Luego, es necesario lograr que cada clasificador sea lo mas unico posible, particularmente con respecto a ejemplos erroneamente clasificados.
+Los métodos de ensamblado están diseñados para intentar resolver el problema de \emph{low bias}~/~\emph{high variance} que muestran la mayoría de los modelos de aprendizaje automático, haciéndolos apropiados para modelos de clasificación más robustos \parencite{polikar2006ensemble}.
+Un modelo de ensamblado está diseñado de muchos modelos con \emph{low bias} cuyas predicciones son combinadas para producir una predicción final.
+Se asume fundamentalmente que la combinación de varias predicciones de bajo nivel producirá una salida con baja varianza mientras mantiene un \emph{low bias}.
+Tener un conjunto diverso de modelos de bajo nivel es una característica fundamental para lograr esto \parencite{polikar2006ensemble}.
+Sin embargo, esto requiere, que clasificadores individuales cometan errores en diferentes instancias.
+La intuición es que si cada clasificador comete diferentes errores, entonces una combinación estratégica de estos clasificadores puede reducir el error total. Luego, es necesario lograr que cada clasificador sea lo mas único posible, particularmente con respecto a ejemplos erróneamente clasificados.
 
-La naturaleza de multiples hipotesis de estos modelos asegura que, si son ajustados lo suficiente, tendran resultados mejores que cualquiera de los modelos individuales en el caso general. Esto les permite tambien estimar el grado de confianza o calidad de las predicciones que producen. Las tecnicas clasicas de ensamblado incluyen \textit{voting} and \textit{weighted voting} \parencite{dietterich2000ensemble}, boosting \parencite{schapire1990strength}, y bagging \parencite{breiman1996bagging}.
+La naturaleza de múltiples hipótesis de estos modelos asegura que, si son ajustados lo suficiente, tendrán resultados mejores que cualquiera de los modelos individuales en el caso general. Esto les permite también estimar el grado de confianza o calidad de las predicciones que producen. Las técnicas clásicas de ensamblado incluyen \emph{voting} y \textit{weighted voting} \parencite{dietterich2000ensemble}, \emph{boosting} \parencite{schapire1990strength}, y \emph{bagging} \parencite{breiman1996bagging}.
 
-En un problema de clasificacion, \textit{voting} produce como salidao la etiqueta que tiene la mayoria de los votos, tratando cada prediccion de los modelos ensamblados como un voto. \textit{Weighted-voting} funciona de forma similar a \textit{voting}, pero cada modelo del ensamblado es asignado un \textit{peso} que indica la importancia de su voto. \textit{Boosting} ejecuta un proceso iterativo donde los modelos son entrenados secuencialmente, cada uno tratando de mejorar su rendimineto en los ejemplos entrenantes donde los modelos anteriores tuvieron peor rendimiento. Durante este proceso, cada sub-modelo es tambien asignado un peso que marca la importancia de su prediccion. \textit{Bagging} entrena cada sub-modelo en una seleccion diferente (con reemplazo) de los ejemplos entrenantes originales. De esta forma, el modelo con una alta varianza deberia producir modelos entrenados con alta diversidad. Alternativamente, \textit{feature bagging} funciona de forma similar, seleccionando un subconjunto de los features en lugar de los ejemplos entrenantes, causando que features correlacionados sean analizados de forma separada en algunos sub-modelos.
+En un problema de clasificación, \emph{voting} produce como salida la etiqueta que tiene la mayoría de los votos, tratando cada predicción de los modelos ensamblados como un voto.
+\emph{Weighted-voting} funciona de forma similar a \emph{voting}, pero cada modelo del ensamblado es asignado un \emph{peso} que indica la importancia de su voto.
+\emph{Boosting} ejecuta un proceso iterativo donde los modelos son entrenados secuencialmente, cada uno tratando de mejorar su rendimiento en los ejemplos entrenantes donde los modelos anteriores tuvieron peor rendimiento.
+Durante este proceso, cada sub-modelo es también asignado un peso que marca la importancia de su predicción.
+\textit{Bagging} entrena cada submodelo en una selección diferente (con reemplazo) de los ejemplos entrenantes originales.
+De esta forma, el modelo con una alta varianza debería producir modelos entrenados con alta diversidad.
+Alternativamente, \textit{feature bagging} funciona de forma similar, seleccionando un subconjunto de características en lugar de los ejemplos entrenantes, causando que características correlacionados sean analizados de forma separada en algunos submodelos.
 
-Las capacidad de los metodos de ensamblado para construir modelos mas robustos los ha hecho apropiados para multiples aplicaciones. El dominio de la salud es uno de los ejemplos donde estos metodos han sido aplicados con gran exito. Por ejemplo, una aplicacion hibrida de metodos de ensamblado con redes neuronales en un entorno de aprendizaje for reforzamiento es presentada para al prediccion de infeccion de COVID-19 con gran precision \parencite{JIN2022105560}. De forma similar, un metodo de toma de decision multi-criterio basado en ensemblados es propuesto para la deteccion de COVID-19 a partir del sonido de la tos en pacientes \parencite{CHOWDHURY2022105405}. Existen ejemplos tambien no relacionados a la medicina, por ejemplo, en \parencite{livieris2020ensemble} se emplearon estrategias de ensamblado como \textit{ensemble-averaging}, \textit{bagging} y \textit{stacking} con metodologias avanzadas de aprendizaje profundo para predecir los precios, a nivel de hora, de criptomonedas como \textit{Ethereum}, \textit{Bitcoin} y \textit{Ripple}.
+Las capacidad de los métodos de ensamblado para construir modelos más robustos los ha hecho apropiados para múltiples aplicaciones.
+El dominio de la salud es uno de los ejemplos donde estos métodos han sido aplicados con gran éxito.
+Por ejemplo, una aplicación híbrida de métodos de ensemble con redes neuronales en un entorno de aprendizaje por reforzamiento es presentada para al predicción de infección de COVID-19 con gran precisión \parencite{JIN2022105560}.
+De forma similar, un método de toma de decisión multicriterio basado en ensembles es propuesto para la detección de COVID-19 a partir del sonido de la tos en pacientes \parencite{CHOWDHURY2022105405}.
+Existen ejemplos también no relacionados a la medicina, por ejemplo, en \parencite{livieris2020ensemble} se emplearon estrategias de ensemble como \textit{ensemble-averaging}, \textit{bagging} y \textit{stacking} con metodologías avanzadas de aprendizaje profundo para predecir los precios, a nivel de hora, de criptomonedas como \textit{Ethereum}, \textit{Bitcoin} y \textit{Ripple}.
 
-Una simple pero poderosa tecnica en el contexto de los metodos de ensamblado es la llamada \textit{snapshot ensemble} \parencite{huang17snapshot}. Esta tecnica genera multiples clasificadores base, entrenando una sola red neuronal mientras la hace converger de forma rapida y repetida a multiples optimos locales y salvando en cada uno de dichos puntos los parametros del modelo. Todas las redes neuronales son entonces ensambladas para producir el clasificador final. Estos \textit{snapshot ensemble} son mas robustos y precisos que las redes individuales dada su naturaleza de ensamblado, a ningun costo adicional de entrenamiento.
+Una simple pero poderosa técnica en el contexto de los métodos de ensamblado es la llamada \textit{snapshot ensemble} \parencite{huang17snapshot}. Esta técnica genera múltiples clasificadores base, entrenando una sola red neuronal mientras la hace converger de forma rápida y repetida a múltiples óptimos locales y salvando en cada uno de dichos puntos los parámetros del modelo. Todas las redes neuronales son entonces ensambladas para producir el clasificador final. Estos \textit{snapshot ensemble} son mas robustos y precisos que las redes individuales dada su naturaleza de ensamblado, a ningún costo adicional de entrenamiento.
 
-\section{Metodos de Aprendizaje de Maquina Automatico}\label{section:automl}
-% - sec3o4. AutoML
+\section{Métodos de AutoML}\label{section:automl}
 
-Aprendizaje de Maquina Automatico (Auto-ML) es el proceso de automatizar la solucino de problemas del mundo real a traves de tecnicas de aprendizaje de maquina. El proceso involucra eliminar la necesidad de humanos expertos en aprendizaje de maquina para seleccionar apropiadamente las caracteristicas, flujos, paradigmas, algoritmos y sus hiperparametros para resolver un problema \parencite{Dimitrakakis_Liu_Parkes_Radanovic_2019}. Las prinicpales ventajas de las tecnologias de AutoML incluyen: (1) reducir el tiempo empleado en resolver problemas bien estudiados; y, (2) eliminar la necesidad de conocimiento experto. Adicionalmente, estas tecnologias tienden a generar soluciones mas simples que a menudo tienen mejor desempeño que soluciones diseñadas por humanos.
+AutoML (del inglés \textit{Automated Machine Learning}) es el proceso de automatizar la solución de problemas del mundo real a través de técnicas de aprendizaje automático.
+El proceso involucra eliminar la necesidad de humanos expertos en aprendizaje automático para seleccionar apropiadamente las características, flujos, paradigmas, algoritmos y sus hiperparámetros para resolver un problema \parencite{Dimitrakakis_Liu_Parkes_Radanovic_2019}.
+Las principales ventajas de las tecnologías de AutoML incluyen:
+(1) reducir el tiempo empleado en resolver problemas bien estudiados; y,
+(2) eliminar la necesidad de conocimiento experto.
+Adicionalmente, estas tecnologías tienden a generar soluciones más simples que a menudo tienen mejor desempeño que soluciones diseñadas por humanos.
 
-Multiples tecnologias han sido propuestas para resolver el problema de Auto-ML. Auto-Weka~\parencite{autoweka} fue una de las primeras soluciones presentadas. Esta está basada en el software Weka \parencite{weka}, un software construido a partir de varias herramientas de visualizacion y algoritmos para analisis de datos y modelacion predictiva. \textit{Auto-Weka} resuelve el problema de \textit{Auto-ML} como un problema CASH segun definido a continuacion.
+Múltiples tecnologías han sido propuestas para resolver el problema de AutoML. AutoWeka~\parencite{autoweka} fue una de las primeras soluciones presentadas.
+Esta solución está basada en el software Weka~\parencite{weka}, un software construido a partir de varias herramientas de visualización y algoritmos para análisis de datos y modelación predictiva. \textit{AutoWeka} resuelve el problema de \textit{AutoML} como un problema \emph{CASH} según definido a continuación.
 
 \begin{definition}
 \label{definition:cash}
-
-    Sea $A = \{A^{(1)}, \dots, A^{(R)}\}$ un conjunto de algoritmos, y sea $\Lambda^{(j)}$ el dominio de los hiperparametros del algoritmo $A^{(j)}$. Sea, $D = \{(x_1, y_1), \dots, (x_n, y_n)\}$ el conjunto de entrenamiento, el cual es dividido en $K$ cross-validation folds de la forma $\{D_{valid}^{(1)}, \dots, D_{valid}^{(K)}\}$ y $\{D_{train}^{(1)}, \dots, D_{train}^{(K)}\}$ tal que $D_{train}^{(i)} = D \setminus D_{valid}^{(i)}$ para todo $i = 1, \dots, K$. Finalmente, denotese $L(A_{\lambda}^{(j)}, D_{train}^{(i)},D_{valid}^{(i)})$ la perdida del algoritmo $A^{(j)}$ en $D_{valid}^{(i)}$ con hiperparametros $\lambda$. Entonces, el problema de \textit{Seleccion de Algoritmo y Optimizacion de Hiperparametros Combinado (CASH)} es encontrar la configuracion conjunta de algoritmo e hiperparametros que minimiza la perdida:
+    Sea $A = \{A^{(1)}, \dots, A^{(R)}\}$ un conjunto de algoritmos, y sea $\Lambda^{(j)}$ el dominio de los hiperparámetros del algoritmo $A^{(j)}$.
+    Sea, $D = \{(x_1, y_1), \dots, (x_n, y_n)\}$ el conjunto de entrenamiento, el cual es dividido en $K$ \emph{cross-validation folds} de la forma $\{D_{valid}^{(1)}, \dots, D_{valid}^{(K)}\}$ y $\{D_{train}^{(1)}, \dots, D_{train}^{(K)}\}$ tal que $D_{train}^{(i)} = D \setminus D_{valid}^{(i)}$ para todo $i = 1, \dots, K$. Finalmente, denótese $L(A_{\lambda}^{(j)}, D_{train}^{(i)},D_{valid}^{(i)})$ la perdida del algoritmo $A^{(j)}$ en $D_{valid}^{(i)}$ con hiperparámetros $\lambda$.
+    Entonces, el problema de \textit{Selección de Algoritmo y Optimización de Hiperparámetros Combinado (CASH)} es encontrar la configuración conjunta de algoritmo e hiperparámetros que minimiza la perdida:
 
     \begin{equation}
         A^{\star}, \lambda_{\star} \in argmin_{A^{(j)}, \lambda \in \Lambda^(j)} \frac{1}{K} \sum_{i=1}^K L(A_{\lambda}^{(j)}, D_{train}^{(i)},D_{valid}^{(i)})
     \end{equation}
 \end{definition}
 
-Otros sistemas populares de Auto-ML son Auto-Sklearn \parencite{feurer2015efficient} y Auto-Keras \parencite{autoKeras}. Estos sistemas estan basados en las bibliotecas de aprendizaje de maquina, \textit{Scikit-Learn} \parencite{pedregosa2011scikit} y \textit{Keras} \parencite{chollet2015keras} respectivamente. Ambos sistemas proveen una interfaz para encontrar la mejor arquitectura de aprendizaje de maquina para resolver un problema. Una diferencia fundamental entre ellos es la forma en que sus espacios de busqueda son definidos. Mientras Auto-SkLearn explora espacio de busqueda condicional, i.e., un espacio con algunos hiperparametros condicionados a otros, Auto-Keras realiza una Busqueda de Arqutectura Neuronal (NAS \parencite{NAS}), la cual implica explorar espacios jerarquicos de complejidad arbitraria.
+Otros sistemas populares de AutoML son AutoSklearn \parencite{feurer2015efficient} y AutoKeras \parencite{autoKeras}.
+Estos sistemas están basados en las bibliotecas de aprendizaje automático, \textit{ScikitLearn} \parencite{pedregosa2011scikit} y \textit{Keras} \parencite{chollet2015keras} respectivamente.
+Ambos sistemas proveen una interfaz para encontrar la mejor arquitectura de aprendizaje automático para resolver un problema.
+Una diferencia fundamental entre ellos es la forma en que sus espacios de búsqueda son definidos.
+Mientras AutoSkLearn explora espacio de búsqueda condicional, es decir, un espacio con algunos hiperparámetros condicionados a otros, AutoKeras realiza una \emph{Busqueda de Arqutectura Neuronal (NAS)}~\parencite{NAS}, la cual implica explorar espacios jerárquicos de complejidad arbitraria.
 
-AutoGOAL \parencite{autogoal, estevez2020general} es una de las mas recientes contribucinoes al campo del Auto-ML. AutoGOAL es un sistema que utiliza tecnicas heterogeneas para resolver el problema CASH. La escencia de AutoGOAL radica en su espacio personalizable de pipelines y su pool de algoritmos de busqueda, que son usados para encontrar la mejor configuracion para resolver un problema. Cada pipeline esta definido como un conjunto de algoritmos interconectados que traducen una entrada predefinida a su salida correspondiente. El espacio de pipelines comprende no solo el conjunto de algoritmos, sino tambien sus hiperparametros.
+AutoGOAL \parencite{autogoal, estevez2020general} es una de las mas recientes contribuciones al campo del AutoML. AutoGOAL es un sistema que utiliza técnicas heterogéneas para resolver el problema CASH.
+La esencia de AutoGOAL radica en su espacio personalizable de flujos y su conjunto de algoritmos de búsqueda, que son usados para encontrar la mejor configuración para resolver un problema.
+Cada flujo está definido como un conjunto de algoritmos interconectados que traducen una entrada predefinida a su salida correspondiente.
+El espacio de flujos comprende no solo el conjunto de algoritmos, sino también sus hiperparámetros.
 
-Multiples fuentes de algoritmos estan incluidos en el espacio de AutoGOAL, tales como \textit{Scikit-Learn}\parencite{pedregosa2011scikit}, \textit{NLTK}\parencite{nltk}, \textit{Keras}\parencite{chollet2015keras}, y \textit{Pytorch}\parencite{paszke2019pytorch}. Sin embargo, AutoGOAL carece de la habilidad de combinar multiples end-to-end pipelines para generar una solucion. Esta limitacion puede ser superada con la utilizacion de ensamblados.
+Múltiples fuentes de algoritmos están incluidos en el espacio de AutoGOAL, tales como \textit{ScikitLearn}\parencite{pedregosa2011scikit}, \textit{NLTK}\parencite{nltk}, \textit{Keras}\parencite{chollet2015keras}, y \textit{Pytorch}\parencite{paszke2019pytorch}.
+Sin embargo, AutoGOAL carece de la habilidad de combinar múltiples flujos de extremo a extremo para generar una solución.
+Esta limitación puede ser superada con la utilización de ensembles.
 
-El proceso fundamental de optimizacion utilizado en AutoGOAL en estos momentos esta baasado en una tecnica de continua optimizacion con Evolucion Gramatical para gramaticas probabilistas libres del contexto \parencite{megane2021probabilistic}. El proceso consiste de un cilo de generacion y evaluacion, utilizando una gramatica $G$ apropiada para describir el problema de aprendizaje de maquina qe se intenta resolver. En cada iteracion un conjunto de $N$ pipelines es generados a partir de samplear la gramatica $G$ de acuerdo a las probabilidades $\theta$ asignadas a cada produccion. Estas probabilidades son inicializadas con una distribucion uniforme $\theta_0$ para todas las producciones. Cada pipeline es evaluado (lo cual consiste simplemente en entrenamiento y ejecucion), y los de mejor desempeño son utilizados para modificar $\theta$, con el objetivo de maximizar la probabilidad de que estos sean generados. Este proceso se ilustra en el algoritmo 
+El proceso fundamental de optimización utilizado en AutoGOAL en estos momentos esta basado en una técnica de optimización con Evolución Gramatical para gramáticas probabilistas libres del contexto \parencite{megane2021probabilistic}.
+El proceso consiste de un ciclo de generación y evaluación, utilizando una gramática $G$ apropiada para describir el problema de aprendizaje de maquina que se intenta resolver.
+En cada iteración un conjunto de $N$ flujos es generado a partir de tomar muestras de la gramática $G$ de acuerdo a las probabilidades $\theta$ asignadas a cada producción.
+Estas probabilidades son inicializadas con una distribución uniforme $\theta_0$ para todas las producciones.
+Cada flujo es evaluado (lo cual consiste simplemente en entrenamiento y ejecución), y los de mejor desempeño son utilizados para modificar $\theta$, con el objetivo de maximizar la probabilidad de que estos sean generados. Este proceso se ilustra en el algoritmo 
 
 \begin{algorithm}[htb!]
     \caption{PGE\label{algorithm:pge}}
 
-    $N$ $\leftarrow$ tamaño de la poblacion \\
-    $n$ $\leftarrow$ numero de individuos seleccionados en cada iteracion \\
+    $N$ $\leftarrow$ tamaño de la población \\
+    $n$ $\leftarrow$ numero de individuos seleccionados en cada iteración \\
     $\alpha$ $\leftarrow$ factor de aprendizaje \\
-    $G$ $\leftarrow$ gramatica que describe los pipelines de aprendizaje de maquina a explorar \\
+    $G$ $\leftarrow$ gramática que describe los flujos de aprendizaje de maquina a explorar \\
     $\theta_0$ $\leftarrow$ probabilidades iniciales (uniforme) \\
-    $f$ $\leftarrow$ funcion de fitness (entrenamiento y evaluacion de pipelines) \\
+    $f$ $\leftarrow$ función de \emph{fitness} (entrenamiento y evaluación de flujos) \\
 
     \SetKwData{best}{\textit{best}}
 
     $\best \leftarrow none$
 
-    \For{cada iteracion $i$}{
-        $P_i$ $\leftarrow$ generar poblacion utilizando gramatica G, con probabilidades $\theta_{i-1}$ \\
-        \For{cada solucion $S \in P_i$}{
-            $f(S)$ $\leftarrow$ calcular fitness de $S$ (evaluar el pipeline) \\
+    \For{cada iteración $i$}{
+        $P_i$ $\leftarrow$ generar población utilizando gramática $G$, con probabilidades $\theta_{i-1}$ \\
+        \For{cada solución $S \in P_i$}{
+            $f(S)$ $\leftarrow$ calcular \emph{fitness} de $S$ (evaluar el flujo) \\
         }
 
         $\best \leftarrow argmax_{S \in P \cup \{\best\}} \{f(S)\}$ \\
         $P_{i}^{*}$ $\leftarrow$ seleccionar los $n$ mejores individuos de $P_i$ \\
-        $\theta_i^{*}$ $\leftarrow$ calcular la distribucion marginal de $P^{*}$ \\
+        $\theta_i^{*}$ $\leftarrow$ calcular la distribución marginal de $P^{*}$ \\
         $\theta_i \leftarrow \alpha \theta_i^{*} + (1-\alpha)\theta_{i-1}$ \\
     }
     \Return{\best} \\
 \end{algorithm}
 
 
-\section{Optimizacion Multiobjetivo}\label{section:multiobjective}
+\section{Optimización Multiobjetivo}\label{section:multiobjective}
 
-Los metodos de optimizacion multiobjetivo son aquellos que exploran el espacio de busqueda optimizando simultaneamente diferentes funciones.
+Los métodos de optimización multiobjetivo son aquellos que exploran el espacio de búsqueda optimizando simultáneamente diferentes funciones.
 
-\begin{definition}[Optimizacion Multiobjetivo]
+\begin{definition}[Optimización Multiobjetivo]
 \label{definition:multiobjective}
 
-    Dadas $m$ funciones objetivo $f_1: X \rightarrow \mathbf{R}, \dots, f_m: X \rightarrow \mathbf{R}$ las cuales traducen el espacion $X$ en $\mathbf{R}$, un problema de optimizacion multiobjetivo esta dado es expresado de la seguiente forma:
+    Dadas $m$ funciones objetivo $f_1: X \rightarrow \mathbf{R}, \dots, f_m: X \rightarrow \mathbf{R}$ las cuales traducen el espacio $X$ en $\mathbf{R}$, un problema de optimización multiobjetivo esta dado es expresado de la siguiente forma:
 
     \begin{equation}
         minimizar f_1(x), \dots, minimizar f_m(x), x \in X
     \end{equation}
 \end{definition}
 
-Al trabajar con multiples funciones objetivos es necesario encontrar formas de comparar dos soluciones en el espacio de soluciones factibles. El concepto de \textit{Pareto dominaci\'on} juega un papel fundamental en el ambito de la optimizacion multiobjetivo, dado que permite comparar objetivamente dos vectores de forma precisa, sin requerir informacion adicional de preferencia.
+Al trabajar con múltiples funciones objetivos es necesario encontrar formas de comparar dos soluciones en el espacio de soluciones factibles.
+El concepto de \textit{Pareto dominación} juega un papel fundamental en el ámbito de la optimización multiobjetivo, dado que permite comparar objetivamente dos vectores de forma precisa, sin requerir información adicional de preferencia.
 
-\begin{definition}[Pareto Dominaci\'on]
+\begin{definition}[Pareto Dominación]
 \label{definition:pareto-dominance}
 
-    Dados dos vectores en el espacio objetivo, digase $y^{(1)}, y^{(2)} \in \mathbf{R}^m$ , entonces el punto $y^{(1)}$ se dice que \emph{pareto-domina} a $y^{(2)}$ si y solo si:
+    Dados dos vectores en el espacio objetivo, dígase $y^{(1)}, y^{(2)} \in \mathbf{R}^m$ , entonces el punto $y^{(1)}$ se dice que \textbf{\textit{pareto-domina}} a $y^{(2)}$ si y solo si:
 
     \begin{equation}
         \forall_{i\in\{1,\dots,m\}}: y_i^{(1)} \leq y_i^{(2)} y \exists_{j\in\{1,\dots,m\}}: y_j^{(1)} \le y_j^{(2)}
@@ -132,39 +183,62 @@ Al trabajar con multiples funciones objetivos es necesario encontrar formas de c
 
 \begin{definition}[Frente pareto]
 \label{definition:pareto-front}
-    Todos aquellos vectores $x$ del espacio objetivo tal que no exista otro vector $y$ en el espacio objetivo que pareto-domine a $x$.
+    Todos aquellos vectores $x$ del espacio objetivo tal que no exista otro vector $y$ en el espacio objetivo que \textbf{pareto-domine} a $x$.
 \end{definition}
 
-Tradicionalmente los problemas de optimizacion multiobjetivo han sido atacados utilizando tecnicas de escalarizacion (e.g. \parencite{miettinen2012nonlinear}), estas tecnicas consisten en de alguna forma combinar todas las funciones objetivos en una sola, o reescribirlas como restricciones. Varias tecnicas existen en este contexto. \textit{Linear Weighting} es una de estas, en la cual se construye una nueva funcion objetivo a partir de la combinacion lineal de las funciones objetivo del problema original, i.e. $min \sum w_i f_i(x), x \in X$. Este enfoque tiene un problema fundamental y es que si el frente pareto no es convexo, no es posible encontrar soluciones en esta zona, no importa los pesos $w_i$ que se utilicen. Otra forma de escalarizacion es \textit{$\epsilon$-constrain}, esta tecnica selecciona una funcion como la \textit{principal} y las demas se establecen como restricciones al conjunto de soluciones factibles, exigiendo que sean menores que un $\epsilon$.
+Tradicionalmente los problemas de optimización multiobjetivo han sido atacados utilizando técnicas de escalarización (e.g. \parencite{miettinen2012nonlinear}), estas técnicas consisten en de alguna forma combinar todas las funciones objetivos en una sola, o reescribirlas como restricciones.
+Varias técnicas existen en este contexto. \textit{Linear Weighting} es una de estas, en la cual se construye una nueva función objetivo a partir de la combinación lineal de las funciones objetivo del problema original, esto es $min \sum w_i f_i(x), x \in X$.
+Este enfoque tiene un problema fundamental y es que si el \emph{frente pareto} no es convexo, no es posible encontrar soluciones en esta zona, no importa los pesos $w_i$ que se utilicen.
+Otra forma de escalarización es \textit{$\epsilon$-constrain}, esta técnica selecciona una función como la \textit{principal} y las demás se establecen como restricciones al conjunto de soluciones factibles, exigiendo que sean menores que un $\epsilon$.
 
-Existen metodos numericos que intentan resolver el problema haciendo cumplir las condiciones de Karush-Kuhn-Tucker \parencite{kuhn2014nonlinear}. La idea va de encontrar al menos una solucion del sistema de ecuaciones que se produce al tratar el problema de \textit{KKT}. Es posible utilizar metodos de continuacion y homotopia para obtener todas las soluciones \parencite{hillermeier2001nonlinear, schutze2005continuation}. Estos metodos require que las soluciones satisfagan condiciones de convexidad local y diferenciabilidad.
+Existen métodos numéricos que intentan resolver el problema haciendo cumplir las condiciones de \emph{Karush-Kuhn-Tucker} \parencite{kuhn2014nonlinear}.
+La idea va de encontrar al menos una solución del sistema de ecuaciones que se produce al tratar el problema de \textit{KKT}.
+Es posible utilizar métodos de continuación y homotopía para obtener todas las soluciones \parencite{hillermeier2001nonlinear, schutze2005continuation}.
+Estos métodos requiere que las soluciones satisfagan condiciones de convexidad local y diferenciabilidad.
 
 \subsection{NSGA-II}
 
-Los algoritmos geneticos utilizaan paradigmas basados en procesos evolutivos naturales, como \textit{seleccion natural}, \textit{mutaci\'on} y \textit{recombinaci\'on} para mover un poblacion (conjunto de vectores de decision) a soluciones optimas o casi optimas \parencite{back1996evolutionary}. Los algoritmos geneticos multiobjetivos generalizan esta idea y son diseñados para en cada iteracion acercarse mas al frente pareto. En este contexto destaca \emph{NSGA-II} \parencite{deb2002nsgaii}, el cual se explica en mayor detalle a continuacion.
+Los algoritmos genéticos utilizan paradigmas basados en procesos evolutivos naturales, como \textit{selección natural}, \textit{mutación} y \textit{recombinación} para mover una población (conjunto de vectores de decisión) a soluciones óptimas o casi óptimas \parencite{back1996evolutionary}.
+Los algoritmos genéticos multiobjetivo generalizan esta idea y son diseñados para en cada iteración acercarse más al frente pareto.
+En este contexto destaca \emph{NSGA-II} \parencite{deb2002nsgaii}, el cual se explica en mayor detalle a continuación.
 
-El algoritmo consiste basicamente de un ciclo generacional que se divide en dos partes. En la primera parte, la poblacion pasa por un proceso de variacion. En la segunda parte, un proceso de seleccion toma lugar, el cual resultaen la poblacion de la nueva generacion. Este proceso se repite hasta que se cumple algun criterio de convergencia o se excede una cantidad de computo predefinida.
+El algoritmo consiste básicamente de un ciclo generacional que se divide en dos partes.
+En la primera parte, la población pasa por un proceso de variación.
+En la segunda parte, un proceso de selección toma lugar, el cual resulta en la población de la nueva generación.
+Este proceso se repite hasta que se cumple algún criterio de convergencia o se excede una cantidad de computo predefinida.
 
-En la parte de la variacion, $\lambda$ nuevos individuos son generados. Para cada uno de ellos dos padres son seleccionados de la poblacion actual $P_t$. Para escoger estos, se utiliza una seleccion de torneo binario, es decir se escogen aleatoriamente dos individuos de la poblacion y se selecciona el mejor de acuerdo a su ranking en la poblacion. Los padres son entonces recombinados utilizando un operador de combinacion, el individuo resultante es luego mutado utilizando un operador de mutacion. De esta forma es creado un nuevo conjunto $Q_t$ de individuos, los cuales son añadidos junto a la poblacion actual al conjunto de individuos a considerar para la siguiente generacion.
+En la parte de la variación, $\lambda$ nuevos individuos son generados.
+Para cada uno de ellos dos padres son seleccionados de la población actual $P_t$.
+Para escoger estos, se utiliza una selección de torneo binario, es decir se escogen aleatoriamente dos individuos de la población y se selecciona el mejor de acuerdo a su \emph{orden} en la población.
+Los padres son entonces recombinados utilizando un operador de combinación, el individuo resultante es luego mutado utilizando un operador de mutación.
+De esta forma es creado un nuevo conjunto $Q_t$ de individuos, los cuales son añadidos junto a la población actual al conjunto de individuos a considerar para la siguiente generación.
 
-La segunda fase, fase de seleccion, los $\mu$ mejores individuos son seleccionados del conjunto $P_t \cup Q_t$ utilizando un mecanismo de ranking multiobjetivo, de esta forma la poblacion de la nueva generacion $P_{t+1}$ es formada. El mecanismo de seleccion de \emph{NSGA-II} es el ingrediente fundamental que lo distingue del resto de los algoritmos geneticos que son utilizados para resolver problemas de optimizacion de un unico objetivo. Este consiste de dos niveles. Primero se realiza un \emph{non-dominated sorting}. Este depende unicamente del \emph{pareto-orden} entre los individuos. Finalmente los individuos que comparten el mismo \emph{pareto-orden} son ordenados de acuerdo al \emph{crowding-distance}, la cual es una medidad de la diversidad.
+La segunda fase, fase de selección, los $\mu$ mejores individuos son seleccionados del conjunto $P_t \cup Q_t$ utilizando un mecanismo de ordenación multiobjetivo, de esta forma la población de la nueva generación $P_{t+1}$ es formada.
+El mecanismo de selección de \emph{NSGA-II} es el ingrediente fundamental que lo distingue del resto de los algoritmos genéticos que son utilizados para resolver problemas de optimización de un único objetivo.
+Este consiste de dos niveles.
+Primero se realiza un \emph{\textbf{non-dominated sorting}}.
+Este depende únicamente del \emph{pareto-orden} entre los individuos.
+Finalmente los individuos que comparten el mismo \emph{pareto-orden} son ordenados de acuerdo al \emph{\textbf{crowding-distance}}, la cual es una medida de la diversidad.
 
 % TODO: annadir pseudocodigo de todo esto
 
 \subsubsection{Non-dominated sorting}\label{section:ndsorting}
 
-Sea $ND(P)$ el conjunto de soluciones no dominadas \ref{definition:pareto-dominance} en una poblacion $P$. \emph{Non-dominated sorting} particiona la poblacion en subconjuntos, pasado en la \emph{pareto dominacion} \ref{definition:pareto-dominance} como especifica la siguiente recursion.
+Sea $\text{ND}(P)$ el conjunto de soluciones no dominadas \ref{definition:pareto-dominance} en una población $P$.
+\emph{Non-dominated sorting} particiona la población en subconjuntos, basado en la \emph{pareto dominación} \ref{definition:pareto-dominance} como especifica la siguiente recurrencia.
 
 \begin{align}
-    R_1 &= ND(P) \\
-    R_{k+1} &= ND(P \setminus \cup_{i=1}^k R_i) \quad k = 1,2, \dots
+    R_1 &= \text{ND}(P) \\
+    R_{k+1} &= \text{ND}(P \setminus \cup_{i=1}^k R_i) \quad k = 1,2, \dots
 \end{align}
 
-Como en cada paso de la recursion al menos una solucion es eliminada de la poblacion, el numero maximo de \emph{capas} es $|P|$. El orden de una solucion esta dada por el subindice $k$ del $R_k$ en el cual queda dicha solucion.
+Como en cada paso de la recurrencia al menos una solución es eliminada de la población, el número máximo de \emph{capas} es $|P|$.
+El orden de una solución esta dado por el subíndice $k$ del $R_k$ en el cual queda dicha solución.
 
 \subsubsection{Crownding distance}\label{section:crowding-distance}
 
-Si mas de una solucion quedan en el mismo subconjunto de la poblacion $R_k$ luego de realizar la ordenacion anterior, se procesde a ordenar las soluciones dentro de dichos subconjunto a partir de su \emph{crowding distance}. Esta es calculada para una solucion $x$ como la suma de las contribuciones $c_i$ a la i-\'esima funcion objetivo:
+Si más de una solución quedan en el mismo subconjunto de la población $R_k$ luego de realizar la ordenación anterior, se procede a ordenar las soluciones dentro de dichos subconjunto a partir de su \emph{crowding distance}.
+Esta es calculada para una solución $x$ como la suma de las contribuciones $c_i$ a la i~-~ésima función objetivo:
 
 \begin{align}
     l_i(x) = \max \{ f_i(y) | y \in R \setminus \{x\} \wedge_i(y) \leq f_i(x) \} \cup \{-\infty\} \\
@@ -173,9 +247,10 @@ Si mas de una solucion quedan en el mismo subconjunto de la poblacion $R_k$ lueg
     c(x)   = \frac{1}{m} \sum_{i=1}^m c_i(x), x \in R
 \end{align}
 
-Intuitivamente mientras mas \textit{espacio} exista alrededor de una solucion, mayor sera el \emph{crowding distance} de la misma. Por tanto, aquellas soluciones con elevado \emph{crowding distance} son preferidas a aquellas con baja distancia, con el proposito de mantener la diversidad en la poblacion.
+Intuitivamente mientras mas \textit{espacio} exista alrededor de una solución, mayor sera el \emph{crowding distance} de la misma.
+Por tanto, aquellas soluciones con elevado \emph{crowding distance} son preferidas a aquellas con baja distancia, con el propósito de mantener la diversidad en la población.
 
-\section{Discusion}\label{discussion}
+\section{Discusión}\label{discussion}
 % - discusion. Aqui donde se explica como se usa todo lo q acabo de explicar.
 
 

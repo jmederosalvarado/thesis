@@ -4,7 +4,7 @@ En este capitulo se evalúa la capacidad de nuestro sistema de optimización de 
 La experimentación realizada consiste de dos etapas, en una se analiza la capacidad de la primera fase del sistema de obtener un conjunto de modelos base lo suficientemente diverso como para que ensamblar estos resultados en un modelo de mayor precisión que los modelos base.
 En la segunda etapa, se estudia si el algoritmo propuesto permite encontrar formas de ensamblar los modelos base resultantes de la primera etapa de forma tal que se obtengan valores satisfactorios tanto de precisión como en las métricas de equidad.
 
-\section{Marco Experimental}
+\section{Marco Experimental}\label{section:experimental-framework}
 
 Una primera etapa experimental se lleva a cabo con el objetivo de estudiar la capacidad del sistema de producir un conjunto de modelos base capaz de, al ser ensamblado, generalizar y obtener mejores resultados que dichos modelos base.
 Adicionalmente se desea estudiar que influencia tienen las distintas métricas de diversidad utilizadas en esta capacidad del sistema.
@@ -58,7 +58,7 @@ La mejor configuración de dichos hiper-parámetros, incluyendo la métrica de d
 La segunda etapa experimental consiste del estudio de la capacidad del sistema para lograr producir modelos de ensemble que son precisos de acuerdo a una función de perdida determinada y justos según una o varias métricas de equidad. 
 Con este fin se realiza una comparación entre los resultados obtenidos por nuestro sistema y los obtenidos por varios otros sistemas que resultan relevantes en la literatura para la solución de este problema.
 
-\subsection{Escenarios de Evaluación}
+\subsection{Escenarios de Evaluación}\label{section:evaluation-scenaries}
 
 La primera etapa experimental evalúa el sistema en la tarea \emph{HAHA 2019}(\textit{Humor Analysis based on Human Annotation}), con marco en el evento \textit{IberLEF 2019} \parencite{chiruzzo2019overview}.
 El proceso de evaluación consiste primero de la ejecución de la primera fase de nuestro sistema, esto es, la exploración del espacio de modelos y obtención del conjunto de modelos base a ser ensamblados.
@@ -69,7 +69,7 @@ Finalmente la segunda etapa experimental consiste de la ejecución de extremo a 
 En esta etapa se utiliza la mejor configuración de hiper-parámetros acorde a los resultados de la primera fase.
 Ambas fases optimizan la precisión del modelo, en particular la segunda fase incorpora al proceso de optimización métricas de equidad, dígase \emph{Statistical Parity} y \emph{Equalized Opportunity}, como funciones objetivo adicionales a optimizar simultáneamente con la precisión.
 
-\subsection{Corpus de Evaluación}
+\subsection{Corpus de Evaluación}\label{section:evaluation-corpus}
 
 Dos conjuntos de datos son utilizados para la evaluación del sistema en los experimentos realizados.
 
@@ -112,7 +112,7 @@ Las clases están desbalanceadas, con una tendencia hacia la etiqueta '$\leq50K$
 
 \end{description}
 
-\subsection{Configuración Experimental}
+\subsection{Configuración Experimental}\label{section:experimental-setup}
 
 En todos los experimentos, el sistema fue configurado para permitir que cada fase ejecutara a lo sumo $10\,000$ iteraciones o por una hora.
 Los parámetros de búsqueda de AutoGOAL fueron los siguientes:
@@ -123,35 +123,363 @@ Los parámetros de búsqueda de AutoGOAL fueron los siguientes:
     \item \texttt{validation\_split=0.3}
 \end{itemize}
 
-Debido a limitaciones de infraestructura, los algoritmos de \emph{Aprendizaje Profundo} fueron excluidos del conjunto de algoritmos disponibles para AutoGOAL, esto significa que flujos basados en \emph{Keras} y \emph{BERTA fueron excluidos y fundamentalmente} flujos basados en \emph{ScikitLearn} fueron utilizados.
-AutoGOAL es una herramienta aun en desarrollo y la ultima versión estable en el momento de realizar los experimentos (\texttt{v0.6.0}) no soporta completamente algoritmos de  \emph{Aprendizaje Profundo} en todas las arquitecturas.
+Debido a limitaciones de infraestructura, los algoritmos de aprendizaje profundo fueron excluidos del conjunto de algoritmos disponibles para AutoGOAL, esto significa que flujos basados en \emph{Keras} y \emph{BERTA fueron excluidos y fundamentalmente} flujos basados en \emph{ScikitLearn} fueron utilizados.
+AutoGOAL es una herramienta aun en desarrollo y la ultima versión estable en el momento de realizar los experimentos (\texttt{v0.6.0}) no soporta completamente algoritmos de aprendizaje profundo en todas las arquitecturas.
 
-No incluir los algoritmos de \emph{Aprendizaje Profundo} en la configuración experimental puede tener un impacto negativo en el mejor rendimiento que puede ser alcanzado por el sistema.
+No incluir los algoritmos de aprendizaje profundo en la configuración experimental puede tener un impacto negativo en el mejor rendimiento que puede ser alcanzado por el sistema.
 Es decir, el rendimiento del sistema mientras resuelve el problema puede no ser directamente comparado con otras soluciones reportadas que utilizan técnicas de \emph{Aprendizaje Profundo}.
-Sin embargo, la ausencia de estos algoritmos no deberían afectar la capacidad del sistema de mejorar la capacidad de los modelos base que son encontrados en la primera fase.
+Sin embargo, la ausencia de estos algoritmos no deberían afectar la capacidad del sistema de mejorar el rendimiento respecto a los modelos base encontrados en la primera fase.
+Por tanto, si el sistema es capaz de mejorar el rendimiento de los modelos base, entonces el rendimiento del sistema se espera que mejore un mas una vez que las arquitecturas de aprendizaje profundo sean compatibles.
+Esto se espera que ocurra no solo porque los modelos base ahora tendrían mejor rendimiento, sino también porque arquitecturas de ensemble mas poderosas serían añadidas al mismo tiempo sin esfuerzo alguno.
+AutoGOAL ya ha probado lograr resultados competitivos cuando es configurado correctamente \parencite{estevez2020automatic}.
+Además, es importante destacar que, en el caso en que se optimiza buscando un buen balance entre la precisión y las métricas de equidad, por ejemplo en la segunda fase de nuestro sistema, no necesariamente modelos mas poderosos (como los de aprendizaje profundo) implican mejores resultados en dicho balance.
 
-% TODO: Esto aun es relevante?
-%Not including deep learning algorithms in the experimental setup
-%may have a negative impact on the maximum performance achieved by the system.
-%That is, the scored performance of the system while solving a problem cannot be directly compared to other reported solutions that use deep learning techniques.
-%However, the lack of such algorithms should not affect the capacity of the system to improve
-%the performance of the pipelines found in the first phase, i.e. the base models.
-%Therefore, if  the system improves the performance of the base models, then the top performance is expected to further increase once the deep learning architectures become compatible.
-%This is expected to happen not only because the base models will now perform better, but also because more powerful ensemble architectures will be seamlessly added at the same time.
-%AutoGOAL has already be proven to achieve competitive results when set up properly~\cite{estevez2020automatic}
-
-\subsubsection{Biblioteca}
+\subsubsection{Biblioteca}\label{section:library}
 
 El sistema propuesto en este trabajo es parte de la biblioteca en desarrollo \texttt{BFair}\footnote{https://github.com/bfair-ml/bfair}
 La biblioteca tiene como objetivo atacar los problemas de sesgos que emergen de entrenar modelos de \emph{Aprendizaje Automático} que en datos que muestran sesgos de los humanos.
 
-\subsubsection{Hardware}
+\subsubsection{Hardware}\label{section:hardware}
 
 Los experimentos fueron ejecutados en un equipo con las siguientes propiedades:
-CPU Intel Core i9-9900K (-MT-MCP-) con velocidad máxima de 3651/5000 MHz, cache de 16384 KB y RAM de 64GB.
+CPU Intel Core i9-9900K (-MT-MCP-) con velocidad máxima de 3651/5000 MHz, cache de 16384KB y RAM de 64GB.
 
-\section{Resultados}
+\section{Primera Etapa Experimental}\label{section:experiments-first-phase}
+
+A continuación, la sección~\ref{section:results-first-phase} muestra los resultados de los obtenidos a partir de realizar los experimentos de la forma descrita en la sección~\ref{section:experimental-framework} para la tarea \emph{HAHA 2019}. Luego la sección~\ref{section:discussion-first-phase} realiza un análisis en profundidad de dichos resultados y arriba a conclusiones a partir de los mismos.
 
 A continuación se muestran los resultados de la primera y segunda fase experimental respectivamente, según descritas anteriormente.
 
-\subsection*{Primera Etapa Experimental}
+\subsection{Resultados}\label{section:results-first-phase}
+
+Las tablas \ref{table:haha-5}, \ref{table:haha-20}, \ref{table:haha-50}, \ref{table:haha-100} resumen los resultados obtenidos por el sistema, en la tarea \emph{HAHA 2019} correspondiente a la primera fase experimental, para configuraciones con número máximo de clasificadores base siendo $5$, $20$, $50$ y $100$ respectivamente.
+La métrica de puntuación utilizada es $F_1$ como se sugiere en la descripción de la tarea.
+Cinco estrategias de control de población fueron evaluadas con el objetivo de establecer comparaciones, de las cuales dos son las métricas de diversidad discutidas en la sección~\ref{section:diversity-meassures}, y las otras tres son las implementaciones de referencia del método \ref{code:reselect} presentados en la sección~\ref{section:first-phase}.
+Cada tabla muestra la métrica $F_1$ alcanzada por:
+(i) los oráculos optimista y sobreajustados (sección~\ref{section:experimental-framework});
+(ii) el modelo obtenido a partir de ensamblar los modelos base de acuerdo a la función de perdida con la que estos fueron entrenados (sección~\ref{section:experimental-framework}); y,
+(iii) el mejor modelo base encontrado (sección~\ref{section:first-phase}).
+Además, el tipo de algoritmo de ensemble utilizado por el mejor de los modelos de ensemble encontrados es adicionado al final de cada tabla.
+
+
+%For the experiments reported next, only the training collection is used to tune the system.
+%The testing collection is used to report unbiased scores.
+%
+%The training collection was divided into three cross-validation folds for the first phase, using a 30\% validation split.
+%Additionally, it was also divided into two pre-established training and valid collections using a 30\% validation split.
+%These pre-established collections were the ones used to measure diversity in the first phase
+%and the ensembling performance in the second phase.
+%\textcolor{black}{
+%The original testing collection of the corpus was used to report the final testing results.
+%This collection was not used during training.
+%}
+
+\begin{table}[!htb]
+    \centering
+    \resizebox{\textwidth}{!}{
+    \begin{tabular}{lccccc}
+    \toprule
+        & shuffle & arbitrary & best & disagreement & double-fault  \\ \midrule \midrule
+        oráculo optimista ($F_1$)  & 0.996   & 0.917   & 0.893   & 1.000   & 0.970 \\
+        oráculo sobreajustado ($F_1$)  & 0.715   & 0.711   & 0.744   & 0.748   & 0.754 \\ \midrule
+        % oráculo optimista ($acc.$)  & 0.997   & 0.937   & 0.915   & 1.000   & 0.977 \\
+        % oráculo sobreajustado ($acc.$)  & 0.794   & 0.794   & 0.816   & 0.795   & 0.818 \\ \midrule
+        $A^*$ ($F_1$, entrenamiento)  & 0.989   & 0.973   & 0.945   & 0.846   & 0.876 \\
+        $A^*$ ($F_1$, evaluación)  & 0.690   & 0.711   & 0.722   & 0.749   & 0.757 \\
+        $E^*$ ($F_1$, entrenamiento)  & 0.913   & 0.961   & 0.917   & 0.846   & 0.941 \\
+        $E^*$ ($F_1$, evaluación)  & 0.731   & 0.726   & 0.755   & 0.749   & 0.761 \\
+        \midrule
+        % delta (evaluación)  & 0.040   & 0.015   & 0.033   & 0.000   & 0.004 \\
+        % delta (entrenamiento)  & -0.076   & -0.012   & -0.027   & 0.000   & 0.065 \\ \midrule
+        tipo de ensemble & voting & learning & learning & voting & voting \\
+    \bottomrule
+    \end{tabular}}
+    \caption{HAHA 2019. Máximo número de modelos base es 5.
+    Cada columna muestra el resultado obtenido utilizando la estrategia de selección de modelos base correspondiente.
+    $A^*$ y $E^*$ representan el modelo base de mejor rendimiento y la mejor configuración de ensemble encontrada, respectivamente.
+    Tipos de ensemble: \emph{voting}, \emph{overfit}, y \emph{learning}, representan a \emph{Voting Classifier}, \emph{Overfitted Voting Classifier}, y \emph{ML Voting Classifier}, respectivamente.}
+    \label{table:haha-5}
+\end{table}
+
+\begin{table}[!htb]
+    \centering
+    \resizebox{\textwidth}{!}{
+    \begin{tabular}{lccccc}
+    \toprule
+        & shuffle & arbitrary & best & disagreement & double fault  \\ \midrule \midrule
+        oráculo optimista ($F_1$) & 1.000  & 1.000  & 0.936  & 1.000  & 0.998 \\
+        oráculo sobreajustado ($F_1$) & 0.729  & 0.771  & 0.831  & 0.735  & 0.889 \\ \midrule
+        % oráculo optimista ($acc.$) & 1.000  & 1.000  & 0.951  & 1.000  & 0.998 \\
+        % oráculo sobreajustado ($acc.$) & 0.803  & 0.832  & 0.870  & 0.789  & 0.917 \\ \midrule
+        $A^*$ ($F_1$, entrenamiento) & 0.876  & 0.901  & 0.855  & 0.875  & 0.856 \\
+        $A^*$ ($F_1$, evaluación) & 0.705  & 0.721  & 0.759  & 0.732  & 0.755 \\
+        $E^*$ ($F_1$, entrenamiento) & 0.870  & 0.930  & 0.883  & 0.875  & 0.942 \\
+        $E^*$ ($F_1$, evaluación) & 0.719  & 0.740  & 0.765  & 0.732  & 0.767 \\ \midrule
+        % delta (evaluación) & 0.014  & 0.018  & 0.005  & 0.000  & 0.012 \\
+        % delta (entrenamiento) & -0.006  & 0.030  & 0.029  & 0.000  & 0.086 \\ \midrule
+        tipo de ensemble & learning & overfit & voting & learning & voting \\
+    \bottomrule
+    \end{tabular}}
+    \caption{HAHA 2019. Máximo número de modelos base es 20.
+    Cada columna muestra el resultado obtenido utilizando la estrategia de selección de modelos base correspondiente.
+    $A^*$ y $E^*$ representan el modelo base de mejor rendimiento y la mejor configuración de ensemble encontrada, respectivamente.
+    Tipos de ensemble: \emph{voting}, \emph{overfit}, y \emph{learning}, representan a \emph{Voting Classifier}, \emph{Overfitted Voting Classifier}, y \emph{ML Voting Classifier}, respectivamente.}
+    \label{table:haha-20}
+\end{table}
+
+\begin{table}[!htb]
+    \centering
+    \resizebox{\textwidth}{!}{
+    \begin{tabular}{lccccc}
+    \toprule
+        & shuffle & arbitrary & best & disagreement & double fault  \\ \midrule \midrule
+        oráculo optimista ($F_1$) & 1.000  & 1.000  & 0.978  & 1.000  & 1.000 \\
+        oráculo sobreajustado ($F_1$) & 0.953  & 0.950  & 0.927  & 0.996  & 0.969 \\ \midrule
+        % oráculo optimista ($acc.$) & 1.000  & 1.000  & 0.983  & 1.000  & 1.000 \\
+        % oráculo sobreajustado ($acc.$) & 0.965  & 0.961  & 0.944  & 0.997  & 0.977 \\ \midrule
+        $A^*$ ($F_1$, entrenamiento) & 1.000  & 0.928  & 0.877  & 0.857  & 0.913 \\
+        $A^*$ ($F_1$, evaluación) & 0.639  & 0.720  & 0.720  & 0.750  & 0.749 \\
+        $E^*$ ($F_1$, entrenamiento) & 1.000  & 0.924  & 0.921  & 1.000  & 0.923 \\
+        $E^*$ ($F_1$, evaluación) & 0.741  & 0.736  & 0.731  & 0.747  & 0.756 \\
+        \midrule
+        % delta (evaluación) & 0.102  & 0.015  & 0.012  & -0.003  & 0.006 \\
+        % delta (entrenamiento) & 0.000  & -0.004  & 0.044  & 0.143  & 0.010 \\ \midrule
+        tipo de ensemble & overfit & learning & voting & overfit & voting \\
+    \bottomrule
+    \end{tabular}}
+    \caption{HAHA 2019. Máximo número de modelos base es 50.
+    Cada columna muestra el resultado obtenido utilizando la estrategia de selección de modelos base correspondiente.
+    $A^*$ y $E^*$ representan el modelo base de mejor rendimiento y la mejor configuración de ensemble encontrada, respectivamente.
+    Tipos de ensemble: \emph{voting}, \emph{overfit}, y \emph{learning}, representan a \emph{Voting Classifier}, \emph{Overfitted Voting Classifier}, y \emph{ML Voting Classifier}, respectivamente.}
+    \label{table:haha-50}
+\end{table}
+
+\begin{table}[!htb]
+    \centering
+    \resizebox{\textwidth}{!}{
+    \begin{tabular}{lccccc}
+    \toprule
+        & shuffle & arbitrary & best & disagreement & double fault  \\ \midrule \midrule
+        oráculo optimista ($F_1$) & 1.000  & 1.000  & 0.997  & 1.000  & 1.000 \\
+        oráculo sobreajustado ($F_1$) & 0.988  & 0.992  & 0.984  & 0.998  & 0.988 \\ \midrule
+        % oráculo optimista ($acc.$) & 1.000  & 1.000  & 0.997  & 1.000  & 1.000 \\
+        % oráculo sobreajustado ($acc.$) & 0.991  & 0.994  & 0.988  & 0.998  & 0.991 \\ \midrule
+        $A^*$ ($F_1$, entrenamiento) & 0.998  & 0.856  & 0.853  & 0.902  & 0.920 \\
+        $A^*$ ($F_1$, evaluación) & 0.683  & 0.748  & 0.759  & 0.745  & 0.750 \\ 
+        $E^*$ ($F_1$, entrenamiento) & 1.000  & 1.000  & 1.000  & 0.970  & 0.940 \\
+        $E^*$ ($F_1$, evaluación) & 0.756  & 0.745  & 0.761  & 0.728  & 0.743 \\
+        \midrule
+        % delta (evaluación) & 0.073  & -0.003  & 0.002  & -0.017  & -0.007 \\
+        % delta (entrenamiento) & 0.002  & 0.144  & 0.147  & 0.069  & 0.020 \\ \midrule
+        tipo de ensemble & overfit & overfit & overfit & learning & voting \\
+    \bottomrule
+    \end{tabular}}
+    \caption{HAHA 2019. Máximo número de modelos base es 100.
+    Cada columna muestra el resultado obtenido utilizando la estrategia de selección de modelos base correspondiente.
+    $A^*$ y $E^*$ representan el modelo base de mejor rendimiento y la mejor configuración de ensemble encontrada, respectivamente.
+    Tipos de ensemble: \emph{voting}, \emph{overfit}, y \emph{learning}, representan a \emph{Voting Classifier}, \emph{Overfitted Voting Classifier}, y \emph{ML Voting Classifier}, respectivamente.}
+    \label{table:haha-100}
+\end{table}
+
+
+Como puede observarse, \textbf{
+los mejores resultados fueron obtenidos cuando el máximo número de clasificadores base esta entre 20 y 50 y la estrategia de selección de modelos base es \emph{double-fault}.
+}
+A continuación, la sección~\ref{section:discussion-first-phase} profundiza en los resultados presentados en esta sección~\ref{section:results-first-phase}.
+
+\subsection{Discusión}\label{section:discussion-first-phase}
+
+Algunos patrones interesantes pueden ser observados a partir de analizar el rendimiento de los ensembles oráculo para diferentes estrategias de reselección de clasificadores base.
+La tabla~\ref{table:oracle} resume el rendimiento de los oráculos optimista y sobreajustado en el conjunto de evaluación.
+Algunos de estos patrones son presentados a continuación:
+
+\begin{itemize}
+    \item 
+    La métrica \emph{disagreement} asegura la máxima cobertura del conjunto de entrenamiento sin importar el número de clasificadores base seleccionado.
+    Esto tiene sentido dado que la medida de \emph{disagreement} premia la reselección de modelos que tienen predicciones con conflictos entre si.
+    Observando el rendimiento del oráculo sobreajustado, se puede notar que a pesar de que provee un cubrimiento máximo, no hay un conjunto de reglas \textbf{consistente} que pueda ser aplicado para explotar dicho cubrimiento.
+    
+    \item
+    La métrica \emph{double-fault} provee el rendimiento mas consistente para ambos el oráculo optimista y sobreajustado, en especial cuando el numero de clasificadores es bajo.
+    Esto sugiere que la estrategia de diversificación basada en \emph{double-fault} puede proveer el mejor rendimiento en el subsecuente fase de ensamblado, dado que obtiene una mayor puntuación cuando se utiliza un conjunto de reglas consistente. 
+    
+    \item
+    El cubrimiento mostrado por los ensembles oráculo se incrementa significativamente según se incrementa el número de clasificadores base, independientemente de la estrategia de reselección.
+    Esto tiene sentido dado que un mayor conjunto de votantes incrementa la probabilidad de encontrar uno que correctamente clasifique los ejemplos de mayor conflicto si hay cierta diversidad entre los votantes.
+    Esta idea es apoyada por el hecho de que la estrategia que reselecciona de forma golosa solo los modelos de mejor rendimiento es la que logra el menor cubrimiento (de acuerdo al ensemble optimista).
+\end{itemize}
+
+\begin{table}[!htb]
+    \centering
+
+    \begin{tabular}{lccccc}
+    \toprule
+        \multicolumn{6}{c}{Oráculo Optimista ($F_1$)} \\ \midrule
+        n-clasificadores & shuffle & arbitrary & best & disagreement & double fault  \\ \midrule \midrule
+        5   & 0.996 & 0.917 & 0.893 & 1.000 & 0.970 \\
+        20  & 1.000 & 1.000 & 0.936 & 1.000 & 0.998 \\
+        50  & 1.000 & 1.000 & 0.978 & 1.000 & 1.000 \\
+        100 & 1.000 & 1.000 & 0.997 & 1.000 & 1.000 \\
+    \bottomrule
+    \end{tabular}
+
+    \begin{tabular}{lccccc}
+    \toprule
+        \multicolumn{6}{c}{Oráculo Sobreajustado ($F_1$)} \\ \midrule
+        n-clasificadores & shuffle & arbitrary & best & disagreement & double fault  \\ \midrule \midrule
+        5   & 0.715 & 0.711 & 0.744 & 0.748 & 0.754 \\
+        20  & 0.729 & 0.771 & 0.831 & 0.735 & 0.889 \\
+        50  & 0.953 & 0.950 & 0.927 & 0.996 & 0.969 \\
+        100 & 0.988 & 0.992 & 0.984 & 0.998 & 0.988 \\
+    \bottomrule
+    \end{tabular}
+
+    \caption{Resumen de las métricas en los oráculos para cada estrategia de selección de modelos base según el numero máximo de clasificadores base se incrementa.}
+    \label{table:oracle}
+\end{table}
+
+La tabla~\ref{table:delta} resume las diferencias entre el rendimiento logrado por el mejor ensemble encontrado $E^*$ y el mejor modelo base $A^*$, en ambas la colección de entrenamiento y de evaluación.
+Es notable que los modelos de ensemble son capaces de sobrepasar a sus modelos base en la colección de entrenamiento, incluso cuando algunas estrategias requieren un mayor numero de modelos base para lograr esto.
+La estrategia de \emph{double-fault} es capaz de mejorar el rendimiento incluso con un numero bajo de clasificadores base.
+Esto tiene sentido dado que esta estrategia penaliza al sistema por construir una colección en la cual todos los modelos base fallen en los mismos ejemplos.
+Por tanto, estos resulta en una colección de modelos base, en la cual cada modelo arregla los fallos del otro.
+Este comportamiento es diferente al que muestra la estrategia de \emph{disagreement}, esta premia a los modelos base por tener diferentes predicciones independientemente de si estas eran correctas o incorrectas.
+Esto puede llevar a situaciones en las cuales es difícil para el ensemble decidir en cual de los modelos base confiar, especialmente si el numero de modelos base es muy bajo.
+
+Aun mas importante, la tabla~\ref{table:delta} también muestra que la optimización de ensemble es capaz de producir ensembles que generalizan mejor que sus modelos base, es decir, los ensembles tienen mejor rendimiento en el conjunto de evaluación.
+Esto es particularmente cierto cuando el numero de clasificadores base no es muy grande. Según incrementa el numero de clasificadores base, también lo hace el numero de diferentes combinaciones, y por tanto, el ensemble es mas susceptible a sobre-ajustar el conjunto de entrenamiento.
+
+\begin{table}[!htb]
+    \centering
+
+    \begin{tabular}{lccccc}
+    \toprule
+        \multicolumn{6}{c}{$(E^* - A^*)$ en entrenamiento} \\ \midrule
+        n-clasificadores & shuffle & arbitrary & best & disagreement & double fault  \\ \midrule \midrule
+        5  & \cellcolor{red!25}{-0.076}   & \cellcolor{red!25}-0.012   & \cellcolor{red!25}-0.027   & \cellcolor{yellow!25}0.000   & \cellcolor{green!25}0.065 \\
+        20 & \cellcolor{red!25}-0.006  & \cellcolor{green!25}0.030  & \cellcolor{green!25}0.029  & \cellcolor{yellow!25}0.000  & \cellcolor{green!25}0.086 \\
+        50 & \cellcolor{yellow!25}0.000  & \cellcolor{red!25}-0.004  & \cellcolor{green!25}0.044  & \cellcolor{green!25}0.143  & \cellcolor{green!25}0.010 \\
+        100 & \cellcolor{green!25}0.002  & \cellcolor{green!25}0.144  & \cellcolor{green!25}0.147  & \cellcolor{green!25}0.069  & \cellcolor{green!25}0.020 \\
+    \bottomrule
+    \end{tabular}
+
+    \begin{tabular}{lccccc}
+    \toprule
+        \multicolumn{6}{c}{$(E^* - A^*)$ en evaluación} \\ \midrule
+        n-clasificadores & shuffle & arbitrary & best & disagreement & double fault  \\ \midrule \midrule
+        5  & \cellcolor{green!25}0.040   & \cellcolor{green!25}0.015   & \cellcolor{green!25}0.033   & \cellcolor{yellow!25}0.000   & \cellcolor{green!25}0.004 \\
+        20 & \cellcolor{green!25}0.014  & \cellcolor{green!25}0.018  & \cellcolor{green!25}0.005  & \cellcolor{yellow!25}0.000  & \cellcolor{green!25}0.012 \\
+        50 & \cellcolor{green!25}0.102  & \cellcolor{green!25}0.015  & \cellcolor{green!25}0.012  & \cellcolor{red!25}-0.003  & \cellcolor{green!25}0.006 \\
+        100 & \cellcolor{green!25}0.073  & \cellcolor{red!25}-0.003  & \cellcolor{green!25}0.002  & \cellcolor{red!25}-0.017  & \cellcolor{red!25}-0.007 \\
+    \bottomrule
+    \end{tabular}
+
+    \caption{Resumen de la diferencia en rendimiento entre el mejor modelo base encontrado ($A^*$) y el ensemble correspondiente ($E^*$), para cada estrategia de selección de modelo base según incrementa el numero de clasificadores base.}
+    \label{table:delta}
+\end{table}
+
+Algunas otras ideas que resaltan de la tabla~\ref{table:delta} se resumen a continuación:
+
+\begin{itemize}
+    \item
+    Las métricas de diversidad, dígase \emph{disagreement} y \emph{double-fault}, tienen un mayor impacto en el rendimiento del ensemble en el conjunto de entrenamiento cuando el numero de clasificadores base es bajo.
+    Esto tiene sentido dado que mientras menor cantidad de modelos en la colección de modelos base, mas difícil será encontrar una \textit{buena} selección de forma arbitraria.
+    Sin embargo, las medidas de diversidad no parecen tener un impacto en las capacidades de generalización del ensemble.
+    
+    \item
+    A la estrategia de \emph{disagreement} le resulta difícil mejorar el rendimiento, tanto en el conjunto de entrenamiento como en el de evaluación.
+    Esto es particularmente cierto cuando el numero de clasificadores base es bajo.
+    Esta estrategia no penaliza a los modelos por realizar predicciones erróneas y en su lugar los premia si sus predicciones son diferentes a la del resto de los clasificadores.
+    Luego, es usual que el ensemble simplemente decida confiar en la predicción de solo uno de los clasificadores base, y por tanto el ensemble produce los mismos resultados que su mejor modelo base.
+    Esto muestra que lograr el mejor cubrimiento de acuerdo al oráculo optimista, como lo logra la medida de \emph{disagreement}, no es necesariamente útil.
+\end{itemize}
+
+La tabla~\ref{table:performance} resume el rendimiento obtenido por el ensemble $E^*$ según el numero de clasificadores base y las estrategias de reselección cambian.
+La estrategia de \emph{double-fault} siempre logra los mejores resultados, excepto en el ultimo escenario, en el cual el numero de clasificadores es el más alto.
+En ese caso, aunque el ensemble obtuvo un mejor rendimiento que sus modelos base en la colección de entrenamiento, el numero alto de votantes puede haber afectado sus capacidades de generalización. dado que el espacio de posibles combinaciones de votantes es mayor.
+
+\begin{table}[!htb]
+    \centering
+    
+    \begin{tabular}{lccccc}
+    \toprule
+        \multicolumn{6}{c}{$E^*$ en entrenamiento} \\ \midrule
+        n-clasificadores & shuffle & arbitrary & best & disagreement & double fault  \\ \midrule \midrule
+        5 & 0.913 & {\bf 0.961} & 0.917 & 0.846 & 0.941 \\
+        20 & 0.870 & 0.930 & 0.883 & 0.875 & {\bf 0.942} \\
+        50 & {\bf 1.000} & 0.924 & 0.921 & {\bf 1.000} & 0.923 \\
+        100 & {\bf 1.000} & {\bf 1.000} & {\bf 1.000} & 0.970 & 0.940 \\
+    \bottomrule
+    \end{tabular}
+
+    \begin{tabular}{lccccc}
+    \toprule
+        \multicolumn{6}{c}{$E^*$ @ evaluación} \\ \midrule
+        n-clasificadores & shuffle & arbitrary & best & disagreement & double fault  \\ \midrule \midrule
+        5 & 0.731 & 0.726 & 0.755 & 0.749 & {\bf 0.761} \\
+        20 & 0.719 & 0.740 & 0.765 & 0.732 & {\bf 0.767} \\
+        50 & 0.741 & 0.736 & 0.731 & 0.747 & {\bf 0.756} \\
+        100 & 0.756 & 0.745 & {\bf 0.761} & 0.728 & 0.743 \\
+    \bottomrule
+    \end{tabular}
+
+    \caption{Resumen del rendimiento obtenido por el ensemble ($E^*$) en el conjunto de entrenamiento y evaluación, para cada estrategia de selección de modelos base según el numero maximo de clasificadores incrementa.}
+    \label{table:performance}
+\end{table}
+
+Como es de esperarse, la ausencia de algoritmos de aprendizaje profundo en el conjunto de métodos disponibles tuvo un impacto negativo en el mayor rendimiento alcanzado.
+% Our best performing architecture achieves $0.767$ $F_1$ while the best solution reported in the official HAHA 2019 challenge is $0.821$~\cite{chiruzzo2019overview}.
+La arquitectura obtenida con mayor rendimiento logra alcanzar $0.767$ $F_1$, mientras que la mejor solución reportada por AutoGOAL en la tarea \emph{HAHA 2019} es $0.789$~\parencite{estevez2020automatic}, la cual utiliza algoritmos de aprendizaje profundo - una estrategia de pre-procesamiento utilizando BERT~\parencite{devlin2018bert} y una red neuronal con 2 nodos recurrentes (una capa \emph{BiLSTM} y una \emph{LSTM}) seguidas de dos capas densas distribuidas en tiempo -.
+En comparación, la mejor arquitectura obtenida en estos experimentos consiste de un \emph{Voting Classifier} que ensambla un conjunto de simples modelos de \emph{ScikitLearn} - una estrategia de pre-procesamiento utilizando tokenización (\emph{BlanklineTokenizer}, \emph{TreebankWordTokenizer}, etc.) y algoritmos de vectorizacion (\emph{TfIdfVectorizer}, \emph{CountVectorizer}, etc.) seguidos de una capa de clasificacion (\emph{Perceptron}, \emph{LinearSVC}, \emph{NearestCentroid}, \emph{MultinomialNB}, etc.) -.
+A pesar de utilizar una arquitectura mucho más simple, resultados competitivos son alcanzados.
+
+Adicionalmente, como se muestra en la tabla~\ref{table:delta}, la optimización utilizando ensembles es capaz de producir ensembles que generalizan mejor que sus modelos base.
+Luego, se espera que el rendimiento de los modelos producidos por nuestro sistema mejore una vez que algoritmos más poderosos estén disponibles.
+
+Las tablas~\ref{types} y~\ref{table:types-count} resumen los diferentes tipos de ensemble que fueron encontrados como optimos en cada experimento.
+La técnica de ensemble ``ML Voting Classifier'' no parece ser utilizada por ninguna estrategia de reselección de forma consistente.
+La técnica de ensemble ``Voting Classifier'' es utilizada consistentemente en las estrategias basadas en \emph{double-fault}, y también parece ser utilizada frecuentemente cuando el numero de clasificadores base es bajo.
+Además, la técnica de ensemble ``Overfitted Voting Classifier'' parece ser utilizada mas cuando el numero de clasificadores es bajo.
+
+\begin{table}[!htb]
+    \centering
+
+    \begin{tabular}{lccccc}
+    \toprule
+        n-clasificadores & shuffle & arbitrary & best & disagreement & double fault  \\ \midrule \midrule
+        5   & voting & learning & learning & voting & voting \\
+        20  & learning & overfit & voting & learning & voting \\
+        50  & overfit & learning & voting & overfit & voting \\
+        100 & overfit & overfit & overfit & learning & voting \\
+    \bottomrule
+    \end{tabular}
+    
+    \caption{Resume la estrategia de ensemble utilizada por la mejor configuracion de ensemble encontrada ($E^*$) para cada estrategia de seleccion de modelos base segun el numero maximo de clasificadores base incrementa.
+    Tipos de ensemble: \emph{voting}, \emph{overfit}, y \emph{learning}, representan \emph{``Voting Classifier''}, \emph{``Overfitted Voting Classifier''}, y \emph{``ML Voting Classifier''}, respectivamente.
+    }
+    \label{table:types}
+\end{table}
+
+\begin{table}[!htb]
+    \centering
+    
+    \begin{tabular}{lccc}
+    \toprule
+        n-clasificadores & voting  & overfitted & learning \\ \midrule \midrule
+        5   & 3 & 0 & 2 \\
+        20  & 2 & 1 & 2 \\
+        50  & 2 & 2 & 1 \\
+        100 & 1 & 3 & 1 \\
+    \bottomrule
+    \end{tabular}
+
+    \caption{Frecuencia de uso de cada tecnica de ensemble.
+    Las columnas \emph{voting}, \emph{overfit}, y \emph{learning}, representan \emph{``Voting Classifier''}, \emph{``Overfitted Voting Classifier''}, y \emph{``ML Voting Classifier''}, respectivamente.}
+    \label{table:types-count}
+\end{table}
+
+Para concluir, se muestra que el sistema brinda los resultados mas prometedores cuando es configurado para realizar la búsqueda sobre una colección de $20$ o $50$ modelos base y utilizando la estrategia de selección de modelos base \emph{double-fault}.
+
+\section{Segunda Etapa Experimental}\label{section:experiments-second-phase}
+\subsection{Resultados}\label{section:results-second-phase}
+\subsection{Discusión}\label{section:discussion-second-phase}

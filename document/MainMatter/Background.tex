@@ -1,26 +1,40 @@
 \chapter{Estado del Arte}\label{chapter:state-of-the-art}
 
-% - fairness. Parrafo q engloba el cap. Hablar en general. Intentan enganchar los ensembles.
+Los sesgos que muestran los algoritmos de aprendizaje automático provienen de diversas fuentes.
+Una de las fuentes mas comunes de sesgos son las colecciones de datos, de las cuales los modelos de aprendizaje automático implícitamente aprenden a expresar tales sesgos.
+Los sesgos contenidos en las colecciones de datos pueden ser a veces el resultado de errores durante su construcción,  pero es común que tengan su origen en procesos históricos.
+Cuando estos sesgos son utilizados para realizar una predicción, puede dar lugar a una determinación injusta acerca de los individuos.
+
+Los sesgos pueden incluso provenir de fuentes mas difíciles de detectar para el usuario.
+Por ejemplo, la popularización de representaciones semánticas autogeneradas, tales como \emph{word embeddings} pueden contribuir a la propagación de sesgos contenidos en datos históricos~\parencite{bolukbasi2016man}.
+Luego, incluso cuando se trabaja con una colección de datos que no contiene explícitamente nada relacionado con genero o raza, por ejemplo, al utilizar \emph{word embeddings} clásicos para procesar datos en forma de texto pueden obtenerse decisiones sesgadas a causa de sesos que se han probado contienen los \emph{word embeddings}.
+
+Es posible que los modelos de aprendizaje automático produzcan decisiones injustas incluso asumiendo que sus datos de entrenamiento no tenían sesgos.
+Es decir, el modelo de aprendizaje automático ha construido una hipótesis que no generaliza completamente a los datos no vistos durante el entrenamiento o incluso a los propios ejemplos entrenantes.
+Luego, cuantificar los sesgos que un modelo de aprendizaje automático tiene respecto a un conjunto de datos es una tarea usual.
+Se hace imprescindible proveer una definición que permita capturar el concepto de equidad y analizar los sesgos que presenta un modelo de forma objetiva.
 
 \section{Definiciones de Equidad}
-% - sec1. how to measure fairness. Statistical parity, WET (embedding), winoMT (machine transaltion). Hablar de la fuente de los sesgos.
 
-%% From FBO
+Múltiples definiciones han sido propuestas para capturar diferentes criterios de equidad.
 No existe en estos momentos una única definición ampliamente aceptada de lo que es \textit{equidad}, sino que diferentes definiciones codifican diferentes características que se muestran útiles en diferentes contextos.
 Incluso, algunas de las definiciones más comunes presentan conflictos entre si.
+A continuación se presentan algunas de las definiciones mas utilizadas. 
 
-A continuación se presentan algunas de las definiciones mas utilizadas. Sea $Y$ la clasificación (binaria) correcta, $S$ el atributo protegido, y $Y^p$ la clasificación obtenida del modelo.
-Las definiciones más comunes pueden ser agrupadas en tres categorías:
-(i) considerando el resultado obtenido dada la clasificación correcta;
-(ii) considerando la clasificación correcta dada la clasificación obtenida;
-(iii) considerando solamente el resultado obtenido.
-Los siguientes son ejemplos de estos tipos de métricas.
+% Our system is designed to work with any selection of one or more fairness definitions.
+% The only constraint tied to the fairness definition is that it should only depend on: the protected attribute, the predicted class, and the gold class, of each individual in the collection, since those three are the parameters used in the standard fairness definitions.
+% These definitions are transformed into fairness metrics either by computing the difference between the highest and lowest evaluations across protected groups or by computing the ratio between those two evaluations.
 
-\begin{itemize}
-    \item \textbf{Equal Opportunity (EO)} requiere que la proporción de verdaderos positivos sea la misma en todos los subgrupos: $P(Y^p=1 | Y=1, S=0) = P(Y^p=1 | Y=1, S=1)$
-    \item \textbf{Equalized Odds (EOdd)} requiere igual proporción de falsos positivos, además de EO
-    \item \textbf{Statistical Parity (SP)} requiere que las predicciones positivas no se vean afectadas por el valor del atributo protegido, sin tomar en cuenta la clasificación correcta: $P(Y^p=1 | S=0) = P(Y^p=1 | S=1)$
-\end{itemize}
+Sea $Y$ la clasificación (binaria) correcta, $S$ el atributo protegido, y $Y^p$ la clasificación obtenida del modelo.
+
+ \begin{itemize}
+     \item \textbf{Statistical Parity (SP)}: Un clasificador $\hat{Y}$ satisface \emph{statistical parity} si $P(\hat{Y}=1|P=1) = P(\hat{Y}=1|P=0)$.
+     Esto es, la probabilidad de un resultados positivo debería ser la misma sin importar si el individuo pertenece a un grupo protegido~\parencite{verma2018fairness}.
+     \item \textbf{Equal Opportunity (EO)}: Un binario clasificador $\hat{Y}$ satisface \emph{equal opportunity} con respecto a $P$ y $Y$ si $P(\hat{Y}=1|Y=1,P=1) = P(\hat{Y}=1|Y=1,P=0)$.
+     Esto significa que la probabilidad de que a una persona en la clase positiva le sea asignada un resultado positivo debería ser igual para miembros tanto de grupos protegidos como no protegidos~\parencite{verma2018fairness}.
+     \item \textbf{Equalized Odds (EOdd)}: Un clasificador $\hat{Y}$ satisface \emph{equalized odds} con respecto al atributo protegido $P$ y predicción $Y$, si $P(\hat{Y}=1|Y=y,P=1) = P(\hat{Y}=1|Y=y,P=0)$, es decir, $\hat{Y}$ y $A$ son independientemente condicionales a $Y$.
+     Esto significa que la probabilidad de que a una persona en la clase positiva le sea asignada correctamente una predicción positiva y la probabilidad de que a una persona en la clase negativa le sea incorrectamente asignada una predicción positiva debería ser la misma para miembros de grupos protegidos y no protegidos~\cite{verma2018fairness}.
+ \end{itemize}
 
 Las concesiones inherentes a utilizar cada noción de equidad han sido estudiados extensamente \parencite{dwork2012fairness, friedler2016possibility, kleinberg2018inherent}.
 Escoger la definición correcta para un problema determinado es difícil, y en la práctica no puede ser delegado a un agente automático.
@@ -32,13 +46,14 @@ En su lugar, una decisión humana es preferida para asegurar una decisión infor
 
 Las técnicas de mitigación de sesgos pueden ser divididas fundamentalmente en técnicas de pre-procesamiento, post-procesamiento y técnicas durante el procesamiento. Adicionalmente un conjunto de técnicas llamadas meta-algoritmos han surgido recientemente, presentando muy buenos resultados.
 
-Las técnicas de pre-procesamiento logran equidad modificando la representación de los datos, es decir, pre-procesando los datos, y luego adoptan una solución de aprendizaje automático estándar \parencite{nips2017preproc, Kamiran2011DataPT, zemel2013learning}.
-Por ejemplo, aprender una representación a partir de resolver un problema de optimización con dos objetivos, codificar la información preservando la mayor cantidad de información posible y ofuscar al mismo tiempo la pertenencia al conjunto de atributos protegidos \parencite{zemel2013learning}.
-Los métodos de pre-procesamiento son agnósticos al modelo, pero sus hiperparámetros, así como los del modelos de aprendizaje automático seleccionado todavía necesitan ser ajustados para mejor rendimiento.
+Las técnicas de pre-procesamiento logran equidad modificando la representación de los datos, es decir, pre-procesando los datos y luego adoptando una solución de aprendizaje automático estándar \parencite{nips2017preproc, Kamiran2011DataPT, zemel2013learning}.
+Un ejemplo de esto es: aprender una representación a partir de resolver un problema de optimización con dos objetivos, codificar la información preservando la mayor cantidad de información posible y ofuscar al mismo tiempo la pertenencia al conjunto de atributos protegidos \parencite{zemel2013learning}.
+Una ventaja de los métodos de pre-procesamiento son agnósticos al modelo.
+Por el contrario, sus hiperparámetros, así como los del modelos de aprendizaje automático seleccionado todavía necesitan ser ajustados para mejor rendimiento.
 
-Los métodos aplicados durante el procesamiento se aseguran que se cumplan ciertas restricciones de equidad durante el entrenamiento (e.g. \parencite{donini2018empirical, zafar2017fairness, zafar2019fairness}), sin embargo solo es aplicable a una cierta clase de modelos.
-Por ejemplo el algoritmo aplicado en \parencite{donini2018empirical} solo puede ser aplicado a \emph{kernel machines} (tales como \emph{maquinas de soporte vectorial}), y solo a una única definición de equidad (i.e., \emph{EO}).
-Aunque las técnicas de mitigación durante el procesamiento pueden brindar muy buenos resultados para la clase del modelo que están diseñados, frecuentemente son difíciles, o a veces imposible de extender para nuevas clases de modelos.
+Los métodos aplicados durante el procesamiento aseguran que se cumplan ciertas restricciones de equidad durante el entrenamiento (p.e. \parencite{donini2018empirical, zafar2017fairness, zafar2019fairness}), sin embargo, esto los hace aplicable solo a una cierta clase de modelos.
+Por ejemplo, el algoritmo propuesto en \cite{donini2018empirical} solo puede ser aplicado a \emph{kernel machines} (tales como \emph{maquinas de soporte vectorial}), y solo a una única definición de equidad, dígase \emph{Equal Opportunity}).
+Aunque las técnicas de mitigación durante el procesamiento pueden brindar muy buenos resultados para la clase del modelo que están diseñados, frecuentemente son difíciles, o a veces imposible, de extender para nuevas clases de modelos.
 Estos métodos también pueden introducir nuevos hiperparámetros que podrían requerir conocimiento específicos del dominio y experimentación.
 
 Las técnicas de post-procesamiento operan ajustando el umbral de decisión de modelos pre-entrenados para eventualmente lograr resultados más justos respecto a una métrica de equidad dada.
@@ -46,7 +61,7 @@ El principal problema es que post-procesar el umbral de decisión es inherenteme
 Adicionalmente, estas técnicas no son utilizables si la información sensible no esta disponible en el momento de realizar las predicciones, lo cual a su vez puede llevar a problemas legales por la utilización de información sensible para realizar predicciones \parencite{MacCarthy2018StandardsOF}.
 
 Una clase de métodos recientemente propuesta para tareas de clasificación justa, conocida como meta-algoritmos, reduce la tarea de clasificación justa a una secuencia de problemas de clasificación con costo asociado a sus errores de predicción \parencite{agarwal2018reductions, agarwal2019fair, kearns2018preventing}.
-Las soluciones a estos problemas producen un clasificador \emph{randomizado}. Contrario a los métodos que funcionan durante el procesamiento, los meta-algoritmos no dependen del tipo de los modelos que se utilizan en el clasificador, sino en la capacidad de los mismos para ser reentrenados repetidamente.
+Las soluciones a estos problemas suelen producir un clasificador \emph{randomizado}. Contrario a los métodos que funcionan durante el procesamiento, los meta-algoritmos no dependen del tipo de los modelos que se utilizan en el clasificador, sino en la capacidad de los mismos para ser reentrenados repetidamente.
 En el contexto de algoritmos de minimización del riesgo empírico, estos métodos son agnósticos al modelo de aprendizaje automático, pero aun necesitan implementaciones específicas basadas en la definición de equidad seleccionada y necesitan producir un ensamblado de modelos. Limitaciones similares caracterizan un número de enfoques que utilizan optimización \parencite{chiappa2018causal,Dimitrakakis_Liu_Parkes_Radanovic_2019} o inferencia bayesiana \parencite{kearns2018preventing,thomas2019preventing}, sus implementaciones tienen que estar diseñadas específicamente para ciertas definiciones de equidad.
 
 % TODO:
@@ -68,30 +83,30 @@ La naturaleza de múltiples hipótesis de estos modelos asegura que, si son ajus
 En un problema de clasificación, \emph{voting} produce como salida la etiqueta que tiene la mayoría de los votos, tratando cada predicción de los modelos ensamblados como un voto.
 \emph{Weighted-voting} funciona de forma similar a \emph{voting}, pero cada modelo del ensamblado es asignado un \emph{peso} que indica la importancia de su voto.
 \emph{Boosting} ejecuta un proceso iterativo donde los modelos son entrenados secuencialmente, cada uno tratando de mejorar su rendimiento en los ejemplos entrenantes donde los modelos anteriores tuvieron peor rendimiento.
-Durante este proceso, cada sub-modelo es también asignado un peso que marca la importancia de su predicción.
+Durante este proceso, a cada submodelo le es también asignado un peso que marca la importancia de su predicción.
 \textit{Bagging} entrena cada submodelo en una selección diferente (con reemplazo) de los ejemplos entrenantes originales.
 De esta forma, el modelo con una alta varianza debería producir modelos entrenados con alta diversidad.
 Alternativamente, \textit{feature bagging} funciona de forma similar, seleccionando un subconjunto de características en lugar de los ejemplos entrenantes, causando que características correlacionados sean analizados de forma separada en algunos submodelos.
 
 Las capacidad de los métodos de ensamblado para construir modelos más robustos los ha hecho apropiados para múltiples aplicaciones.
 El dominio de la salud es uno de los ejemplos donde estos métodos han sido aplicados con gran éxito.
-Por ejemplo, una aplicación híbrida de métodos de ensemble con redes neuronales en un entorno de aprendizaje por reforzamiento es presentada para al predicción de infección de COVID-19 con gran precisión \parencite{JIN2022105560}.
-De forma similar, un método de toma de decisión multicriterio basado en ensembles es propuesto para la detección de COVID-19 a partir del sonido de la tos en pacientes \parencite{CHOWDHURY2022105405}.
+Por ejemplo, una aplicación híbrida de métodos de ensemble con redes neuronales en un entorno de aprendizaje por reforzamiento ha sido presentada para al predicción de infección de COVID-19 con gran precisión~\parencite{JIN2022105560}.
+De forma similar, un método de toma de decisión multicriterio basado en ensembles ha sido propuesto para la detección de COVID-19 a partir del sonido de la tos en pacientes \parencite{CHOWDHURY2022105405}.
 Existen ejemplos también no relacionados a la medicina, por ejemplo, en \parencite{livieris2020ensemble} se emplearon estrategias de ensemble como \textit{ensemble-averaging}, \textit{bagging} y \textit{stacking} con metodologías avanzadas de aprendizaje profundo para predecir los precios, a nivel de hora, de criptomonedas como \textit{Ethereum}, \textit{Bitcoin} y \textit{Ripple}.
 
-Una simple pero poderosa técnica en el contexto de los métodos de ensamblado es la llamada \textit{snapshot ensemble} \parencite{huang17snapshot}. Esta técnica genera múltiples clasificadores base, entrenando una sola red neuronal mientras la hace converger de forma rápida y repetida a múltiples óptimos locales y salvando en cada uno de dichos puntos los parámetros del modelo. Todas las redes neuronales son entonces ensambladas para producir el clasificador final. Estos \textit{snapshot ensemble} son mas robustos y precisos que las redes individuales dada su naturaleza de ensamblado, a ningún costo adicional de entrenamiento.
+Una simple pero poderosa técnica en el contexto de los métodos de ensamblado es la llamada \textit{snapshot ensemble} \parencite{huang17snapshot}. Esta técnica genera múltiples clasificadores base, entrenando una sola red neuronal mientras la hace converger de forma rápida y repetida a múltiples óptimos locales y salvando en cada uno de dichos puntos los parámetros del modelo. Todas las redes neuronales son luego ensambladas para producir el clasificador final. Estos \textit{snapshot ensemble} son mas robustos y precisos que las redes individuales dada su naturaleza de ensamblado, a ningún costo adicional de entrenamiento.
 
 \section{Métodos de AutoML}\label{section:automl}
 
-AutoML (del inglés \textit{Automated Machine Learning}) es el proceso de automatizar la solución de problemas del mundo real a través de técnicas de aprendizaje automático.
-El proceso involucra eliminar la necesidad de humanos expertos en aprendizaje automático para seleccionar apropiadamente las características, flujos, paradigmas, algoritmos y sus hiperparámetros para resolver un problema \parencite{Dimitrakakis_Liu_Parkes_Radanovic_2019}.
-Las principales ventajas de las tecnologías de AutoML incluyen:
+\emph{AutoML} (del inglés \textit{Automated Machine Learning}) es el proceso de automatizar la solución de problemas del mundo real a través de técnicas de aprendizaje automático.
+El proceso intenta eliminar la necesidad de humanos expertos en aprendizaje automático para seleccionar apropiadamente las características, flujos, paradigmas, algoritmos y sus hiperparámetros para resolver un problema \parencite{Dimitrakakis_Liu_Parkes_Radanovic_2019}.
+Las principales ventajas de las tecnologías de \emph{AutoML} incluyen:
 (1) reducir el tiempo empleado en resolver problemas bien estudiados; y,
 (2) eliminar la necesidad de conocimiento experto.
 Adicionalmente, estas tecnologías tienden a generar soluciones más simples que a menudo tienen mejor desempeño que soluciones diseñadas por humanos.
 
-Múltiples tecnologías han sido propuestas para resolver el problema de AutoML. AutoWeka~\parencite{autoweka} fue una de las primeras soluciones presentadas.
-Esta solución está basada en el software Weka~\parencite{weka}, un software construido a partir de varias herramientas de visualización y algoritmos para análisis de datos y modelación predictiva. \textit{AutoWeka} resuelve el problema de \textit{AutoML} como un problema \emph{CASH} según definido a continuación.
+Múltiples tecnologías han sido propuestas para resolver el problema de \emph{AutoML}. \emph{AutoWeka}~\parencite{autoweka} fue una de las primeras soluciones presentadas.
+Esta solución está basada en el software \emph{Weka}~\parencite{weka}, un software construido a partir de varias herramientas de visualización y algoritmos para análisis de datos y modelación predictiva. \emph{AutoWeka} resuelve el problema de \emph{AutoML} como un problema \emph{CASH} según definido a continuación.
 
 \begin{definition}
 \label{definition:cash}
@@ -105,7 +120,7 @@ Esta solución está basada en el software Weka~\parencite{weka}, un software co
 \end{definition}
 
 Otros sistemas populares de AutoML son AutoSklearn \parencite{feurer2015efficient} y AutoKeras \parencite{autoKeras}.
-Estos sistemas están basados en las bibliotecas de aprendizaje automático, \textit{ScikitLearn} \parencite{pedregosa2011scikit} y \textit{Keras} \parencite{chollet2015keras} respectivamente.
+Estos sistemas están basados en las bibliotecas de aprendizaje automático \textit{ScikitLearn} \parencite{pedregosa2011scikit} y \textit{Keras} \parencite{chollet2015keras}, respectivamente.
 Ambos sistemas proveen una interfaz para encontrar la mejor arquitectura de aprendizaje automático para resolver un problema.
 Una diferencia fundamental entre ellos es la forma en que sus espacios de búsqueda son definidos.
 Mientras AutoSkLearn explora espacio de búsqueda condicional, es decir, un espacio con algunos hiperparámetros condicionados a otros, AutoKeras realiza una \emph{Busqueda de Arqutectura Neuronal (NAS)}~\parencite{NAS}, la cual implica explorar espacios jerárquicos de complejidad arbitraria.
@@ -183,10 +198,10 @@ El concepto de \textit{Pareto dominación} juega un papel fundamental en el ámb
 
 \begin{definition}[Frente pareto]
 \label{definition:pareto-front}
-    Todos aquellos vectores $x$ del espacio objetivo tal que no exista otro vector $y$ en el espacio objetivo que \textbf{pareto-domine} a $x$.
+    Todos aquellos vectores $x$ del espacio objetivo tal que no exista otro vector $z$ en el espacio objetivo que \textbf{pareto-domine} a $x$.
 \end{definition}
 
-Tradicionalmente los problemas de optimización multiobjetivo han sido atacados utilizando técnicas de escalarización (e.g. \parencite{miettinen2012nonlinear}), estas técnicas consisten en de alguna forma combinar todas las funciones objetivos en una sola, o reescribirlas como restricciones.
+Tradicionalmente los problemas de optimización multiobjetivo han sido atacados utilizando técnicas de escalarización (p.e. \parencite{miettinen2012nonlinear}), estas técnicas consisten en de alguna forma combinar todas las funciones objetivos en una sola, o reescribirlas como restricciones.
 Varias técnicas existen en este contexto. \textit{Linear Weighting} es una de estas, en la cual se construye una nueva función objetivo a partir de la combinación lineal de las funciones objetivo del problema original, esto es $min \sum w_i f_i(x), x \in X$.
 Este enfoque tiene un problema fundamental y es que si el \emph{frente pareto} no es convexo, no es posible encontrar soluciones en esta zona, no importa los pesos $w_i$ que se utilicen.
 Otra forma de escalarización es \textit{$\epsilon$-constrain}, esta técnica selecciona una función como la \textit{principal} y las demás se establecen como restricciones al conjunto de soluciones factibles, exigiendo que sean menores que un $\epsilon$.
@@ -254,24 +269,6 @@ Por tanto, aquellas soluciones con elevado \emph{crowding distance} son preferid
 % - discusion. Aqui donde se explica como se usa todo lo q acabo de explicar.
 
 
-% Background:
-% - Intro al cap explicando cuales son los temas que voy a tratar
-% - hablar al principio de equidad respecto a la fuente de los sesgos, word embeddings, etc hasta llegar a q estas metricas son pa medir sesgos de modelo respecto a un dataset
-%
-% %%
-% in-procesamiento -> durante el procesamiento
-%
-% machine learning
-% aprendizaje de maquinas -> automatico
-%
-% Automl es en ingles
-%
-% Estandard -> estandar
-%
-% %%
-% Post procesamiento que quede claro que se aplica sobre el modelo ya entrenado
-%
-% %%
 % Model agnostic y model specific en el sota + fbo en mode agnostic
 %
 % %%

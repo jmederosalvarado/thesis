@@ -1,5 +1,7 @@
 \chapter{Propuesta}\label{chapter:proposal}
 
+\todo[inline]{En este capítulo ...}
+
 \section{Descripción general}\label{section:overview}
 
 El sistema toma como entrada una colección de datos $D = \{(x_1, y_1), \dots , (x_n, y_n)\}$ y una función de pérdida $\mathcal{L}$ y una o varias métricas de equidad $F_1, F_2, \dots, F_n$.
@@ -11,6 +13,8 @@ La segunda fase es responsable de producir un conjunto de modelos de clasificaci
 Estos modelos son generados ensamblando la colección de modelos base de forma tal que optimice su efectividad según $L_2$, a la vez que es lo mas \emph{justo} posible según $F_1, F_2, \dots, F_n$.
 En el contexto de esta tesis se asume $L = L_1 = L_2$.
 Las secciones \ref{section:first-phase} y \ref{section:second-phase} abordan con mas detalles la primera y segunda fase, respectivamente.
+
+\todo[inline]{Párrafo con la imagen del overview, y que describe la imagen.}
 
 % TODO
 % Figure 1 summarizes the architecture of the system.
@@ -59,7 +63,7 @@ Todo esto es capturado por la función \ref{code:reselect}.
 % TODO Probablemente la parte de PGE queremos pasarla para el estado del arte
 Para explorar inteligentemente  el espacio de algoritmos y hiperparámetros, es decir, para resolver el problema \textit{CASH} modificado, se utiliza la implementación de \emph{Probabilistic Grammatical Evolution Search}~(algoritmo \ref{algorithm:pge}) presente en AutoGOAL.
 AutoGOAL se refiere a los modelos que construye como flujos, dado que cada uno de ellos esta formado por algoritmos interconectados.
-La búsqueda comienza con una estrategia de muestreo aleatorio, pero según evalúa mas flujos, modifica el modelo de muestreo probabilista para que flujos similares a los mejores encontrados hasta el momento, sean generados con mayor frecuencia.
+La búsqueda comienza con una estrategia de muestreo aleatorio, pero según evalúa más flujos, modifica el modelo de muestreo probabilista para que flujos similares a los mejores encontrados hasta el momento, sean generados con mayor frecuencia.
 El espacio de algoritmos y hiperparámetros utilizados es el utilizado por defecto en AutoGOAL, el cual incluye varios algoritmos clásicos de aprendizaje automático presentes en las diferentes bibliotecas utilizadas por AutoGOAL.
 
 % TODO Linkear aqui a recomendaciones de como mejorar la seleccion del conjunto mas diverso
@@ -131,6 +135,8 @@ Las siguientes métricas son computadas entre pares de modelos base para estimar
     
 \end{description}
 
+\todo[inline]{Pon algun párrafo de clausura. En plan, algo que diga que recordemos que la diversidad de los modelos influye en el performance de los ensembles, y que cual de estas 2 metricas es mejor se estudiará en la experimentación, y se compararán con otros approach usando selecciones aleatorias.}
+
 \section{Ensamblado inteligente de modelos justos}\label{section:second-phase}
 
 En esta fase el sistema tiene la tarea de combinar las predicciones de $N$ modelos para ajustar $D$ de acuerdo tanto a la perdida $\mathcal{L}$ como a las métricas de equidad $F_1, \dots, F_n$.
@@ -157,5 +163,55 @@ Estas estrategias son presentadas a continuación.
     
 \end{description}
 
+\todo[inline]{los hiperparámetros de esto? Puedes incluir un pseudo codigo ademas de como se construye el espacio a partir de un sampler}
+\todo[inline]{Anade una image que ilustre el comportamiento de los 3 ensemblers}
+
 Para explorar el espacio de algoritmos e hiperparámetros se realiza una modificación a \emph{Probabilistic Grammatical Evolution}(\ref{algorithm:pge}), en la cual la fase de seleccionar los $n$ individuos de la población actual que pasan a la siguiente generación, se realiza utilizando \emph{Non-dominated sorting}~(sección \ref{section:ndsorting}) y \emph{Crowding distance}~(sección \ref{section:crowding-distance}), de la misma forma en que se utiliza en \emph{NSGA-II}.
 De esta forma la función de selección, y por tanto la exploración del espacio, optimizan simultáneamente las métricas de equidad y la función de pérdida.
+
+\todo[inline]{Parrafo describiendo cómo se combinan PGE y NSGA-II (no decirme qué se hace, sino cómo se hace). Con el parrafo anterior dices "qué pero del "como" apenas dices una cosa}
+
+\todo[inline]{Pseudo codigo de NS-PGE. Tienen que quedar claro en él que (1) se itera por generaciones con PGE, (2) se actualizan los hiperparámetros segun SN, (3) cómo se construye la seleccion de modelos final, (4) como se actualiza entre generaciones}.
+
+% \begin{function}[htb!]
+%     \caption{NSPGE($D, G, \mathcal{F}$)\label{func:nspge}}
+%     \SetKwData{probs}{$\sigma$}
+%     \SetKwData{models}{models}
+%     \SetKwData{uniform}{\bf uniform-init}
+%     \SetKwData{generation}{generation}
+%     \SetKwData{score}{scores}
+%     \SetKwData{indices}{indices}
+%     \SetKwData{ns}{\bf non-dominated-sort}
+%     \SetKwData{updates}{updates}
+%     \SetKwData{merge}{\bf select-best-parameters}
+%     \SetKwData{update}{\bf update-probabilities}
+%     \SetKwData{init}{\bf set}
+%     \SetKwData{sample}{\bf sample}
+%     \SetKwData{select}{\bf select}
+
+%     \init $\probs \leftarrow \uniform(G)$ \\
+%     \init $\models \leftarrow \emptyset$ \\
+%     \For{$\generation \in \sample(G, \probs)$}{
+%         \init $\score \leftarrow \emptyset$ \\
+%         \For{$\mathcal{L}^{(i)} \in \mathcal{F}$}{
+%             \For{$A^{(j)}_\lambda \in \generation$}{
+%                 $\score^{(i,j)} \leftarrow \mathcal{L}^{(i)}(A^{(j)}_\lambda,\ D^{(i)}_{train},\ D^{(i)}_{valid})$ \\
+%             }
+%         }
+%         \init $\indices \leftarrow \ns(\generation, \score)$ \\
+%         \init $\updates \leftarrow \merge(\generation, \score, \indices)$ \\
+%         $ $ \\
+%         $\probs \leftarrow \update(\probs, \updates)$ \\
+%         $\models \leftarrow \select(\generation, \indices)$
+%     }
+%     \Return{\models}
+% \end{function}
+
+\todo[inline]{Párrafo explicando por qué funciona (o se espere que funcione) esa forma para optimizar fairness}
+
+\todo[inline]{Explicar cómo se construye la colección final. Y por qué quedarse con los no dominados de cada generación tiene sentido}
+
+\todo[inline]{Explicar como el usuario puede encontrar de todas las soluciones la que quiere al final. Además como puede especificar constraints para dirigir la busqueda, y donde se insertan en el codigo. }
+
+\todo[inline]{Hay todo un grupo de cosas que existen fuera de las 2 fases, que va de como integrarlas, que podría ir en una ultima sección de ejecución end to end. En general deberias revisar el codigo del Diversifier, Ensembler, y Mitigator, y ver qué cosas están y no están dichas en la propuesta, como eso mismo de los contraints, el detriment, etc.}
+

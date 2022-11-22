@@ -1,17 +1,20 @@
 \chapter{Análisis Experimental}\label{chapter:experiments}
 
-En este capítulo se evalúa la capacidad de nuestro sistema de optimización de dos fases de resolver un problema de clasificación y lograr buenos resultados en métricas de precisión y equidad a partir de ensamblar modelos base.
-La experimentación realizada consiste de dos etapas, en una se analiza la capacidad de la primera fase del sistema de obtener un conjunto de modelos base lo suficientemente diverso como para que ensamblar estos resultados en un modelo de mayor precisión que los modelos base.
-En la segunda etapa, se estudia si el algoritmo propuesto permite encontrar formas de ensamblar los modelos base resultantes de la primera etapa de forma tal que se obtengan valores satisfactorios tanto de precisión como en las métricas de equidad.
+En este capítulo se evalúa la capacidad de nuestro sistema de optimización para resolver problemas de clasificación y lograr buenos resultados según métricas de precisión y equidad.
+La experimentación realizada consiste de dos etapas.
+Inicialmente se analiza la capacidad de la primera fase del sistema para obtener un conjunto de modelos base lo suficientemente diverso como para que ensamblar sus predicciones resulte en un modelo de mayor precisión que los modelos base.
+Finalmente, se estudia si el algoritmo propuesto permite encontrar formas de ensamblar los modelos base resultantes de la primera etapa de manera tal que se obtengan valores satisfactorios tanto de precisión como en las métricas de equidad.
 
 \section{Marco Experimental}\label{section:experimental-framework}
 
-Una primera etapa experimental se lleva a cabo con el objetivo de estudiar la capacidad del sistema de producir un conjunto de modelos base capaz de, al ser ensamblado, generalizar y obtener mejores resultados que dichos modelos base.
-Adicionalmente se desea estudiar que influencia tienen las distintas métricas de diversidad utilizadas en esta capacidad del sistema.
+Las dos etapas en las que queda divida nuestra experimentación se describen a continuación
+
+La \textbf{primera etapa experimental} tiene como objetivo estudiar la capacidad del sistema de producir un conjunto de modelos base que, al ser ensamblado, pueda generalizar y obtener mejores resultados que dichos modelos base.
+Adicionalmente, se desea estudiar que influencia tienen las distintas métricas de diversidad utilizadas en esta capacidad del sistema.
 
 Para estimar el mejor rendimiento obtenible a partir de ensamblar el conjunto de modelos base encontrado, dos medidas son propuestas a continuación.
-Estas medidas estiman el rendimiento que logran modelos de ensemble de prueba, esto es, modelos de ensemble que conocen los resultados correctos a priori, y por tanto son modelos que no tienen utilidad real fuera de ser utilizados con propósitos de comparación.
-Dichos modelos de ensemble son llamados \emph{Oráculo Optimista} y \emph{Oráculo Sobre-ajustado}.
+Estas medidas estiman el rendimiento que logran modelos de ensemble artificiales, estos son modelos de ensemble que conocen los resultados correctos a priori, y por tanto son modelos que no tienen utilidad real fuera de ser utilizados con propósitos de comparación.
+Llamaremos a dichos ensembles: \emph{Oráculo Optimista} y \emph{Oráculo Sobreajustado}.
 
 \begin{description}
 
@@ -47,15 +50,15 @@ Los resultados que obtiene este ensemble, proveen una cota superior del mejor re
 Primeramente se desea validar que nuestro sistema es capaz de generar modelos base en la primera fase que al ser ensamblados en la segunda fase dan lugar a un ensemble que obtiene mejores resultados sobre el conjunto de evaluación que cualquiera de los modelos base de los que se compone.
 Para ello, los resultados obtenidos por el ensemble producido por nuestro sistema son comparados con los obtenidos por el mejor de los modelos base, y analizados respecto a los resultados obtenidos por el \emph{Oráculo Sobre-ajustado} descrito anteriormente.
 
-Además en esta etapa experimental se desea también comprobar la influencia de las diferentes métricas de diversidad utilizadas en la capacidad del sistema para producir modelos base que generalicen luego de ser ensamblados.
+Además, en esta etapa experimental se desea también comprobar la influencia de las diferentes métricas de diversidad utilizadas en la capacidad del sistema para producir modelos base que generalicen luego de ser ensamblados.
 Con este propósito, se realiza un análisis de que tan bien los modelos base cubren el espacio de entrada de nuestro problema.
 Para este análisis resulta de suma utilidad el concepto de \emph{Oráculo Optimista}, el cual nos darán información acerca de la influencia de las distintas métricas de diversidad en la distribución de los distintos modelos base sobre el espacio de entrada de nuestros datos.
 Los resultados obtenidos por nuestro sistema son entonces comparados con aquellos del \emph{Oráculo Optimista} para cada una de las métricas de diversidad utilizadas.
 
-Finalmente, se analiza también en esta etapa el comportamiento del sistema bajo diferentes combinaciones de otros hiper-parámetros como la cantidad de modelos base.
-La mejor configuración de dichos hiper-parámetros, incluyendo la métrica de diversidad que mejores resultados proporciona al sistema, son utilizados en la segunda etapa experimental.
+Finalmente, se analiza también en esta etapa el comportamiento del sistema bajo diferentes combinaciones de otros hiperparámetros como la cantidad de modelos base.
+La mejor configuración de dichos hiperparámetros, incluyendo la métrica de diversidad que mejores resultados proporciona al sistema, son utilizados en la segunda etapa experimental.
 
-La segunda etapa experimental consiste del estudio de la capacidad del sistema para lograr producir modelos de ensemble que son precisos de acuerdo a una función de perdida determinada y justos según una o varias métricas de equidad. 
+La \textbf{segunda etapa experimental} consiste del estudio de la capacidad del sistema para lograr producir modelos de ensemble que son precisos de acuerdo a una función de perdida determinada y justos según una o varias métricas de equidad. 
 Con este fin se realiza una comparación entre los resultados obtenidos por nuestro sistema y los obtenidos por varios otros sistemas que resultan relevantes en la literatura para la solución de este problema.
 
 \subsection{Escenarios de Evaluación}\label{section:evaluation-scenaries}
@@ -64,9 +67,11 @@ La primera etapa experimental evalúa el sistema en la tarea \emph{HAHA 2019}(\t
 El proceso de evaluación consiste primero de la ejecución de la primera fase de nuestro sistema, esto es, la exploración del espacio de modelos y obtención del conjunto de modelos base a ser ensamblados.
 Posteriormente la segunda fase de nuestro sistema es ejecutada, utilizando como única función objetivo la función de perdida que fue utilizada en la obtención de los modelos base.
 La función objetivo a optimizar en ambas fases del sistema es la precisión del sistema.
+Como parte de esta etapa se realizan múltiples ejecuciones con diferentes configuraciones de hiperparámetros.
+La configuración de hiperparámetros para la cual se observen los mejores resultados en esta etapa, sera la utilizada en la segunda etapa experimental, como se describe a continuación.
 
-Finalmente la segunda etapa experimental consiste de la ejecución de extremo a extremo de nuestro sistema.
-En esta etapa se utiliza la mejor configuración de hiper-parámetros acorde a los resultados de la primera fase.
+Una segunda etapa experimental se lleva a cabo, la cual consiste de la ejecución de extremo a extremo de nuestro sistema, utilizando la colección de datos \emph{Adult}~\parencite{ucidata} como escenario de evaluación.
+En esta etapa se utiliza la mejor configuración de hiperparámetros acorde a los resultados de la primera fase, es relevante destacar que entre estos hiperparámetros preseleccionados en la etapa anterior se encuentran la medida de diversificación a utilizar en la selección de modelos base y la cantidad máxima de estos.
 Ambas fases optimizan la precisión del modelo, en particular la segunda fase incorpora al proceso de optimización métricas de equidad, dígase \emph{Statistical Parity} y \emph{Equalized Opportunity}, como funciones objetivo adicionales a optimizar simultáneamente con la precisión.
 
 \subsection{Corpus de Evaluación}\label{section:evaluation-corpus}
@@ -105,10 +110,10 @@ La colección de datos es anotada a partir de asignar una clasificación de \emp
 
 \item[Adult]
 La colección de datos \emph{Adult} \parencite{ucidata} presenta información extraída del censo de 1994 en los Estados Unidos por Barry Becker.
-Los datos contienen detalles personales de los individues, tales como nivel de educación, horas de trabajo a la semana, raza, sexo, etc., y el objetivo es predecir si el individuo ganará un salario mayor a \$$50$K al año.
+Los datos contienen detalles personales de los individues, tales como nivel de educación, horas de trabajo a la semana, raza, sexo, etc., y el objetivo es predecir si el individuo ganará un salario mayor a \texttt{\$50K} al año.
 Hay un total de $48\,842$ filas de datos, y de estas, $3\,620$ contienen casillas con valores desconocidos, dejando $45\,222$ filas completas.
-Existen dos clases en las cuales clasificar a los individuos dependiendo de su salario anual, estas son, '$<50K$' o '$\leq50K$'.
-Las clases están desbalanceadas, con una tendencia hacia la etiqueta '$\leq50K$', la cual representa aproximadamente el $75\%$ de los ejemplos.
+Existen dos clases en las cuales clasificar a los individuos dependiendo de su salario anual, estas son, \texttt{<50K} o \texttt{$\leq$50K}.
+Las clases están desbalanceadas, con una tendencia hacia la etiqueta \texttt{<50K}, la cual representa aproximadamente el $75\%$ de los ejemplos.
 
 \end{description}
 
@@ -123,21 +128,24 @@ Los parámetros de búsqueda de AutoGOAL fueron los siguientes:
     \item \texttt{validation\_split=0.3}
 \end{itemize}
 
-Debido a limitaciones de infraestructura, los algoritmos de aprendizaje profundo fueron excluidos del conjunto de algoritmos disponibles para AutoGOAL, esto significa que flujos basados en \emph{Keras} y \emph{BERTA fueron excluidos y fundamentalmente} flujos basados en \emph{ScikitLearn} fueron utilizados.
-AutoGOAL es una herramienta aun en desarrollo y la ultima versión estable en el momento de realizar los experimentos (\texttt{v0.6.0}) no soporta completamente algoritmos de aprendizaje profundo en todas las arquitecturas.
+Debido a limitaciones de infraestructura, los algoritmos de aprendizaje profundo fueron excluidos del conjunto de algoritmos disponibles para AutoGOAL.
+Esto significa que flujos basados en \emph{Keras} y \emph{BERT} fueron excluidos y fundamentalmente flujos basados en \emph{ScikitLearn} fueron utilizados.
 
-No incluir los algoritmos de aprendizaje profundo en la configuración experimental puede tener un impacto negativo en el mejor rendimiento que puede ser alcanzado por el sistema.
-Es decir, el rendimiento del sistema mientras resuelve el problema puede no ser directamente comparado con otras soluciones reportadas que utilizan técnicas de \emph{Aprendizaje Profundo}.
+No incluir los algoritmos de aprendizaje profundo en la configuración experimental puede tener un impacto negativo en el rendimiento máximo que puede ser alcanzado por el sistema.
+Es decir, la precisión del sistema no puede ser comparada directamente con otras soluciones reportadas, en términos de magnitud, pues aquellas soluciones que utilizan técnicas de aprendizaje profundo tienen una ventaja inherente en problemas donde modelos más simples no son tan competitivos.
 Sin embargo, la ausencia de estos algoritmos no deberían afectar la capacidad del sistema de mejorar el rendimiento respecto a los modelos base encontrados en la primera fase.
 Por tanto, si el sistema es capaz de mejorar el rendimiento de los modelos base, entonces el rendimiento del sistema se espera que mejore un mas una vez que las arquitecturas de aprendizaje profundo sean compatibles.
 Esto se espera que ocurra no solo porque los modelos base ahora tendrían mejor rendimiento, sino también porque arquitecturas de ensemble mas poderosas serían añadidas al mismo tiempo sin esfuerzo alguno.
 AutoGOAL ya ha probado lograr resultados competitivos cuando es configurado correctamente \parencite{estevez2020automatic}.
 Además, es importante destacar que, en el caso en que se optimiza buscando un buen balance entre la precisión y las métricas de equidad, por ejemplo en la segunda fase de nuestro sistema, no necesariamente modelos mas poderosos (como los de aprendizaje profundo) implican mejores resultados en dicho balance.
+Por tanto, la comparativa con otros métodos de mitigación no debería verse afectada significativamente.
 
 \subsubsection{Biblioteca}\label{section:library}
 
 El sistema propuesto en este trabajo es parte de la biblioteca en desarrollo \texttt{BFair}\footnote{https://github.com/bfair-ml/bfair}
 La biblioteca tiene como objetivo atacar los problemas de sesgos que emergen de entrenar modelos de \emph{Aprendizaje Automático} que en datos que muestran sesgos de los humanos.
+
+\todo[inline]{Aquí quizas puedes poner un ejemplo de cómo queda un llamado a la interfaz para resolver Adult. En plan, la parte de cargar los datos la pones como una funcion maquica y abajo lo que pones es el código de python con los hiperparámetros que tocan.}
 
 \subsubsection{Hardware}\label{section:hardware}
 
@@ -152,13 +160,13 @@ A continuación se muestran los resultados de la primera y segunda fase experime
 
 \subsection{Resultados}\label{section:results-first-phase}
 
-Las tablas \ref{table:haha-5}, \ref{table:haha-20}, \ref{table:haha-50}, \ref{table:haha-100} resumen los resultados obtenidos por el sistema, en la tarea \emph{HAHA 2019} correspondiente a la primera fase experimental, para configuraciones con número máximo de clasificadores base siendo $5$, $20$, $50$ y $100$ respectivamente.
-La métrica de puntuación utilizada es $F_1$ como se sugiere en la descripción de la tarea.
-Cinco estrategias de control de población fueron evaluadas con el objetivo de establecer comparaciones, de las cuales dos son las métricas de diversidad discutidas en la sección~\ref{section:diversity-meassures}, y las otras tres son las implementaciones de referencia del método \ref{code:reselect} presentados en la sección~\ref{section:first-phase}.
+Las tablas~\ref{table:haha-5},~\ref{table:haha-20},~\ref{table:haha-50},~\ref{table:haha-100} resumen los resultados obtenidos por el sistema en la tarea \emph{HAHA 2019}, para configuraciones con número máximo de clasificadores base siendo $5$, $20$, $50$ y $100$ respectivamente.
+El sistema fue configurado para utilizar en ambas fases una función de pérdida basada en $F_1$, la cual fue propuesta como métrica de puntuación en la descripción de la tarea.
+Cinco estrategias de control de población fueron evaluadas con el objetivo de establecer comparaciones, de las cuales dos son las métricas de diversidad discutidas en la sección~\ref{section:diversity-meassures}, y las tres restantes son las implementaciones de referencia del método~\ref{code:reselect} presentados en la sección~\ref{section:first-phase}.
 Cada tabla muestra la métrica $F_1$ alcanzada por:
 (i) los oráculos optimista y sobreajustados (sección~\ref{section:experimental-framework});
-(ii) el modelo obtenido a partir de ensamblar los modelos base de acuerdo a la función de perdida con la que estos fueron entrenados (sección~\ref{section:experimental-framework}); y,
-(iii) el mejor modelo base encontrado (sección~\ref{section:first-phase}).
+(ii) el modelo obtenido a partir de ensamblar los modelos base~(sección~\ref{section:second-phase}); y,
+(iii) el mejor modelo base encontrado~(sección~\ref{section:first-phase}).
 Además, el tipo de algoritmo de ensemble utilizado por el mejor de los modelos de ensemble encontrados es adicionado al final de cada tabla.
 
 
@@ -174,7 +182,7 @@ Además, el tipo de algoritmo de ensemble utilizado por el mejor de los modelos 
 %This collection was not used during training.
 %}
 
-\begin{table}[!htb]
+\begin{table}[H]
     \centering
     \resizebox{\textwidth}{!}{
     \begin{tabular}{lccccc}
@@ -201,7 +209,7 @@ Además, el tipo de algoritmo de ensemble utilizado por el mejor de los modelos 
     \label{table:haha-5}
 \end{table}
 
-\begin{table}[!htb]
+\begin{table}[H]
     \centering
     \resizebox{\textwidth}{!}{
     \begin{tabular}{lccccc}
@@ -227,7 +235,7 @@ Además, el tipo de algoritmo de ensemble utilizado por el mejor de los modelos 
     \label{table:haha-20}
 \end{table}
 
-\begin{table}[!htb]
+\begin{table}[H]
     \centering
     \resizebox{\textwidth}{!}{
     \begin{tabular}{lccccc}
@@ -254,7 +262,7 @@ Además, el tipo de algoritmo de ensemble utilizado por el mejor de los modelos 
     \label{table:haha-50}
 \end{table}
 
-\begin{table}[!htb]
+\begin{table}[H]
     \centering
     \resizebox{\textwidth}{!}{
     \begin{tabular}{lccccc}
@@ -309,7 +317,7 @@ Algunos de estos patrones son presentados a continuación:
     Esta idea es apoyada por el hecho de que la estrategia que reselecciona de forma golosa solo los modelos de mejor rendimiento es la que logra el menor cubrimiento (de acuerdo al ensemble optimista).
 \end{itemize}
 
-\begin{table}[!htb]
+\begin{table}[H]
     \centering
 
     \begin{tabular}{lccccc}
@@ -349,7 +357,7 @@ Esto puede llevar a situaciones en las cuales es difícil para el ensemble decid
 Aun mas importante, la tabla~\ref{table:delta} también muestra que la optimización de ensemble es capaz de producir ensembles que generalizan mejor que sus modelos base, es decir, los ensembles tienen mejor rendimiento en el conjunto de evaluación.
 Esto es particularmente cierto cuando el numero de clasificadores base no es muy grande. Según incrementa el numero de clasificadores base, también lo hace el numero de diferentes combinaciones, y por tanto, el ensemble es mas susceptible a sobre-ajustar el conjunto de entrenamiento.
 
-\begin{table}[!htb]
+\begin{table}[H]
     \centering
 
     \begin{tabular}{lccccc}
@@ -398,7 +406,7 @@ La tabla~\ref{table:performance} resume el rendimiento obtenido por el ensemble 
 La estrategia de \emph{double-fault} siempre logra los mejores resultados, excepto en el ultimo escenario, en el cual el numero de clasificadores es el más alto.
 En ese caso, aunque el ensemble obtuvo un mejor rendimiento que sus modelos base en la colección de entrenamiento, el numero alto de votantes puede haber afectado sus capacidades de generalización. dado que el espacio de posibles combinaciones de votantes es mayor.
 
-\begin{table}[!htb]
+\begin{table}[H]
     \centering
     
     \begin{tabular}{lccccc}
@@ -436,12 +444,12 @@ A pesar de utilizar una arquitectura mucho más simple, resultados competitivos 
 Adicionalmente, como se muestra en la tabla~\ref{table:delta}, la optimización utilizando ensembles es capaz de producir ensembles que generalizan mejor que sus modelos base.
 Luego, se espera que el rendimiento de los modelos producidos por nuestro sistema mejore una vez que algoritmos más poderosos estén disponibles.
 
-Las tablas~\ref{types} y~\ref{table:types-count} resumen los diferentes tipos de ensemble que fueron encontrados como optimos en cada experimento.
+Las tablas~\ref{table:types} y~\ref{table:types-count} resumen los diferentes tipos de ensemble que fueron encontrados como óptimos en cada experimento.
 La técnica de ensemble ``ML Voting Classifier'' no parece ser utilizada por ninguna estrategia de reselección de forma consistente.
 La técnica de ensemble ``Voting Classifier'' es utilizada consistentemente en las estrategias basadas en \emph{double-fault}, y también parece ser utilizada frecuentemente cuando el numero de clasificadores base es bajo.
 Además, la técnica de ensemble ``Overfitted Voting Classifier'' parece ser utilizada mas cuando el numero de clasificadores es bajo.
 
-\begin{table}[!htb]
+\begin{table}[H]
     \centering
 
     \begin{tabular}{lccccc}
@@ -460,7 +468,7 @@ Además, la técnica de ensemble ``Overfitted Voting Classifier'' parece ser uti
     \label{table:types}
 \end{table}
 
-\begin{table}[!htb]
+\begin{table}[H]
     \centering
     
     \begin{tabular}{lccc}
@@ -481,5 +489,87 @@ Además, la técnica de ensemble ``Overfitted Voting Classifier'' parece ser uti
 Para concluir, se muestra que el sistema brinda los resultados mas prometedores cuando es configurado para realizar la búsqueda sobre una colección de $20$ o $50$ modelos base y utilizando la estrategia de selección de modelos base \emph{double-fault}.
 
 \section{Segunda Etapa Experimental}\label{section:experiments-second-phase}
+
+\begin{table}[H]
+    \centering
+    
+    \begin{tabular}{lc}
+    \toprule
+        \multicolumn{2}{c}{Accuracy Score} \\ \midrule
+        evaluations & adult \\  % & dorothea  \\
+        \midrule \midrule
+        % optimistic oracle &  1.000 \\ %   &  0.989 \\
+        % overfitted oracle & 0.838 \\ %  &  0.969 \\
+        \midrule
+        $A^*$ (training) &  0.839 $(\pm 0.069)$ \\ %  & 0.973 \\
+        $E^*$ (training) &  {\bf 0.860 $(\pm 0.060)$} \\ %  & {\bf 1.000} \\
+        \cmidrule(lr){1-2}
+        delta (training) & \cellcolor{green!25} 0.021 \\ %  & \cellcolor{green!25} 0.027  \\
+        \midrule \midrule
+        $A^*$ (testing) & 0.823 $(\pm 0.019)$ \\ %  & 0.937 \\ 
+        $E^*$ (testing) & {\bf 0.831 $(\pm 0.013)$} \\ %  & {\bf 0.946} \\
+        \cmidrule(lr){1-2}
+        delta (testing) & \cellcolor{green!25} 0.008 \\ %  & \cellcolor{green!25} 0.009  \\
+        \midrule
+    \bottomrule
+    \end{tabular}
+    
+    \begin{tabular}{lcccc}
+    \toprule
+        \multicolumn{5}{c}{Adult} \\ \midrule
+        method & accuracy & statistical parity & equal opportunity & equalized odds  \\
+        \midrule \midrule
+        FERM & 0.81 & - & 0.01 & - \\
+        Zafar & 0.78 & - & 0.05 & - \\
+        Adversarial & & & & \\ \midrule
+        FERM preprocess & & & & \\
+        SMOTE & & & & \\
+        FBO (RF) & $\approx 0.785$ & $\leq 0.05$ & $\leq 0.05$ & $\leq 0.05$ \\
+        FBO (XGBoost) & $\approx 0.835$ & $\leq 0.05$ & $\leq 0.05$ & $\leq 0.05$ \\
+        FBO (NN) & $\approx 0.775$ & $\leq 0.05$ & $\leq 0.05$ & $\leq 0.05$ \\
+        FBO (LL) & $\approx 0.810$ & $\leq 0.05$ & $\leq 0.05$ & $\leq 0.05$ \\ \midrule
+        % FBO (RF, 0.05) & 0.78 & & 1-0.2=0.8 (this acc with only this constraint) & \\
+        % FBO (RF, 0.10) & & & & \\
+        % FBO (RF, 0.15) & & 0.83 & & \\
+        % FBO (XGBoost, 0.05) & 0.84 & 1-0.16=0.84 (this acc with only this constraint) & & \\
+        % FBO (NN, 0.05) & 0.78 & 1-0.20=0.8 (this acc with only this constraint) & & \\
+        % FBO (LL, 0.05) & 0.82 & & & \\ \midrule
+        BFair (20) & 0.817 & 0.049 & 0.014 & 0.007 \\
+        BFair (20) & 0.820 & 0.057 & 0.002 & 0.005   \\
+        BFair (50) & 0.833 & 0.089 & 0.086 & 0.052 \\
+        BFair (20) & 0.860 & - & 0.032 & - \\
+    \bottomrule
+    \end{tabular}
+
+    \caption{Evaluation in the Adult dataset in terms of ....
+    Maximum number of classifiers set to 50.
+    The base model selection strategy was set to \emph{double-fault}.
+    No detriment constraints in use.
+    }
+    \label{table:adult-and-dorothea}
+\end{table}
+
+\begin{table}[H]
+    \centering
+
+    \begin{tabular}{lc}
+    \toprule
+        \multicolumn{2}{c}{Precisión} \\ \midrule
+        Método & Resultados en \emph{Adult} \\
+        \midrule \midrule
+        FERM & $0.164 \pm 0.010$ \\
+        Zafar & $0.187 \pm 0.001$ \\
+        Adversarial & $0.237 \pm 0.001$ \\
+        FERM preprocess & $0.228 \pm 0.013$ \\
+        SMOTE & $0.178 \pm 0.005$ \\
+        FairBO (LL) & $0.175 \pm 0.007$ \\  \midrule
+        BFair (20) & $0.170$ {\tiny \bf SP=}$0.087$ \\
+    \bottomrule
+    \end{tabular}
+
+    \caption{Restriccion $DSP \leq 0.1 $.}
+    \label{table:comparison-adult-dsp01}
+\end{table}
+
 \subsection{Resultados}\label{section:results-second-phase}
 \subsection{Discusión}\label{section:discussion-second-phase}

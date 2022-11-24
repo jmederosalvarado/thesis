@@ -25,7 +25,7 @@ A continuación se presentan algunas de las definiciones mas utilizadas.
 % The only constraint tied to the fairness definition is that it should only depend on: the protected attribute, the predicted class, and the gold class, of each individual in the collection, since those three are the parameters used in the standard fairness definitions.
 % These definitions are transformed into fairness metrics either by computing the difference between the highest and lowest evaluations across protected groups or by computing the ratio between those two evaluations.
 
-Sea $Y$ la clasificación (binaria) correcta, $S$ el atributo protegido, y $Y^p$ la clasificación obtenida del modelo.
+%Sea $Y$ la clasificación (binaria) correcta, $S$ el atributo protegido, y $Y^p$ la clasificación obtenida del modelo.
 
  \begin{itemize}
      \item \textbf{Statistical Parity (SP)}: Un clasificador $\hat{Y}$ satisface \emph{statistical parity} si $P(\hat{Y}=1|P=1) = P(\hat{Y}=1|P=0)$.
@@ -40,6 +40,10 @@ Las concesiones inherentes a utilizar cada noción de equidad han sido estudiado
 Escoger la definición correcta para un problema determinado es difícil, y en la práctica no puede ser delegado a un agente automático.
 En su lugar, una decisión humana es preferida para asegurar una decisión informada.
 
+Es posible transformar las definiciones de equidad anteriores para obtener métricas, que de cierta forma cuantifiquen el sesgo de un clasificador.
+Por ejemplo \emph{Differential Statistical Parity} (\texttt{DSP}) puede ser obtenida utilizando la definición de \emph{Statistical Parity} para obtener una medida de la diferencia entre la cantidad de resultados positivos entre los diferentes grupos protegidos.
+Luego, estas métricas pueden ser utilizadas como funciones de perdida a emplear en algoritmos de optimización que permitirán mitigar los sesgos de los modelos.
+
 \section{Mitigación de sesgos}\label{section:mitigation}
 
 %% From FBO
@@ -52,40 +56,67 @@ Una ventaja de los métodos de pre-procesamiento son agnósticos al modelo.
 Por el contrario, sus hiperparámetros, así como los del modelos de aprendizaje automático seleccionado todavía necesitan ser ajustados para mejor rendimiento.
 
 Los métodos aplicados durante el procesamiento aseguran que se cumplan ciertas restricciones de equidad durante el entrenamiento (p.e. \parencite{donini2018empirical, zafar2017fairness, zafar2019fairness}), sin embargo, esto los hace aplicable solo a una cierta clase de modelos.
-Por ejemplo, el algoritmo propuesto en \cite{donini2018empirical} solo puede ser aplicado a \emph{kernel machines} (tales como \emph{maquinas de soporte vectorial}), y solo a una única definición de equidad, dígase \emph{Equal Opportunity}).
+Por ejemplo, el algoritmo propuesto por \emph{Donini, Michele et. al.} \parencite{donini2018empirical} solo puede ser aplicado a \emph{kernel machines} (tales como \emph{maquinas de soporte vectorial}), y solo a una única definición de equidad, dígase \emph{Equal Opportunity}).
 Aunque las técnicas de mitigación durante el procesamiento pueden brindar muy buenos resultados para la clase del modelo que están diseñados, frecuentemente son difíciles, o a veces imposible, de extender para nuevas clases de modelos.
 Estos métodos también pueden introducir nuevos hiperparámetros que podrían requerir conocimiento específicos del dominio y experimentación.
 
 Las técnicas de post-procesamiento operan ajustando el umbral de decisión de modelos pre-entrenados para eventualmente lograr resultados más justos respecto a una métrica de equidad dada.
 El principal problema es que post-procesar el umbral de decisión es inherentemente subóptimo y puede llevar a peores balances de eficacia y equidad.
-Adicionalmente, estas técnicas no son utilizables si la información sensible no esta disponible en el momento de realizar las predicciones, lo cual a su vez puede llevar a problemas legales por la utilización de información sensible para realizar predicciones \parencite{MacCarthy2018StandardsOF}.
+Adicionalmente, estas técnicas no son utilizables si la información sensible no esta disponible en el momento de realizar las predicciones
+El conocimiento por parte del sistema de información sensible de los individuos reales en el momento de realizar las predicciones puede llevar a problemas legales~\parencite{MacCarthy2018StandardsOF}.
 
-Una clase de métodos recientemente propuesta para tareas de clasificación justa, conocida como meta-algoritmos, reduce la tarea de clasificación justa a una secuencia de problemas de clasificación con costo asociado a sus errores de predicción \parencite{agarwal2018reductions, agarwal2019fair, kearns2018preventing}.
+Finalmente, resultan relevantes los llamados meta-algoritmos, una clase de métodos recientemente propuesta para tareas de clasificación justa.
+Estos reducen la tarea de clasificación justa a una secuencia de problemas de clasificación con costo asociado a sus errores de predicción \parencite{agarwal2018reductions, agarwal2019fair, kearns2018preventing}.
 Las soluciones a estos problemas suelen producir un clasificador \emph{randomizado}. Contrario a los métodos que funcionan durante el procesamiento, los meta-algoritmos no dependen del tipo de los modelos que se utilizan en el clasificador, sino en la capacidad de los mismos para ser reentrenados repetidamente.
-En el contexto de algoritmos de minimización del riesgo empírico, estos métodos son agnósticos al modelo de aprendizaje automático, pero aun necesitan implementaciones específicas basadas en la definición de equidad seleccionada y necesitan producir un ensamblado de modelos. Limitaciones similares caracterizan un número de enfoques que utilizan optimización \parencite{chiappa2018causal,Dimitrakakis_Liu_Parkes_Radanovic_2019} o inferencia bayesiana \parencite{kearns2018preventing,thomas2019preventing}, sus implementaciones tienen que estar diseñadas específicamente para ciertas definiciones de equidad.
+En el contexto de algoritmos de Minimización del Riesgo Empírico (\emph{ERM} por sus siglas en inglés), estos métodos son agnósticos al modelo de aprendizaje automático, pero aun necesitan implementaciones específicas basadas en la definición de equidad seleccionada y necesitan producir un ensamblado de modelos. Limitaciones similares caracterizan un número de enfoques que utilizan optimización \parencite{chiappa2018causal,Dimitrakakis_Liu_Parkes_Radanovic_2019} o inferencia bayesiana \parencite{kearns2018preventing,thomas2019preventing}, sus implementaciones tienen que estar diseñadas específicamente para ciertas definiciones de equidad.
 
-% TODO:
-% - Bayesian Optimization
-% - Ferm
-% - Zafar
+Varios algoritmos han sido propuestos en la literatura, que o bien se acogen a uno de los enfoques anteriormente descritos o combinan varios de ellos.
+A continuación se exploran algunos de estos métodos que resultan sumamente relevantes para el presente trabajo.
 
-\section{Métodos de ensamblado}\label{section:ensembles}
+\begin{description}
 
-Los métodos de ensamblado están diseñados para intentar resolver el problema de \emph{low bias}~/~\emph{high variance} que muestran la mayoría de los modelos de aprendizaje automático, haciéndolos apropiados para modelos de clasificación más robustos \parencite{polikar2006ensemble}.
-Un modelo de ensamblado está diseñado de muchos modelos con \emph{low bias} cuyas predicciones son combinadas para producir una predicción final.
+\item[\emph{Fair Bayesian Optimization}~\parencite{perrone2021fbo}]
+Motivado por la versatilidad del ajuste de hiperparámetros, propone un enfoque basado en \emph{Optimizacion Bayesiana} (\emph{BO}) general restringida.
+La \emph{Optimizacion Bayesiana} es una metodología bien establecida para optimizar funciones de caja negra costosas de evaluar.
+La técnica propuesta por \emph{FBO} optimiza los hiperparámetros de una función de caja negra de forma agnóstica al modelo, mientras se satisfacen restricciones de equidad.
+
+\item[\emph{SMOTE} \parencite{chawla2002smote}]
+Propone un metodo de preprocesamiento para colecciones de datos desbalanceadas.
+El enfoque de este método se basa fundamentalmente en el sobre-muestreo de los datos pertenecientes a las clases menos representadas en la colección.
+Utiliza un algoritmo que genera nuevos ejemplos a partir de modificaciones en los ejemplos pertenecientes a dicha clase existentes en los datos.
+
+\item[\emph{Fair Empirical Risk Minimization} (\emph{FERM}) \parencite{FERM}]
+Introduce una generalización de las diferentes nociones de equidad, las cuales restringen el \emph{riesgo condicional} de un clasificador de acuerdo a una función de perdida predeterminada y un parámetro de aproximación.
+Este intenta resolver el problema de minimizar el riesgo esperado para un conjunto predeterminado de funciones, utilizando una modificación de \emph{Empirical Risk Minimization} a la cual se refieren como \emph{Fair Empirical Risk Minimization}.
+Además, se proponen ejemplos concretos de algoritmos como \emph{Máquinas de Soporte Vectorial} mejorados para satisfacer estas restricciones de equidad.
+Finalmente se muestra como para el caso lineal de la restricción de equidad modificada, este enfoque se reduce a un paso de preprocesamiento sobre la colección de datos. %, haciendo cumplir las restricciones de equidad a cualquier modelo linear ajustado sobre los mismos.
+
+\item[\emph{Zafar et. al.} \parencite{zafar2017fairness}] El trabajo realizado por  los autores introduce una métrica para la equidad del umbral de decisión, la \emph{covarianza del umbral de decisión}.
+Utilizando esta métrica como base, se definen dos problemas a resolver, la optimización de la equidad con restricciones sobre la precisión, y la optimización de la precisión con restricciones sobre la equidad.
+Los autores realizan modificaciones a \emph{Regresión Logística} y \emph{Maquinas de Soporte Vectorial} para utilizar estas restricciones y resolver estos problemas propuestos.
+
+\item[\emph{Mitigación de Sesgos mediante Aprendizaje Adversarial}~\parencite{zhang2018mitigating}] replantea el problema de mitigación de sesgos como un problema de aprendizaje profundo adversarial~\parencite{goodfellow2014adversarial}.
+Esto significa que la tarea se reduce a encontrar un modelo predictor que resuelva el problema de clasificación a la vez que intenta que un adversario no pueda inferir el valor de los atributos protegidos a partir de la predicción.
+
+\end{description}
+
+\section{Métodos de ensemble}\label{section:ensembles}
+
+Los métodos de ensamble están diseñados para intentar resolver el problema de \emph{low bias}~/~\emph{high variance} que muestran la mayoría de los modelos de aprendizaje automático, haciéndolos apropiados para modelos de clasificación más robustos \parencite{polikar2006ensemble}.
+Un modelo de ensamble está diseñado de muchos modelos con \emph{low bias} cuyas predicciones son combinadas para producir una predicción final.
 Se asume fundamentalmente que la combinación de varias predicciones de bajo nivel producirá una salida con baja varianza mientras mantiene un \emph{low bias}.
 Tener un conjunto diverso de modelos de bajo nivel es una característica fundamental para lograr esto \parencite{polikar2006ensemble}.
 Sin embargo, esto requiere, que clasificadores individuales cometan errores en diferentes instancias.
 La intuición es que si cada clasificador comete diferentes errores, entonces una combinación estratégica de estos clasificadores puede reducir el error total. Luego, es necesario lograr que cada clasificador sea lo mas único posible, particularmente con respecto a ejemplos erróneamente clasificados.
 
-La naturaleza de múltiples hipótesis de estos modelos asegura que, si son ajustados lo suficiente, tendrán resultados mejores que cualquiera de los modelos individuales en el caso general. Esto les permite también estimar el grado de confianza o calidad de las predicciones que producen. Las técnicas clásicas de ensamblado incluyen \emph{voting} y \textit{weighted voting} \parencite{dietterich2000ensemble}, \emph{boosting} \parencite{schapire1990strength}, y \emph{bagging} \parencite{breiman1996bagging}.
+La naturaleza de múltiples hipótesis de los métodos de ensemble asegura que, si son ajustados lo suficiente, tendrán resultados mejores que cualquiera de los modelos individuales en el caso general. Esto les permite también estimar el grado de confianza o calidad de las predicciones que producen. Las técnicas clásicas de ensamblado incluyen \emph{voting} y \textit{weighted voting} \parencite{dietterich2000ensemble}, \emph{boosting} \parencite{schapire1990strength}, y \emph{bagging} \parencite{breiman1996bagging}.
 
 En un problema de clasificación, \emph{voting} produce como salida la etiqueta que tiene la mayoría de los votos, tratando cada predicción de los modelos ensamblados como un voto.
 \emph{Weighted-voting} funciona de forma similar a \emph{voting}, pero cada modelo del ensamblado es asignado un \emph{peso} que indica la importancia de su voto.
 \emph{Boosting} ejecuta un proceso iterativo donde los modelos son entrenados secuencialmente, cada uno tratando de mejorar su rendimiento en los ejemplos entrenantes donde los modelos anteriores tuvieron peor rendimiento.
 Durante este proceso, a cada submodelo le es también asignado un peso que marca la importancia de su predicción.
 \textit{Bagging} entrena cada submodelo en una selección diferente (con reemplazo) de los ejemplos entrenantes originales.
-De esta forma, el modelo con una alta varianza debería producir modelos entrenados con alta diversidad.
+%De esta forma, un modelo con una alta varianza debería producir modelos entrenados con alta diversidad.
 Alternativamente, \textit{feature bagging} funciona de forma similar, seleccionando un subconjunto de características en lugar de los ejemplos entrenantes, causando que características correlacionados sean analizados de forma separada en algunos submodelos.
 
 Las capacidad de los métodos de ensamblado para construir modelos más robustos los ha hecho apropiados para múltiples aplicaciones.
@@ -95,6 +126,11 @@ De forma similar, un método de toma de decisión multicriterio basado en ensemb
 Existen ejemplos también no relacionados a la medicina, por ejemplo, en \parencite{livieris2020ensemble} se emplearon estrategias de ensemble como \textit{ensemble-averaging}, \textit{bagging} y \textit{stacking} con metodologías avanzadas de aprendizaje profundo para predecir los precios, a nivel de hora, de criptomonedas como \textit{Ethereum}, \textit{Bitcoin} y \textit{Ripple}.
 
 Una simple pero poderosa técnica en el contexto de los métodos de ensamblado es la llamada \textit{snapshot ensemble} \parencite{huang17snapshot}. Esta técnica genera múltiples clasificadores base, entrenando una sola red neuronal mientras la hace converger de forma rápida y repetida a múltiples óptimos locales y salvando en cada uno de dichos puntos los parámetros del modelo. Todas las redes neuronales son luego ensambladas para producir el clasificador final. Estos \textit{snapshot ensemble} son mas robustos y precisos que las redes individuales dada su naturaleza de ensamblado, a ningún costo adicional de entrenamiento.
+
+Como se puede observar, los métodos de ensemble son muy poderosos.
+Estos son capaces de construir sistemas que a partir de las predicciones de un conjunto de modelos (quizás no lo suficientemente expresivo) generalizan bien y obtienen resultados satisfactorios.
+Sin embargo, es necesario para la construcción de estos ensembles se debe partir de un conjunto de modelos base previamente obtenidos, que cumplan determinadas características.
+Luego, resulta sumamente interesante explorar enfoques que permitan obtener estos modelos base de forma automática para un problema determinado, de forma tal que no sea necesario manualmente tomar decisiones acerca de el tipo de modelos a utilizar, lo hiperparámetros de los mismos, etc. 
 
 \section{Métodos de AutoML}\label{section:automl}
 
@@ -119,8 +155,8 @@ Esta solución está basada en el software \emph{Weka}~\parencite{weka}, un soft
     \end{equation}
 \end{definition}
 
-Otros sistemas populares de AutoML son AutoSklearn \parencite{feurer2015efficient} y AutoKeras \parencite{autoKeras}.
-Estos sistemas están basados en las bibliotecas de aprendizaje automático \textit{ScikitLearn} \parencite{pedregosa2011scikit} y \textit{Keras} \parencite{chollet2015keras}, respectivamente.
+Otros sistemas populares de \emph{AutoML} son \emph{AutoSklearn} \parencite{feurer2015efficient} y \emph{AutoKeras} \parencite{autoKeras}.
+Estos sistemas están basados en las bibliotecas de aprendizaje automático \emph{ScikitLearn} \parencite{pedregosa2011scikit} y \textit{Keras} \parencite{chollet2015keras}, respectivamente.
 Ambos sistemas proveen una interfaz para encontrar la mejor arquitectura de aprendizaje automático para resolver un problema.
 Una diferencia fundamental entre ellos es la forma en que sus espacios de búsqueda son definidos.
 Mientras AutoSkLearn explora espacio de búsqueda condicional, es decir, un espacio con algunos hiperparámetros condicionados a otros, AutoKeras realiza una \emph{Busqueda de Arqutectura Neuronal (NAS)}~\parencite{NAS}, la cual implica explorar espacios jerárquicos de complejidad arbitraria.
@@ -168,6 +204,9 @@ Cada flujo es evaluado (lo cual consiste simplemente en entrenamiento y ejecuci�
     \Return{\best} \\
 \end{algorithm}
 
+A pesar de la gran variedad de algoritmos que AutoGOAL tiene a su disposición y los satisfactorios resultados que obtiene para una gran variedad de problemas, es una limitación significativa el hecho de que solo es posible optimizar una función objetivo.
+La capacidad de AutoGOAL para encontrar modelos que optimicen múltiples funciones objetivos simultáneamente posibilitaría la solución de un amplio espectro de problemas que son inherentemente multi-objetivo.
+
 
 \section{Optimización Multiobjetivo}\label{section:multiobjective}
 
@@ -205,18 +244,23 @@ Tradicionalmente los problemas de optimización multiobjetivo han sido atacados 
 Varias técnicas existen en este contexto. \textit{Linear Weighting} es una de estas, en la cual se construye una nueva función objetivo a partir de la combinación lineal de las funciones objetivo del problema original, esto es $min \sum w_i f_i(x), x \in X$.
 Este enfoque tiene un problema fundamental y es que si el \emph{frente pareto} no es convexo, no es posible encontrar soluciones en esta zona, no importa los pesos $w_i$ que se utilicen.
 Otra forma de escalarización es \textit{$\epsilon$-constrain}, esta técnica selecciona una función como la \textit{principal} y las demás se establecen como restricciones al conjunto de soluciones factibles, exigiendo que sean menores que un $\epsilon$.
+\emph{Random Scalarization} \parencite{paria2020flexible} propone una estrategia basada en escalarizaciones aleatorias de las funciones objetivo.
+En lugar de optimizar una única escalarización de las funciones objetivos, este enfoque itera sobre un conjunto de escalarizaciones durante un proceso de \emph{Optimización Bayesiana}.
+Finalmente, \emph{ParEGO} \parencite{knowles2006parego} es una extensión de \emph{EGO} \parencite{jones1998ego} para la utilización en escenarios multiobjetivos.
+Utiliza un enfoque que combina las diferentes funciones objetivo en una sola a partir de una escalarización utilizando un vector de pesos parametrizado, utilizando diferentes parámetros para dicho vector de pesos el \emph{Frente Pareto} es construído de forma gradual.
 
 Existen métodos numéricos que intentan resolver el problema haciendo cumplir las condiciones de \emph{Karush-Kuhn-Tucker} \parencite{kuhn2014nonlinear}.
 La idea va de encontrar al menos una solución del sistema de ecuaciones que se produce al tratar el problema de \textit{KKT}.
 Es posible utilizar métodos de continuación y homotopía para obtener todas las soluciones \parencite{hillermeier2001nonlinear, schutze2005continuation}.
 Estos métodos requiere que las soluciones satisfagan condiciones de convexidad local y diferenciabilidad.
 
-\subsection{NSGA-II}
-
 Los algoritmos genéticos utilizan paradigmas basados en procesos evolutivos naturales, como \textit{selección natural}, \textit{mutación} y \textit{recombinación} para mover una población (conjunto de vectores de decisión) a soluciones óptimas o casi óptimas \parencite{back1996evolutionary}.
 Los algoritmos genéticos multiobjetivo generalizan esta idea y son diseñados para en cada iteración acercarse más al frente pareto.
 En este contexto destaca \emph{NSGA-II} \parencite{deb2002nsgaii}, el cual se explica en mayor detalle a continuación.
 
+\subsection{NSGA-II}
+
+\emph{NSGA-II} es un algoritmo sumamente sencillo, pero aun así ha mostrado ser muy efectivo en la resolución de problemas de optimización multiobjetivo.
 El algoritmo consiste básicamente de un ciclo generacional que se divide en dos partes.
 En la primera parte, la población pasa por un proceso de variación.
 En la segunda parte, un proceso de selección toma lugar, el cual resulta en la población de la nueva generación.
@@ -267,6 +311,10 @@ Por tanto, aquellas soluciones con elevado \emph{crowding distance} son preferid
 
 \section{Discusión}\label{discussion}
 % - discusion. Aqui donde se explica como se usa todo lo q acabo de explicar.
+
+El método propuesto en este trabajo explora la utilización de AutoGOAL como vía para obtener un conjunto de modelos \emph{diversos} base que puedan ser posteriormente ensamblados.
+El proceso de construir el ensemble a partir de estos modelos base se realiza mediante una modificación del algoritmo de optimización de AutoGOAL, la cual permite explorar el espacio de búsqueda optimizando simultáneamente varias métricas, como por ejemplo la precisión y una o varias métricas de equidad.
+Para la modificación de AutoGOAL este trabajo se inspira en los metodos de selección propuestos por \emph{NSGA-II}, estos son, \emph{Non-dominated Sorting} y \emph{Crowding Distance}.
 
 
 % Model agnostic y model specific en el sota + fbo en mode agnostic

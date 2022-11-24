@@ -490,40 +490,16 @@ Para concluir, se muestra que el sistema brinda los resultados mas prometedores 
 
 \section{Segunda Etapa Experimental}\label{section:experiments-second-phase}
 
+\subsection{Resultados}\label{section:results-second-phase}
+
 \begin{table}[H]
     \centering
     
-    \begin{tabular}{lc}
-    \toprule
-        \multicolumn{2}{c}{Accuracy Score} \\ \midrule
-        evaluations & adult \\  % & dorothea  \\
-        \midrule \midrule
-        % optimistic oracle &  1.000 \\ %   &  0.989 \\
-        % overfitted oracle & 0.838 \\ %  &  0.969 \\
-        \midrule
-        $A^*$ (training) &  0.839 $(\pm 0.069)$ \\ %  & 0.973 \\
-        $E^*$ (training) &  {\bf 0.860 $(\pm 0.060)$} \\ %  & {\bf 1.000} \\
-        \cmidrule(lr){1-2}
-        delta (training) & \cellcolor{green!25} 0.021 \\ %  & \cellcolor{green!25} 0.027  \\
-        \midrule \midrule
-        $A^*$ (testing) & 0.823 $(\pm 0.019)$ \\ %  & 0.937 \\ 
-        $E^*$ (testing) & {\bf 0.831 $(\pm 0.013)$} \\ %  & {\bf 0.946} \\
-        \cmidrule(lr){1-2}
-        delta (testing) & \cellcolor{green!25} 0.008 \\ %  & \cellcolor{green!25} 0.009  \\
-        \midrule
-    \bottomrule
-    \end{tabular}
-    
+    \resizebox{\textwidth}{!}{
     \begin{tabular}{lcccc}
     \toprule
-        \multicolumn{5}{c}{Adult} \\ \midrule
-        method & accuracy & statistical parity & equal opportunity & equalized odds  \\
+        método & precisión & statistical parity & equal opportunity & equalized odds  \\
         \midrule \midrule
-        FERM & 0.81 & - & 0.01 & - \\
-        Zafar & 0.78 & - & 0.05 & - \\
-        Adversarial & & & & \\ \midrule
-        FERM preprocess & & & & \\
-        SMOTE & & & & \\
         FBO (RF) & $\approx 0.785$ & $\leq 0.05$ & $\leq 0.05$ & $\leq 0.05$ \\
         FBO (XGBoost) & $\approx 0.835$ & $\leq 0.05$ & $\leq 0.05$ & $\leq 0.05$ \\
         FBO (NN) & $\approx 0.775$ & $\leq 0.05$ & $\leq 0.05$ & $\leq 0.05$ \\
@@ -535,41 +511,88 @@ Para concluir, se muestra que el sistema brinda los resultados mas prometedores 
         % FBO (NN, 0.05) & 0.78 & 1-0.20=0.8 (this acc with only this constraint) & & \\
         % FBO (LL, 0.05) & 0.82 & & & \\ \midrule
         BFair (20) & 0.817 & 0.049 & 0.014 & 0.007 \\
-        BFair (20) & 0.820 & 0.057 & 0.002 & 0.005   \\
-        BFair (50) & 0.833 & 0.089 & 0.086 & 0.052 \\
-        BFair (20) & 0.860 & - & 0.032 & - \\
     \bottomrule
-    \end{tabular}
+    \end{tabular}}
 
-    \caption{Evaluation in the Adult dataset in terms of ....
-    Maximum number of classifiers set to 50.
-    The base model selection strategy was set to \emph{double-fault}.
-    No detriment constraints in use.
-    }
+    \caption{
+    Evaluación en \emph{Adult}, con restricción en las tres medidas de equidad.
+    El máximo número de clasificadores utilizado es 20.
+    La estrategia de selección de modelos base es \emph{double-fault}.}
     \label{table:adult-and-dorothea}
 \end{table}
 
 \begin{table}[H]
     \centering
 
-    \begin{tabular}{lc}
+    \begin{tabular}{lcc}
     \toprule
-        \multicolumn{2}{c}{Precisión} \\ \midrule
-        Método & Resultados en \emph{Adult} \\
+        Método & Error & statistical parity \\
         \midrule \midrule
-        FERM & $0.164 \pm 0.010$ \\
-        Zafar & $0.187 \pm 0.001$ \\
-        Adversarial & $0.237 \pm 0.001$ \\
-        FERM preprocess & $0.228 \pm 0.013$ \\
-        SMOTE & $0.178 \pm 0.005$ \\
-        FairBO (LL) & $0.175 \pm 0.007$ \\  \midrule
-        BFair (20) & $0.170$ {\tiny \bf SP=}$0.087$ \\
+        FERM & $0.164 \pm 0.010$ & $\leq 0.1$ \\
+        Zafar & $0.187 \pm 0.001$ & $\leq 0.1$ \\
+        Adversarial & $0.237 \pm 0.001$ & $\leq 0.1$ \\ 
+        \midrule
+        FERM preprocess & $0.228 \pm 0.013$ & $\leq 0.1$ \\
+        SMOTE & $0.178 \pm 0.005$ & $\leq 0.1$ \\
+        FairBO & $0.175 \pm 0.007$ & $\leq 0.1$ \\  
+        \midrule
+        BFair (20) & $0.170$ & $0.087$ \\
     \bottomrule
     \end{tabular}
 
-    \caption{Restriccion $DSP \leq 0.1 $.}
-    \label{table:comparison-adult-dsp01}
+    \caption{
+    Evaluación en \emph{Adult}, con restricción sobre \emph{statistical parity} como métrica de equidad.
+    El máximo número de clasificadores utilizado es 20.
+    La estrategia de selección de modelos base es \emph{double-fault}.}
 \end{table}
 
-\subsection{Resultados}\label{section:results-second-phase}
+\begin{table}[H]
+    \centering
+
+    \begin{tabular}{lcc}
+    \toprule
+        Método & Precisión & statistical parity \\
+        \midrule \midrule
+        ParEGO & $\approx 0.764$ & $\approx 0.0175$ \\
+        Dragonfly & $\approx 0.763$ & $\approx 0.0188$ \\
+        \midrule
+        BFair (20) & $0.813$ & $0.0487$ \\  %SP<=0.05 (adult20) # TOP-ENSEMBLE-0  @ TESTING #
+        BFair (20) & $0.803$ & $0.0332$ \\  %SP<=0.04 (adult20) # TOP-ENSEMBLE-20 @ TESTING #
+        BFair (50) & $0.800$ & $0.0269$ \\  %SP<=0.03 (adult50) # TOP-ENSEMBLE-30 @ TESTING #
+        BFair (50) & $0.777$ & $0.0072$ \\  %SP<=0.02 (adult50) # TOP-ENSEMBLE-39 @ TESTING #
+        BFair (50) & $0.777$ & $0.0072$ \\  %SP<=0.01 (adult50) # TOP-ENSEMBLE-39 @ TESTING #
+        BFair (20) & $0.764$ & $0.0000$ \\  %SP<=0.00 (adult20) # TOP-ENSEMBLE-4  @ TESTING #
+        
+    \bottomrule
+    \end{tabular}
+
+    \caption{
+    Evaluación en \emph{Adult}, con restricción sobre \emph{statistical parity} como métrica de equidad.
+    El máximo número de clasificadores utilizado aparece entre paréntesis.
+    La estrategia de selección de modelos base es \emph{double-fault}.}
+\end{table}
+
 \subsection{Discusión}\label{section:discussion-second-phase}
+
+% Tabla
+% -Minimizando los 3 vs fbo
+% -Solo EO vs ferm zafar smote? Adversial?
+% -dsp vs mobo and fbo
+% 
+% Ferm zafa a pesar de ad hoc yo les gano siendo agnostico al model
+% 
+% Resultados competitivos con fbo
+% 
+% Arquitectura de classif mas clasicas con random forest, ll y incluso con redes neuronales nuestra prupuesta es capaz de supera fbo
+% 
+% En el caso particular usando xgboost fuimos superados
+% 
+% Esto puede deberse a la limitacion en tipos de modleos a explorar q tiene nuestra version
+% 
+% Xgboost no esta en el pool de algo de autogoal
+% 
+% Creemos q a partir de incluir este algoritmo le damos
+% 
+% Ventaja con fbo es q yo no necesito threshold
+% 
+% Hacer el frente

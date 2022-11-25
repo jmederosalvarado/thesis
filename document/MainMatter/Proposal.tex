@@ -1,6 +1,10 @@
 \chapter{Propuesta}\label{chapter:proposal}
 
-\todo[inline]{En este capítulo ...}
+En este capitulo se presenta un sistema que permite la resolución de problemas de clasificación arbitrarios.
+Este sistema tiene entre sus objetivos fundamentales producir clasificadores que sean justos respecto a una o varias métricas de equidad, a la vez que minimizan una función de perdida determinada.
+Para ello se propone un enfoque basado en dos fases, que utiliza una combinación de técnicas de \emph{AutoML}, métodos de ensemble y optimización multiobjetivo.
+La sección~\ref{section:overview} provee una descripción general del sistema.
+Las secciones~\ref{section:first-phase} y~\ref{section:second-phase} detalla el funcionamiento de la primera y segunda fase del sistema respectivamente.
 
 \section{Descripción general}\label{section:overview}
 
@@ -8,10 +12,9 @@ El sistema toma como entrada una colección de datos $D = \{(x_1, y_1), \dots , 
 El objetivo del sistema es producir un modelo de clasificación que es a la vez efectivo según $L$ y justo según $F_1, F_2, \dots, F_n$.
 El sistema consiste en dos fases fundamentales.
 La primera es responsable de generar una colección de modelos, cada uno llamado modelo base.
-Esta colección es construida optimizando una función de perdida $\mathcal{L}_1$, mientras se asegura \emph{diversidad} a lo largo de toda la población.
+Esta colección es construida optimizando la función de perdida $\mathcal{L}$, mientras se asegura \emph{diversidad} a lo largo de toda la población.
 La segunda fase es responsable de producir un conjunto de modelos de clasificación.
-Estos modelos son generados ensamblando la colección de modelos base de forma tal que optimice su efectividad según $L_2$, a la vez que es lo mas \emph{justo} posible según $F_1, F_2, \dots, F_n$.
-En el contexto de esta tesis se asume $L = L_1 = L_2$.
+Estos modelos son generados ensamblando la colección de modelos base de forma tal que optimice su efectividad según $L$, a la vez que es lo mas \emph{justo} posible según $F_1, F_2, \dots, F_n$.
 Las secciones \ref{section:first-phase} y \ref{section:second-phase} abordan con mas detalles la primera y segunda fase, respectivamente.
 
 \todo[inline]{Párrafo con la imagen del overview, y que describe la imagen.}
@@ -20,25 +23,25 @@ Las secciones \ref{section:first-phase} y \ref{section:second-phase} abordan con
 % Figure 1 summarizes the architecture of the system.
 % Figure 2 and 3 provide an overview of the first and second phase, respectively.
 
-\section{Generación de modelos base}\label{section:first-phase}
+\section{Fase 1: Generación de modelos base}\label{section:first-phase}
 
 % TODO
 % Figure 2 provides an overview of this phase.
 % Algoritmo
 
-En esta fase al sistema se le da la tarea de generar $N$ modelos para ajustar $D$ de acuerdo a la pérdida $\mathcal{L}$.
+En esta fase, al sistema se le da la tarea de generar $N$ modelos para ajustar $D$ de acuerdo a la pérdida $\mathcal{L}$.
 
 La Definición~\ref{definition:cash} se modifica para buscar una colección de modelos en lugar de un solo modelo, sujeto a una métrica de diversidad $\mathcal{D}$.
 Esto es, se desea encontrar una colección de modelos base (modelos que optimicen la efectividad en el conjunto de datos $D$ de acuerdo a la función de pérdida $\mathcal{L}$) mientras garantiza algunas diferencias entre sus hipótesis utilizando la métrica $\mathcal{D}$.
-Asegurar diversidad en la colección de modelos base es importante porque los métodos de ensemble no son capaces de mejorar su rendimiento si todos los modelos base tienen exactamente la misma hipótesis, es decir si todos realizan las mismas predicciones.
+Asegurar diversidad en la colección de modelos base es importante porque los métodos de ensemble no son capaces de mejorar su rendimiento si todos los modelos base tienen exactamente la misma hipótesis, es decir, si todos realizan las mismas predicciones.
 
 El procedimiento aplicado para generar la colección de modelos base esta resumido por la función \ref{code:generate-base-models}.
-El espacio de algoritmos e hiperparámetros es explorado utilizando una estrategia de búsqueda pre-seleccionada.
+El espacio de algoritmos e hiperparámetros es explorado utilizando una estrategia de búsqueda preseleccionada.
 Todo esto es capturado por la función \textbf{explore}.
 Luego de evaluar las arquitecturas generadas y estimar la diversidad entre los modelos actualmente seleccionados y la nueva generación de modelos, la colección de modelos base es actualizada para ajustarse a su capacidad $N$.
 Todo esto es capturado por la función \ref{code:reselect}.
 
-\begin{function}[htb!]
+\begin{function}[H]
     \caption{GenerateBaseModels($N, D, A, \Lambda, \mathcal{L}, \mathcal{D}$)\label{code:generate-base-models}}
     \SetKwData{output}{base\_models}
     \SetKwData{score}{scores}
@@ -62,12 +65,11 @@ Todo esto es capturado por la función \ref{code:reselect}.
 
 % TODO Probablemente la parte de PGE queremos pasarla para el estado del arte
 Para explorar inteligentemente  el espacio de algoritmos y hiperparámetros, es decir, para resolver el problema \textit{CASH} modificado, se utiliza la implementación de \emph{Probabilistic Grammatical Evolution Search}~(algoritmo \ref{algorithm:pge}) presente en AutoGOAL.
-AutoGOAL se refiere a los modelos que construye como flujos, dado que cada uno de ellos esta formado por algoritmos interconectados.
-La búsqueda comienza con una estrategia de muestreo aleatorio, pero según evalúa más flujos, modifica el modelo de muestreo probabilista para que flujos similares a los mejores encontrados hasta el momento, sean generados con mayor frecuencia.
+La búsqueda comienza con una estrategia de muestreo aleatorio, pero según evalúa más flujos, modifica el modelo de muestreo probabilístico para que flujos similares a los mejores encontrados hasta el momento, sean generados con mayor frecuencia.
 El espacio de algoritmos y hiperparámetros utilizados es el utilizado por defecto en AutoGOAL, el cual incluye varios algoritmos clásicos de aprendizaje automático presentes en las diferentes bibliotecas utilizadas por AutoGOAL.
 
 % TODO Linkear aqui a recomendaciones de como mejorar la seleccion del conjunto mas diverso
-Para reseleccionar la colección de modelos base, o sea, la colección de flujos de AutoGOAL, un enfoque goloso es utilizado y estudiado.
+Para reseleccionar la colección de modelos base, o sea, la colección de flujos de AutoGOAL, un enfoque goloso es utilizado.
 La función \textbf{reselect}~\ref{code:reselect} resume la estrategia propuesta.
 El algoritmo siempre incluye el modelo que mejor se desempeña de acuerdo a $L$ en la selección. Cada iteración siguiente añade el modelo, no todavía seleccionado, que maximiza la diversidad respecto a todos los modelos anteriormente seleccionados.
 El enfoque goloso no garantiza que la colección final logre la mejor posible diversidad respecto a $\mathcal{D}$.
@@ -122,7 +124,7 @@ Las siguientes métricas son computadas entre pares de modelos base para estimar
     Mientras mas alto el valor de la métrica, mas diferentes son los modelos.
 
     \begin{equation}
-        disagreement(m^{(a)}, m^{(b)}) = \frac{\vert\{M_{i,a} \neq M{i,b} \vert s^{(i)} \in D^{(\star)}_{valid}\}\vert}{\vert D^{(\star)}_{valid} \vert}
+        \texttt{disagreement}(m^{(a)}, m^{(b)}) = \frac{\vert\{M_{i,a} \neq M{i,b} \vert s^{(i)} \in D^{(\star)}_{valid}\}\vert}{\vert D^{(\star)}_{valid} \vert}
     \end{equation}
 
     \item[Double Fault.]
@@ -130,20 +132,26 @@ Las siguientes métricas son computadas entre pares de modelos base para estimar
     Mientras mas alta esta medida mayor la diferencia entre ambos.
 
     \begin{equation}
-        double-fault(m^{(a)}, m^{(b)}) = 1 - \frac{\vert\{M_{i,a} = M{i,b} = -1 \vert s^{(i)} \in D^{(\star)}_{valid}\}\vert}{\vert D^{(\star)}_{valid} \vert}
+        \texttt{double-fault}(m^{(a)}, m^{(b)}) = 1 - \frac{\vert\{M_{i,a} = M{i,b} = -1 \vert s^{(i)} \in D^{(\star)}_{valid}\}\vert}{\vert D^{(\star)}_{valid} \vert}
     \end{equation}
     
 \end{description}
 
-\todo[inline]{Pon algun párrafo de clausura. En plan, algo que diga que recordemos que la diversidad de los modelos influye en el performance de los ensembles, y que cual de estas 2 metricas es mejor se estudiará en la experimentación, y se compararán con otros approach usando selecciones aleatorias.}
+La diversidad de los modelos base conocemos que es un factor fundamental en la capacidad de generalización y en general el rendimiento de los ensembles.
+Los métodos de ensemble, como se verá a continuación son una parte clave de nuestro sistema y de los resultados que este logra.
+Por tanto, el estudio de la capacidad de estas métricas para producir conjuntos de clasificadores base diversos es de suma importancia.
+La influencia de estas métricas en los resultados de nuestro sistema será estudiada en detalle en la sección~\ref{section:results-first-phase}.
 
-\section{Ensamblado inteligente de modelos justos}\label{section:second-phase}
+\section{Fase 2: Ensamblado de modelos justos}\label{section:second-phase}
 
-En esta fase el sistema tiene la tarea de combinar las predicciones de $N$ modelos para ajustar $D$ de acuerdo tanto a la perdida $\mathcal{L}$ como a las métricas de equidad $F_1, \dots, F_n$.
+En esta fase el sistema tiene la tarea de combinar las predicciones de $N$ modelos para ajustar $D$ de acuerdo tanto a la pérdida $\mathcal{L}$ como a las métricas de equidad $F_1, \dots, F_n$.
 
-El sistema una vez mas resuelve un problema de \emph{CASH} como se presenta en \ref{definition:cash}.
+El sistema una vez más resuelve un problema de \emph{CASH} como se presenta en la definición \ref{definition:cash}.
 En lugar de trabajar directamente en $D = \{(x_1,y_1),\dots, (x_n,y_n)\}$, esta vez el sistema trabaja sobre $D^e = \{(y_1^{(*)}, y_1),\dots,(y_n^{(*)}, y_n)\}$, donde $y_i^{(*)} = [y_i^{(0)},\dots,y_i^{(n)}]$ y cada $y_i^{(j)}$ es la salida de un modelo base $j$ para el ejemplo $i$, $i\in[1 \dots n]$, $j\in[1 \dots N]$.
-En otras palabras, al sistema se le pide encontrar la mejor combinación $E^*$ de algoritmos y sus hiperparámetros para ensamblar las salidas de los modelos base.
+En otras palabras, al sistema se le pide encontrar las mejores combinaciones de algoritmos y sus hiperparámetros para ensamblar las salidas de los modelos base.
+
+\subsection{Espacio de búsqueda}
+
 Particularmente, un espacio de algoritmos especializados en estrategias de ensamblados y sus hiperparámetros es utilizado en esta fase.
 Estas estrategias son presentadas a continuación.
 
@@ -166,52 +174,71 @@ Estas estrategias son presentadas a continuación.
 \todo[inline]{los hiperparámetros de esto? Puedes incluir un pseudo codigo ademas de como se construye el espacio a partir de un sampler}
 \todo[inline]{Anade una image que ilustre el comportamiento de los 3 ensemblers}
 
-Para explorar el espacio de algoritmos e hiperparámetros se realiza una modificación a \emph{Probabilistic Grammatical Evolution}(\ref{algorithm:pge}), en la cual la fase de seleccionar los $n$ individuos de la población actual que pasan a la siguiente generación, se realiza utilizando \emph{Non-dominated sorting}~(sección \ref{section:ndsorting}) y \emph{Crowding distance}~(sección \ref{section:crowding-distance}), de la misma forma en que se utiliza en \emph{NSGA-II}.
-De esta forma la función de selección, y por tanto la exploración del espacio, optimizan simultáneamente las métricas de equidad y la función de pérdida.
+\subsection{Encontrando modelos justos y efectivos}
 
-\todo[inline]{Parrafo describiendo cómo se combinan PGE y NSGA-II (no decirme qué se hace, sino cómo se hace). Con el parrafo anterior dices "qué pero del "como" apenas dices una cosa}
+\emph{Probabilistic Grammatical Evolution}~(\ref{algorithm:pge}) es un algoritmo que a pesar de ser sumamente sencillo, permite explorar espacios de búsqueda muy variados.
+Adicionalmente, su utilización en AutoGOAL ha mostrado que puede brindar excelentes resultados en la tarea de encontrar modelos capaces de aprendizaje automático.
+Sin embargo una de las limitaciones fundamentales de este algoritmo es la estrategia de selección de los individuos mas aptos dentro población, dado que solamente considera una métrica como objetivo de la optimización.
+Nuestra propuesta realiza una modificación en este proceso de selección, el cual define la forma en que se explora el espacio, para acomodar más de una métrica en el mismo.
+Esto nos permitirá explorar el espacio de posibles ensembles e hiperparámetros de los mismos, mientras simultáneamente se dirige la búsqueda en direcciones que optimicen tanto métricas de equidad como de efectividad.
 
-\todo[inline]{Pseudo codigo de NS-PGE. Tienen que quedar claro en él que (1) se itera por generaciones con PGE, (2) se actualizan los hiperparámetros segun SN, (3) cómo se construye la seleccion de modelos final, (4) como se actualiza entre generaciones}.
+El funcionamiento de nuestro algoritmo consiste fundamentalmente de tres procesos siendo ejecutados continuamente en un ciclo.
+Primeramente, de forma similar a \emph{PGE}, un conjunto de $N$ flujos es generado a partir de tomar muestras de una gramática $G$ de acuerdo a las probabilidades $\theta$ asignadas a cada producción.
+Seguido de esto, cada flujo generado es evaluado en cada una de las funciones objetivos a optimizar y se procede a un proceso de selección en el cual se determinan los mejores candidatos en la población para pasar a la siguiente generación.
+Este proceso de selección es el que guía las direcciones en las que se explora el espacio de búsqueda, por tanto necesita tener en cuenta la evaluación de cada una de las funciones objetivo.
+Luego, dicho proceso se realiza utilizando \emph{Non-dominated Sorting}~(sección \ref{section:ndsorting}) y \emph{Crowding Distance}~(sección \ref{section:crowding-distance}).
+De la misma forma en que se utiliza en \emph{NSGA-II}, los $N$ individuos de la población son seleccionados según el orden que se obtiene de aplicar \emph{Non-dominated Sorting} y empleando \emph{Crowding Distance} como métrica para desambiguar entre individuos con el mismo \emph{pareto-orden}.
+Además, se mantiene en todo momento durante la ejecución del algoritmo la mejor aproximación del \emph{Frente Pareto} encontrada hasta ese instante.
+Para esto actualizamos al final de cada iteración este conjunto aproximación con las soluciones \emph{\textbf{no} pareto-dominadas} de la unión de aquellas que ya pertenecían al conjunto y las nuevas soluciones encontradas.
+Finalmente, como parte de la ejecución tradicional de \emph{PGE}, se actualiza el modelo probabilístico de la gramática a partir de las soluciones que pasan el proceso de selección.
+La propuesta anteriormente descrita se resume en el algoritmo~\ref{code:nspge}.
 
-% \begin{function}[htb!]
-%     \caption{NSPGE($D, G, \mathcal{F}$)\label{func:nspge}}
-%     \SetKwData{probs}{$\sigma$}
-%     \SetKwData{models}{models}
-%     \SetKwData{uniform}{\bf uniform-init}
-%     \SetKwData{generation}{generation}
-%     \SetKwData{score}{scores}
-%     \SetKwData{indices}{indices}
-%     \SetKwData{ns}{\bf non-dominated-sort}
-%     \SetKwData{updates}{updates}
-%     \SetKwData{merge}{\bf select-best-parameters}
-%     \SetKwData{update}{\bf update-probabilities}
-%     \SetKwData{init}{\bf set}
-%     \SetKwData{sample}{\bf sample}
-%     \SetKwData{select}{\bf select}
+\begin{algorithm}[!htb]
+    \caption{NSPGE($D, G, \mathcal{F}$)\label{code:nspge}}
+    \SetKwData{probs}{$\sigma$}
+    \SetKwData{models}{models}
+    \SetKwData{uniform}{\bf uniform-init}
+    \SetKwData{generation}{generation}
+    \SetKwData{score}{scores}
+    \SetKwData{indices}{indices}
+    \SetKwData{ns}{\bf non-dominated-sort}
+    \SetKwData{updates}{updates}
+    \SetKwData{merge}{\bf select-best-parameters}
+    \SetKwData{update}{\bf update-probabilities}
+    \SetKwData{init}{\bf set}
+    \SetKwData{sample}{\bf sample}
+    \SetKwData{select}{\bf select}
 
-%     \init $\probs \leftarrow \uniform(G)$ \\
-%     \init $\models \leftarrow \emptyset$ \\
-%     \For{$\generation \in \sample(G, \probs)$}{
-%         \init $\score \leftarrow \emptyset$ \\
-%         \For{$\mathcal{L}^{(i)} \in \mathcal{F}$}{
-%             \For{$A^{(j)}_\lambda \in \generation$}{
-%                 $\score^{(i,j)} \leftarrow \mathcal{L}^{(i)}(A^{(j)}_\lambda,\ D^{(i)}_{train},\ D^{(i)}_{valid})$ \\
-%             }
-%         }
-%         \init $\indices \leftarrow \ns(\generation, \score)$ \\
-%         \init $\updates \leftarrow \merge(\generation, \score, \indices)$ \\
-%         $ $ \\
-%         $\probs \leftarrow \update(\probs, \updates)$ \\
-%         $\models \leftarrow \select(\generation, \indices)$
-%     }
-%     \Return{\models}
-% \end{function}
+    \init $\probs \leftarrow \uniform(G)$ \\
+    \init $\models \leftarrow \emptyset$ \\
+    \For{$\generation \in \sample(G, \probs)$}{
+        \init $\score \leftarrow \emptyset$ \\
+        \For{$\mathcal{L}^{(i)} \in \mathcal{F}$}{
+            \For{$A^{(j)}_\lambda \in \generation$}{
+                $\score^{(i,j)} \leftarrow \mathcal{L}^{(i)}(A^{(j)}_\lambda,\ D^{(i)}_{train},\ D^{(i)}_{valid})$ \\
+            }
+        }
+        \init $\indices \leftarrow \ns(\generation, \score)$ \\
+        \init $\updates \leftarrow \merge(\generation, \score, \indices)$ \\
+        $ $ \\
+        $\probs \leftarrow \update(\probs, \updates)$ \\
+        $\models \leftarrow \select(\generation, \indices)$
+    }
+    \Return{\models}
+\end{algorithm}
 
-\todo[inline]{Párrafo explicando por qué funciona (o se espere que funcione) esa forma para optimizar fairness}
+Esta propuesta tiene su motivación en tratar de aprovechar las ventajas que brindan individualmente \emph{Probabilistic Grammatical Evolution} y \emph{NSGA-II}.
+\emph{PGE} es extremadamente versátil respecto al tipo de espacio que permite explorar gracias a permite explorar cualquier espacio que pueda ser capturado por una gramática.
+Al mismo tiempo \emph{PGE} es muy flexible y no impone restricciones algunas sobre la forma en que se realiza el proceso de selección de los individuos que continúan de una generación a otra.
+\emph{NSGA-II} por otro lado ha mostrado ser muy efectivo en converger a buenas aproximaciones del \emph{Frente Pareto} para problemas de optimización multiobjetivo.
+Se considera entonces que una combinación de estos algoritmos puede ser capaz de explorar el espacio de búsqueda de la tarea en cuestión, de forma tal que la estrategia de exploración induzca a cada vez mejores aproximaciones del \emph{Frente Pareto}, a partir de utilizar el método de selección de \emph{NSGA-II}.
 
-\todo[inline]{Explicar cómo se construye la colección final. Y por qué quedarse con los no dominados de cada generación tiene sentido}
-
-\todo[inline]{Explicar como el usuario puede encontrar de todas las soluciones la que quiere al final. Además como puede especificar constraints para dirigir la busqueda, y donde se insertan en el codigo. }
+Una de las ventajas de nuestra propuesta es que mantiene en todo momento un conjunto de soluciones que aproximan el \emph{Frente Pareto}.
+Esto significa que al terminar la ejecución, el sistema no da una única solución al usuario.
+Dar una única solución es problemático debido a que la naturaleza de estos problemas de optimización multiobjetivo implica que existe un conjunto de soluciones entre las cuales no hay manera general de determinar un orden.
+Cada una de dichas soluciones representa un balance diferente entre las diferentes métricas a optimizar.
+Nuestro sistema le provee al usuario un conjunto de soluciones óptimas entre sí, y el usuario puede posteriormente seleccionar la solución que mejor considere de acuerdo al problema en cuestión que se esta resolviendo y las restricciones del mismo.
+Por ejemplo, en determinados casos puede ser tolerable ceder en la justeza del modelo con el objetivo de ganar precisión, mientras que otros escenarios mas sensibles puede que la restricción sobre la equidad del modelo sea primordial y no pueda ser comprometida.
+Luego, el usuario tiene a su disposición una serie de soluciones que representan diferentes balances entre los objetivos, cada una útil en escenarios con diferentes características, todo esto luego de una única ejecución de extremo a extremo de nuestro sistema.
 
 \todo[inline]{Hay todo un grupo de cosas que existen fuera de las 2 fases, que va de como integrarlas, que podría ir en una ultima sección de ejecución end to end. En general deberias revisar el codigo del Diversifier, Ensembler, y Mitigator, y ver qué cosas están y no están dichas en la propuesta, como eso mismo de los contraints, el detriment, etc.}
-

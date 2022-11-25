@@ -162,6 +162,7 @@ Una diferencia fundamental entre ellos es la forma en que sus espacios de búsqu
 Mientras AutoSkLearn explora espacio de búsqueda condicional, es decir, un espacio con algunos hiperparámetros condicionados a otros, AutoKeras realiza una \emph{Busqueda de Arqutectura Neuronal (NAS)}~\parencite{NAS}, la cual implica explorar espacios jerárquicos de complejidad arbitraria.
 
 AutoGOAL \parencite{autogoal, estevez2020general} es una de las mas recientes contribuciones al campo del AutoML. AutoGOAL es un sistema que utiliza técnicas heterogéneas para resolver el problema CASH.
+AutoGOAL se refiere a los modelos que construye como flujos, dado que cada uno de ellos esta formado por algoritmos interconectados.
 La esencia de AutoGOAL radica en su espacio personalizable de flujos y su conjunto de algoritmos de búsqueda, que son usados para encontrar la mejor configuración para resolver un problema.
 Cada flujo está definido como un conjunto de algoritmos interconectados que traducen una entrada predefinida a su salida correspondiente.
 El espacio de flujos comprende no solo el conjunto de algoritmos, sino también sus hiperparámetros.
@@ -315,18 +316,3 @@ Por tanto, aquellas soluciones con elevado \emph{crowding distance} son preferid
 El método propuesto en este trabajo explora la utilización de AutoGOAL como vía para obtener un conjunto de modelos \emph{diversos} base que puedan ser posteriormente ensamblados.
 El proceso de construir el ensemble a partir de estos modelos base se realiza mediante una modificación del algoritmo de optimización de AutoGOAL, la cual permite explorar el espacio de búsqueda optimizando simultáneamente varias métricas, como por ejemplo la precisión y una o varias métricas de equidad.
 Para la modificación de AutoGOAL este trabajo se inspira en los metodos de selección propuestos por \emph{NSGA-II}, estos son, \emph{Non-dominated Sorting} y \emph{Crowding Distance}.
-
-
-% Model agnostic y model specific en el sota + fbo en mode agnostic
-%
-% %%
-% Propuestas
-% - Permite usar multiples funciones de fairness
-% - Trabajar sobre colec de data heterogénea 
-% - Haber propuesto un sistema para resolver prob de clas arbitrarios con control sobre fairness y disponible pa la comunidad
-% - Agnostic del modelo
-%
-% %%
-% Espacio de hiperparametros
-% Algoritmo de optimizacion
-%

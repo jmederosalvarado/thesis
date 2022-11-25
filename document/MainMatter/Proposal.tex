@@ -152,8 +152,11 @@ En otras palabras, al sistema se le pide encontrar las mejores combinaciones de 
 
 \subsection{Espacio de búsqueda}
 
-Particularmente, un espacio de algoritmos especializados en estrategias de ensamblados y sus hiperparámetros es utilizado en esta fase.
-Estas estrategias son presentadas a continuación.
+Con el propósito de encontrar el ensemble que optimiza las funciones objetivos en cuestión, el sistema utiliza técnicas de AutoML para explorar un espacio de posibles soluciones.
+Este espacio de búsqueda esta conformado por las diferentes maneras de formar un ensemble a partir de los modelos base.
+Más específicamente, el espacio de búsqueda se forma a partir de tomar decisiones sobre una serie de hiperparámetros.
+Estos hiperparámetros son, la cantidad de modelos base que serán escogidos para formar el ensemble, el subconjunto de modelos base a partir de la cantidad escogida anteriormente y por ultimo el tipo de ensemble que será utilizada.
+Los diferentes tipos de ensemble se describen con mas detalle a continuación.
 
 \begin{description}
 
@@ -171,8 +174,9 @@ Estas estrategias son presentadas a continuación.
     
 \end{description}
 
-\todo[inline]{los hiperparámetros de esto? Puedes incluir un pseudo codigo ademas de como se construye el espacio a partir de un sampler}
-\todo[inline]{Anade una image que ilustre el comportamiento de los 3 ensemblers}
+% TODO: la verdad no estoy convencido de que me guste esto. es realmente necesario?
+%\todo[inline]{los hiperparámetros de esto? Puedes incluir un pseudo codigo ademas de como se construye el espacio a partir de un sampler}
+%\todo[inline]{Anade una image que ilustre el comportamiento de los 3 ensemblers}
 
 \subsection{Encontrando modelos justos y efectivos}
 

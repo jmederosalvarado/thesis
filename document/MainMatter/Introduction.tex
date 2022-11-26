@@ -20,9 +20,14 @@ Por ejemplo un clasificador que solamente es ajustado para maximizar la precisio
 %(3) que si muchos approach existentes para mitigar son de optimización para alcanzar un trade off
 
 Cuantificar y mitigar los sesgos durante las diferentes etapas del ciclo de vida de los modelos de aprendizaje automatico ha sido objeto de estudio de numerosas investigaciones~\todocite{fbo}{5}
-
-%Extensive work has been done to measure and mitigate biases
-%during different stages of the ML life-cycle [5].
+Especificamente, un numero de metodos han sido propuestos recientemente para incrementar la equidad en los resultados producidos por estos modelos.
+La clave del diseño detras de todos estas métodos es maximizar la precisión de las predicciones, sujeto a restricciones de equidad sobre los resultados.
+Sin embargo, como consecuencia de mantener la tratabilidad computacional de estas tecnicas, estos métodos sufren de una o mas de las siguientes desventajas.
+La tecnica de mitigacion es
+(i) específica a la clase del modelo utilizado (p.e. solamente modelos lineares),
+(ii) limitiada a un conjunto especifico de definiciones de equidad,
+(iii) limitado a un unico atributo protegido binario,
+(iv) require acceso a informacion sensible en el momento de las predicciones
 
 %Specifically, a number of methods have been proposed in recent
 %years to reduce unfairness in the ML model outcomes. The

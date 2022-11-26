@@ -1,9 +1,20 @@
 \chapter*{Introducción}\label{chapter:introduction}
 \addcontentsline{toc}{chapter}{Introducción}
 
-% motivación+ problemática + objetivos + contribuciones + párrafo con la estructura del proyecto
+% motivación + problemática + objetivos + contribuciones + párrafo con la estructura del proyecto
 
-% La forma más cómoda de plantear la problemática creo que pasa por decir (1) que ML está en todos lados, (2) que aplicarlo a toma de decisiones de alto riesgo da lugar a el tema de los sesgos, (3) que si muchos approach existentes para mitigar son de optimización para alcanzar un trade off, (4) que si AutoML es bueno para el tema de democratizar una tecnología y que ayuda a crear hipótesis automáticamente, (5) que si AutoGoal tiene varias ventajas sobre el resto, y (6) finalmente que a partir de combinar ciertas cosas se pueden resolver las limitaciones de otras propuestas actuales. De ahí caes en objetivos, contribuciones y organización
+%(1) que ML está en todos lados
+
+En los últimos años, ha habido un creciente interés en aplicar técnicas de aprendizaje automático para resolver diferentes tipos de tareas.
+Análisis de emociones en textos, etiquetado de imágenes y traducción automática son algunos ejmplos de estas tareas~\parencite{}.
+
+%(2) que aplicarlo a toma de decisiones de alto riesgo da lugar a el tema de los sesgos
+%(3) que si muchos approach existentes para mitigar son de optimización para alcanzar un trade off
+%(4) que si AutoML es bueno para el tema de democratizar una tecnología y que ayuda a crear hipótesis automáticamente
+%(5) que si AutoGoal tiene varias ventajas sobre el resto
+%(6) finalmente que a partir de combinar ciertas cosas se pueden resolver las limitaciones de otras propuestas actuales
+
+%De ahí caes en objetivos, contribuciones y organización
 
 % importante vender todas las contribuciones explícitamente (eran como 4, y las anotaste)
 
@@ -17,7 +28,55 @@
 %recidivism, among others [8,17,24,37].
 %Recent advances in Automatic Machine Learning (Auto-ML) have enabled the development of libraries and other tools to
 %effectively find the best combination of algorithms and hyperparameters to solve a problem [19]. Several technologies have
-%been proposed to solve the Auto-ML problem, such as Auto-Weka [35], Auto-sklearn [16], and Auto-Keras [20].
+%been proposed to solve the Auto-ML problem, such as Auto-Weka [35], Auto-sklearn [16], and Auto-Keras [20]. These
+%libraries are alternatives for reducing the time spent by researchers in solving well-studied problems. Even if Auto-ML tools
+%tend to be more time and resource consuming than standard ML libraries, not having to think about which architecture
+%might be the best for solving a problem makes them worth developing. Also, by being applicable to a broad range of problems,
+%learning to use these tools may be easier than learning several independent libraries.
+%In this context, we find AutoGOAL1 to be a good example of the potential of Auto-ML libraries. AutoGOAL is a novel Auto-ML
+%system that uses heterogeneous techniques. In contrast with other existing Auto-ML technologies, AutoGOAL can automatically
+%build machine learning pipelines that combine techniques and algorithms from different frameworks, including shallow classifiers,
+%natural language processing tools, and neural networks [13,14]. AutoGOAL performs a Probabilistic Grammatical Evolution
+%Search to explore the space of available algorithms and their hyperparamenters to build pipelines [15]. At the end of the
+%search, the best performing pipeline found according to the input loss function is given as a solution for the problem.
+%Even though AutoGOAL is capable of combining algorithms from several different frameworks to build pipelines, it lacks
+%the ability to combine multiple end-to-end pipelines to generate a solution. This means that although multiple hypotheses
+%are tested while AutoGOAL is searching for the best configuration, the final solution comprises a single end-to-end hypothesis
+%and all intermediate pipelines found by AutoGOAL are discarded. However, we consider that these discarded pipelines
+%could be a great source of information, especially if the collection of pipelines is intelligently selected to maximize a desired
+%criteria.
+%One way of combining several hypothesis to produce a more robust solution, i.e. a solution that generalizes better to
+%unseen inputs, is through ensemble methods. There are several ensemble methods available in the literature, such as voting
+%and weighted-voting [10], boosting [32], and bagging [3]. However, depending on the problem, one ensemble method might
+%perform better than the other. This presents the aforementioned challenge of finding the best method to apply to fit a desired
+%criteria, a time-consuming task when done manually. This challenge can be overcome by intelligently exploring the space of
+%ensemble methods, with their respective hyperparameters, to find the best one to apply.
+%We believe that by ensembling the outputs of several pipelines, the single, biased hypothesis that AutoGOAL originally
+%generates can be improved, and therefore, a more robust solution can be provided. Also, by having a starting collection of
+%pre-trained models, we expect that more complex metrics can be better optimized. Solving problems in two phases to
+%enhance performance has been studied in the literature, providing good results [27,22]. Additionally, using ensembles to
+%merge multiple snapshots of a single neural network architecture along its optimization path has been proven to be an effective
+%technique referred to as snapshot ensembles [18]. By contrast with snapshot ensembles, this paper studies the ensemble
+%of several Auto-ML generated models instead of using a single neural network architecture.
+%This paper’s objective is to design and validate a system that takes advantage of all the different architectures that are
+%generated while solving classification problems with Auto-ML tools, particularly AutoGOAL, to produce more robust classifiers.
+%We propose a two-phase optimization system based on Automatic Machine Learning (Auto-ML) for solving classification
+%problems. In the first phase, the system follows a probabilistic strategy to find the best combination of algorithms and
+%hyperparameters to generate a collection of base models according to certain diversity criteria; and in the second, it follows
+%similar Auto-ML strategies to ensemble those models.
+%The specific contributions of this research are as follows:
+%  We propose a system based on AutoGOAL and ensemble methods to solve arbitrary classification problems. The improvement
+%in the generalization capability of the solutions is the main advantage of our proposal, which is available online as a
+%python project for the research community.
+%  We study how some diversity measures can impact the performance of an ensemble method when used to ensure diversity
+%between the collection of base classifiers.
+%  We provide the basis for future studies on unfairness and bias mitigation. Since the optimization process is divided into
+%two phases, a second loss function can be optimized after the first phase by imposing constraints to limit detriment in
+%performance.
+%The remainder of the paper is organized as follows. Section 2 gives a brief overview of current research in Auto-ML techniques
+%and ensemble methods. Section 3 presents our two-phase optimization system for solving classification problems.
+%Section 4 shows the results of evaluating the system. Section 5 discusses the implications of the results we obtained from
+%the experiments. Finally, Sections 6 presents the conclusions, along with future lines of work.
 
 En la actualidad los algoritmos de aprendizaje automático están siendo aplicados en disimilies areas de la vida humana. Es comun encontrarlos aplicados en sistemas de recomendacion de compras, aplicaciones de citas, solicitudes de prestamos, contratacion personal y muchas otras areas.  A raiz de ello, ha surgido un creciete interes en estudiar las potencialidades y limitaciones de los modelos de aprendizaje automatico, asi como las posibles implicaciones de confiar ciegamente en sus predicciones.
 

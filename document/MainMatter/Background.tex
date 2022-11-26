@@ -1,5 +1,7 @@
 \chapter{Estado del Arte}\label{chapter:state-of-the-art}
 
+\todo[inline]{comienza demasiado duro. falta llegar primero a qué son los sesgos y que tiene que ver eso con ML. o sea, faltan uno o dos parráfos antes de caer que pueden venir de diferentes fuentes. En un paper no lo harías, pero es que el capítulo del estado del arte tiene comenzar lo más arriba posible.}
+
 Los sesgos que muestran los algoritmos de aprendizaje automático provienen de diversas fuentes.
 Una de las fuentes mas comunes de sesgos son las colecciones de datos, de las cuales los modelos de aprendizaje automático implícitamente aprenden a expresar tales sesgos.
 Los sesgos contenidos en las colecciones de datos pueden ser a veces el resultado de errores durante su construcción,  pero es común que tengan su origen en procesos históricos.
@@ -128,7 +130,7 @@ Existen ejemplos también no relacionados a la medicina, por ejemplo, en \parenc
 Una simple pero poderosa técnica en el contexto de los métodos de ensamblado es la llamada \textit{snapshot ensemble} \parencite{huang17snapshot}. Esta técnica genera múltiples clasificadores base, entrenando una sola red neuronal mientras la hace converger de forma rápida y repetida a múltiples óptimos locales y salvando en cada uno de dichos puntos los parámetros del modelo. Todas las redes neuronales son luego ensambladas para producir el clasificador final. Estos \textit{snapshot ensemble} son mas robustos y precisos que las redes individuales dada su naturaleza de ensamblado, a ningún costo adicional de entrenamiento.
 
 Como se puede observar, los métodos de ensemble son muy poderosos.
-Estos son capaces de construir sistemas que a partir de las predicciones de un conjunto de modelos (quizás no lo suficientemente expresivo) generalizan bien y obtienen resultados satisfactorios.
+Estos son capaces de construir sistemas que a partir de las predicciones de un conjunto de modelos (quizás no lo suficientemente expresivos) generalizan bien y obtienen resultados satisfactorios.
 Sin embargo, es necesario para la construcción de estos ensembles se debe partir de un conjunto de modelos base previamente obtenidos, que cumplan determinadas características.
 Luego, resulta sumamente interesante explorar enfoques que permitan obtener estos modelos base de forma automática para un problema determinado, de forma tal que no sea necesario manualmente tomar decisiones acerca de el tipo de modelos a utilizar, lo hiperparámetros de los mismos, etc. 
 

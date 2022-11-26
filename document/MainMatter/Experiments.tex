@@ -61,6 +61,22 @@ La mejor configuración de dichos hiperparámetros, incluyendo la métrica de di
 La \textbf{segunda etapa experimental} consiste del estudio de la capacidad del sistema para lograr producir modelos de ensemble que son precisos de acuerdo a una función de perdida determinada y justos según una o varias métricas de equidad. 
 Con este fin se realiza una comparación entre los resultados obtenidos por nuestro sistema y los obtenidos por varios otros sistemas que resultan relevantes en la literatura para la solución de este problema.
 
+En el contexto de mitigación de sesgos, múltiples métodos \emph{ad-hoc} o dependientes del modelo han sido propuestos.
+Estos métodos tratan de forzar equidad durante el entrenamiento y guían el proceso de optimización de los parámetros para que los modelos resultantes sean efectivos y justos respecto a una métrica de equidad predeterminada.
+Uno de los objetivos de esta etapa experimental es precisamente comprobar si nuestro sistema es lo suficientemente poderoso como para tener mejor rendimiento que estos sistemas que influencian directamente el entrenamiento de los modelos con objetivos de mejorar los resultados de equidad obtenidos.
+
+Alternativamente existen estrategias en la literatura, agnósticas al modelo, para lograr resultados justos.
+Algunas realizan un preprocesamiento sobre la colección de datos para luego poder ajustar un modelos a los mismos.
+Otras, como \emph{Fair Bayesian Optimization}, realizan un ajuste de los hiperparámetros del modelo deseado.
+Estas propuestas, al igual que la nuestra, son muy versátiles, pues no imponen restricciones sobre el tipo de modelo a utilizar.
+Por tanto, es de interés el estudio del rendimiento de nuestro sistema frente a estos enfoques para lograr modelos eficaces y justos.
+
+Además, una de las ventajas de nuestro sistema es que permite optimizar simultáneamente varias métricas de equidad.
+Por lo que se contrastan los resultados de nuestro método en este escenario con los de \emph{Fair Bayesian Optimization}, el cual por sus características también permite múltiples restricciones de equidad.
+
+Finalmente se desea estudiar la capacidad de nuestro sistema de encontrar diferentes balances de equidad y precisión, no solo cumplir con una restricción de equidad.
+Para ello nuestro sistema es comparado con otros métodos de optimización multiobjetivo relevantes en la literatura y que han mostrado buenos resultados en la solución de este problema.
+
 \subsection{Escenarios de Evaluación}\label{section:evaluation-scenaries}
 
 La primera etapa experimental evalúa el sistema en la tarea \emph{HAHA 2019}(\textit{Humor Analysis based on Human Annotation}), con marco en el evento \textit{IberLEF 2019} \parencite{chiruzzo2019overview}.
@@ -129,7 +145,7 @@ Los parámetros de búsqueda de AutoGOAL fueron los siguientes:
 \end{itemize}
 
 Debido a limitaciones de infraestructura, los algoritmos de aprendizaje profundo fueron excluidos del conjunto de algoritmos disponibles para AutoGOAL.
-Esto significa que flujos basados en \emph{Keras} y \emph{BERT} fueron excluidos y fundamentalmente flujos basados en \emph{ScikitLearn} fueron utilizados.
+Por ejemplo, flujos basados en \emph{Keras} y \emph{BERT} fueron excluidos y fundamentalmente flujos basados en \emph{ScikitLearn} fueron utilizados.
 
 No incluir los algoritmos de aprendizaje profundo en la configuración experimental puede tener un impacto negativo en el rendimiento máximo que puede ser alcanzado por el sistema.
 Es decir, la precisión del sistema no puede ser comparada directamente con otras soluciones reportadas, en términos de magnitud, pues aquellas soluciones que utilizan técnicas de aprendizaje profundo tienen una ventaja inherente en problemas donde modelos más simples no son tan competitivos.
@@ -154,9 +170,8 @@ CPU Intel Core i9-9900K (-MT-MCP-) con velocidad máxima de 3651/5000 MHz, cache
 
 \section{Primera Etapa Experimental}\label{section:experiments-first-phase}
 
-A continuación, la sección~\ref{section:results-first-phase} muestra los resultados de los obtenidos a partir de realizar los experimentos de la forma descrita en la sección~\ref{section:experimental-framework} para la tarea \emph{HAHA 2019}. Luego la sección~\ref{section:discussion-first-phase} realiza un análisis en profundidad de dichos resultados y arriba a conclusiones a partir de los mismos.
-
-A continuación se muestran los resultados de la primera y segunda fase experimental respectivamente, según descritas anteriormente.
+A continuación, la sección~\ref{section:results-first-phase} muestra los resultados de los obtenidos a partir de realizar los experimentos de la forma descrita en la sección~\ref{section:experimental-framework} para la tarea \emph{HAHA 2019}.
+Luego la sección~\ref{section:discussion-first-phase} realiza un análisis en profundidad de dichos resultados y arriba a conclusiones a partir de los mismos.
 
 \subsection{Resultados}\label{section:results-first-phase}
 
@@ -490,7 +505,44 @@ Para concluir, se muestra que el sistema brinda los resultados mas prometedores 
 
 \section{Segunda Etapa Experimental}\label{section:experiments-second-phase}
 
+A continuación, la sección~\ref{section:results-second-phase} muestra los resultados de los obtenidos a partir de realizar los experimentos de la forma descrita en la sección~\ref{section:experimental-framework} utilizando la colección de datos \emph{Adult}.
+Luego la sección~\ref{section:discussion-second-phase} realiza un análisis en profundidad de dichos resultados y arriba a conclusiones a partir de los mismos.
+
 \subsection{Resultados}\label{section:results-second-phase}
+
+La tabla~\ref{table:second-phase-vs-all} muestra una comparativa de nuestro enfoque con los métodos agnósticos (ultimas tres filas) y los no agnósticos al modelo (primeras tres filas).
+La tabla~\ref{table:secod-phase-vs-fbo} muestra una comparativa con \emph{FBO} optimizando simultáneamente \emph{Statistical Parity}, \emph{Equal Oportunity} y \emph{Equalized Odds}.
+Por ultimo la tabla~\ref{table:second-phase-vs-mobo} contrasta los resultados obtenidos por nuestro sistema con los obtenidos por los métodos otros métodos de optimización multiobjetivo aplicados al problema de mitigación de sesgos.
+%Los métodos utilizados en las diferentes comparaciones son:
+%(i) \emph{FERM}~\parencite{FERM} (ii) \emph{Zafar}, los mecanismos propuestos por \emph{Zafar et. al.}~\parencite{zafar2017fairness} (iii) \emph{Adversarial}~\parencite{zhang2018mitigating} (iv) \emph{SMOTE}
+
+\begin{table}[H]
+    \centering
+
+    \begin{tabular}{lcc}
+    \toprule
+        Método & Error & statistical parity \\
+        \midrule \midrule
+        FERM & $0.164 \pm 0.010$ & $\leq 0.1$ \\
+        Zafar~\parencite{zafar2017fairness} & $0.187 \pm 0.001$ & $\leq 0.1$ \\
+        Adversarial debiasing & $0.237 \pm 0.001$ & $\leq 0.1$ \\ 
+        \midrule
+        FERM Preprocesamiento & $0.228 \pm 0.013$ & $\leq 0.1$ \\
+        SMOTE & $0.178 \pm 0.005$ & $\leq 0.1$ \\
+        FairBO & $0.175 \pm 0.007$ & $\leq 0.1$ \\  
+        \midrule
+        BFair (20) & $0.170$ & $0.087$ \\
+    \bottomrule
+    \end{tabular}
+
+    \caption{
+    Evaluación en \emph{Adult}, con restricción sobre \emph{statistical parity} como métrica de equidad.
+    El máximo número de clasificadores utilizado es 20.
+    La estrategia de selección de modelos base es \emph{double-fault}.
+    \emph{Zafar} se refiere al método propuesto por \emph{Zafar et. al.}~\parencite{zafar2017fairness}}
+    
+    \label{table:second-phase-vs-all}
+\end{table}
 
 \begin{table}[H]
     \centering
@@ -517,33 +569,9 @@ Para concluir, se muestra que el sistema brinda los resultados mas prometedores 
     \caption{
     Evaluación en \emph{Adult}, con restricción en las tres medidas de equidad.
     El máximo número de clasificadores utilizado es 20.
-    La estrategia de selección de modelos base es \emph{double-fault}.}
-    \label{table:adult-and-dorothea}
-\end{table}
-
-\begin{table}[H]
-    \centering
-
-    \begin{tabular}{lcc}
-    \toprule
-        Método & Error & statistical parity \\
-        \midrule \midrule
-        FERM & $0.164 \pm 0.010$ & $\leq 0.1$ \\
-        Zafar & $0.187 \pm 0.001$ & $\leq 0.1$ \\
-        Adversarial & $0.237 \pm 0.001$ & $\leq 0.1$ \\ 
-        \midrule
-        FERM preprocess & $0.228 \pm 0.013$ & $\leq 0.1$ \\
-        SMOTE & $0.178 \pm 0.005$ & $\leq 0.1$ \\
-        FairBO & $0.175 \pm 0.007$ & $\leq 0.1$ \\  
-        \midrule
-        BFair (20) & $0.170$ & $0.087$ \\
-    \bottomrule
-    \end{tabular}
-
-    \caption{
-    Evaluación en \emph{Adult}, con restricción sobre \emph{statistical parity} como métrica de equidad.
-    El máximo número de clasificadores utilizado es 20.
-    La estrategia de selección de modelos base es \emph{double-fault}.}
+    La estrategia de selección de modelos base es \emph{double-fault}.
+    \emph{RF}, \emph{NN}, \emph{LL} se refieren a \emph{Random Forests}, \emph{Redes Neuronales} y \emph{Linear Learner} respectivamente.}
+    \label{table:secod-phase-vs-fbo}
 \end{table}
 
 \begin{table}[H]
@@ -569,30 +597,38 @@ Para concluir, se muestra que el sistema brinda los resultados mas prometedores 
     \caption{
     Evaluación en \emph{Adult}, con restricción sobre \emph{statistical parity} como métrica de equidad.
     El máximo número de clasificadores utilizado aparece entre paréntesis.
-    La estrategia de selección de modelos base es \emph{double-fault}.}
+    La estrategia de selección de modelos base es \emph{double-fault}.
+    \emph{Dragonfly} se refiere a la implementación en la biblioteca del mismo nombre, del método propuesto por \emph{Paria et. al.}~\parencite{paria2020flexible}.}
+    \label{table:second-phase-vs-mobo}
 \end{table}
 
 \subsection{Discusión}\label{section:discussion-second-phase}
 
-% Tabla
-% -Minimizando los 3 vs fbo
-% -Solo EO vs ferm zafar smote? Adversial?
-% -dsp vs mobo and fbo
-% 
-% Ferm zafa a pesar de ad hoc yo les gano siendo agnostico al model
-% 
-% Resultados competitivos con fbo
-% 
-% Arquitectura de classif mas clasicas con random forest, ll y incluso con redes neuronales nuestra prupuesta es capaz de supera fbo
-% 
-% En el caso particular usando xgboost fuimos superados
-% 
-% Esto puede deberse a la limitacion en tipos de modleos a explorar q tiene nuestra version
-% 
-% Xgboost no esta en el pool de algo de autogoal
-% 
-% Creemos q a partir de incluir este algoritmo le damos
-% 
-% Ventaja con fbo es q yo no necesito threshold
-% 
-% Hacer el frente
+Los resultados observados en la tabla~\ref{table:second-phase-vs-all} muestran que nuestro sistema es sumamente competitivo y en la mayoría de los casos superior que el resto de los métodos de mitigación de sesgos con los cuales es comparado.
+El enfoque propuesto obtiene mejores resultados que todos los métodos agnósticos al modelo con los que fue comparado, estos son, \emph{FERM Preprocesamiento}, \emph{SMOTE} y \emph{FairBO}.
+Comparado con métodos que modifican directamente el proceso de optimización de los modelos para ajustarlos a los objetivos de equidad, nuestro sistema también muestra resultados satisfactorios, siendo solamente superado por \emph{FERM}, y aun en este caso se mantiene muy competitivo.
+Esto ratifica el potencial de nuestro enfoque multiobjetivo para encontrar modelos que sean efectivos a la vez que son justos de acuerdo a la métrica de equidad seleccionada.
+Particularmente interesante es el hecho de que se obtienen resultados competitivos, incluso superiores a las estrategias que son \emph{ad-hoc} y directamente modifican el método de optimización del modelo en cuestión.
+Solo el caso de \emph{FERM} obtiene resultados mejores a los nuestros como se esperaba inicialmente dado que las restricciones de equidad son mantenidas durante el proceso de optimización.
+Sin embargo la diferencia es modesta y nuestro sistema logra ser muy competitivo mientras que es mucho más versátil al mantenerse agnóstico al modelo y método de entrenamiento.
+Adicionalmente es importante destacar que \emph{Adversarial debiasing} (tercera fila) utiliza métodos de aprendizaje profundo, dígase \emph{Redes Neuronales Adversariales}, mientras que nuestro sistema no incluye este tipo de modelos que sabemos son mas poderosos en muchos escenarios.
+
+La tabla~\ref{table:secod-phase-vs-fbo} compara nuestra propuesta con \emph{Fair Bayesian Optimization}.
+\emph{FBO} consiste en un proceso de ajuste de hiperparámetros mediante optimización bayesiana para lograr los resultados de equidad requeridos.
+La flexibilidad de este método le permite hacer cumplir restricciones sobre diferentes métricas de equidad simultáneamente, por lo que nuestro sistema es comparado en este escenario con dicha propuesta.
+Como se puede observar nuestro sistema obtiene mejores resultados que la alternativa en la mayoría de los casos.
+Incluso para configuraciones de \emph{FBO} basadas en redes neuronales, nuestro sistema fue capaz, una vez más de obtener significativamente mejores resultados aun cuando nuestras configuraciones no utilizan algoritmos de aprendizaje profundo.
+Debido a la forma en que \emph{FBO} funciona, requiere un umbral para cada métrica y la única garantía que provee es que dichas métricas de equidad se mantendrán dentro de esta región factible luego de ajustar los hiperparámetros.
+En cambio nuestro enfoque no necesita que el usuario indique el umbral admisible para las métricas de equidad y es capaz de explorar los diferentes balances entre las diferentes métricas (tanto de equidad como de precisión) y permitir al usuario seleccionar el que considere conveniente.
+Adicionalmente puede observarse como a pesar de que nuestro sistema obtiene resultados muy cercanos al umbral para \emph{statistical parity}, este a la vez obtiene considerablemente mejores resultados en el resto de las métricas de equidad.
+Esto quiere decir que nuestro sistema es capaz de mostrar resultados sumamente satisfactorios utilizando no solo una, pero varias métricas de equidad simultáneamente.
+Una vez más, la configuración que obtiene mejores resultados que los nuestros no supera nuestro modelo significativamente, además, se conoce que el algoritmo utilizado por este modelo (\emph{XGBoost}) no forma parte del conjunto de algoritmos disponibles a AutoGOAL en nuestra configuración, lo que sugiere que la comparativa podría haber sido similar al resto de los casos de haber tenido acceso al mismo.
+
+La tabla~\ref{table:second-phase-vs-mobo} muestra una comparación con otros métodos de optimización multiobjetivo que han sido aplicados en la literatura al problema de mitigación de sesgos.
+Una vez mas nuestro sistema muestra ser competitivo en este ámbito, encontrando diferentes balances entre precisión y equidad.
+En todos los casos nuestro sistema supera los sistemas alternativos.
+Además se puede observar como nuestro sistema es capaz de encontrar soluciones que a pesar de que ceden de forma mínima sus valores de equidad son capaces de lograr significativamente mejores valores de precisión
+Esto habla entre otras cosas de la habilidad de nuestro enfoque para cubrir diferentes regiones del \emph{Frente Pareto}.
+
+De forma general, como se ha podido observar, el sistema muestra un elevada capacidad para encontrar balances satisfactorios entre las métricas de equidad deseadas y la pérdida de los modelos.
+Todo esto mientras se mantiene extremadamente versátil, siendo agnóstico al modelo que se utilice, a las métricas que se desean optimizar, incluso a la naturaleza del problema que se desea resolver.

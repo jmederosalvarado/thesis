@@ -19,7 +19,7 @@ Llamaremos a dichos ensembles: \emph{Oráculo Optimista} y \emph{Oráculo Sobrea
 \begin{description}
 
 \item[Oráculo Optimista.]
-Este modelo oráculo devuelve la etiqueta correcta si al menos uno delos modelos base predijo dicha etiqueta.
+Este modelo oráculo devuelve la etiqueta correcta si al menos uno de los modelos base predijo dicha etiqueta.
 La única forma de que este modelo falle es si ninguno de los modelos base fue capaz de sugerir la etiqueta correcta.
 
 \begin{equation*}
@@ -610,6 +610,10 @@ Por ultimo la tabla~\ref{table:second-phase-vs-mobo} contrasta los resultados ob
     \label{fig:pareto-dsp-vs-acc}
 \end{figure}
 
+
+\todo[inline]{Falta poner un párrafo aqui (justo como hiciste en el anologo de la primera etapa) que dice que a continuacion en la seccion de discusión se dan insights al respecto. O lo pones así, o como una oración al final del unico párrafo de esta seccion}
+
+
 \subsection{Discusión}\label{section:discussion-second-phase}
 
 Los resultados observados en la tabla~\ref{table:second-phase-vs-all} muestran que nuestro sistema es sumamente competitivo y en la mayoría de los casos superior que el resto de los métodos de mitigación de sesgos con los cuales es comparado.
@@ -635,7 +639,7 @@ Una vez más, la configuración que obtiene mejores resultados que los nuestros 
 La tabla~\ref{table:second-phase-vs-mobo} muestra una comparación con otros métodos de optimización multiobjetivo que han sido aplicados en la literatura al problema de mitigación de sesgos.
 Una vez mas nuestro sistema muestra ser competitivo en este ámbito, encontrando diferentes balances entre precisión y equidad.
 En todos los casos nuestro sistema supera los sistemas alternativos.
-Además se puede observar como nuestro sistema es capaz de encontrar soluciones que a pesar de que ceden de forma mínima sus valores de equidad son capaces de lograr significativamente mejores valores de precisión
+Además se puede observar como nuestro sistema es capaz de encontrar soluciones que a pesar de que ceden de forma mínima sus valores de equidad son capaces de lograr significativamente mejores valores de precisión.
 Esto habla entre otras cosas de la habilidad de nuestro enfoque para cubrir diferentes regiones del \emph{Frente Pareto}.
 
 De forma general, como se ha podido observar, el sistema muestra un elevada capacidad para encontrar balances satisfactorios entre las métricas de equidad deseadas y la pérdida de los modelos.

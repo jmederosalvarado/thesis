@@ -88,7 +88,9 @@ La precisión tampoco es tomada en cuenta, excepto para seleccionar el modelo de
     \Return{$R^{(0)} \cdots R^{(N)}$}
 \end{function}
 
-Tres métodos \textit{reselect} de referencia fueron implementados para realizar comparaciones entre las métricas de diversidad \textit{disagreement} y \textit{double-fault}, las cuales son presentadas en la sección~\ref{section:diversity-meassures}.
+Utilizando el enfoque goloso presentado anteriormente, tres implementaciones de referencia del método~\ref{code:reselect} son descritas a continuación.
+Estas servirán para establecer comparaciones con implementaciones en las cuales se utiliza el método goloso presentado anteriormente, variando la métrica de equidad del mismo para utilizar \textit{disagreement} y \textit{double-fault}, las cuales serán presentadas en la sección~\ref{section:diversity-meassures}.
+
 \begin{description}
     \item[Shuffle:]
     La colección de modelos base es construida barajando aleatoriamente la selecciona actual de modelos base y los nuevos encontrados.

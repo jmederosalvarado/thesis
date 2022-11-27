@@ -1,18 +1,21 @@
 \chapter{Estado del Arte}\label{chapter:state-of-the-art}
 
 \todo[inline]{comienza demasiado duro. falta llegar primero a qué son los sesgos y que tiene que ver eso con ML. o sea, faltan uno o dos parráfos antes de caer que pueden venir de diferentes fuentes. En un paper no lo harías, pero es que el capítulo del estado del arte tiene comenzar lo más arriba posible.}
+% FROM SURVEY
+% Machine Learning (ML) has been increasingly popular in recent years, both in the diversity and importance of applications [1]. ML is used in a variety of critical decision- making applications including justice risk assessments [2], [3] and job recommendations [4].
+%While ML systems have the advantage to relieve humans from tedious tasks and are able to perform complex calcu- lations at a higher speed [5], they are only as good as the data on which they are trained [6]. ML algorithms, which are never designed to intentionally incorporate bias, run the risk of replicating or even amplifying bias present in real-world data [6], [7], [8]. This may cause unfair treatment in which some individuals or groups of people are privileged (i.e., receive a favourable treatment) and others are unprivileged (i.e., receive an unfavourable treatment). In this context, a fair treatment of individuals constitutes that decisions are made independent of sensitive attributes such as gender or race, such that individuals are treated based on merit [9], [10], [11]. For example, one can aim for an equal probability of population groups to receive a positive treatment, or an equal treatment of individuals that only differ in sensitive attributes.
 
 Los sesgos que muestran los algoritmos de aprendizaje automático provienen de diversas fuentes.
-Una de las fuentes mas comunes de sesgos son las colecciones de datos, de las cuales los modelos de aprendizaje automático implícitamente aprenden a expresar tales sesgos.
-Los sesgos contenidos en las colecciones de datos pueden ser a veces el resultado de errores durante su construcción,  pero es común que tengan su origen en procesos históricos.
+Una de las más comunes son las colecciones de datos, de las cuales los modelos de aprendizaje automático implícitamente aprenden a expresar tales sesgos.
+Los sesgos contenidos en las colecciones de datos pueden ser a veces el resultado de errores durante su construcción, pero es usual que tengan su origen en procesos históricos.
 Cuando estos sesgos son utilizados para realizar una predicción, puede dar lugar a decisiones injustas acerca de los individuos.
 
 Los sesgos pueden incluso provenir de fuentes mas difíciles de detectar para el usuario.
 Por ejemplo, la popularización de representaciones semánticas autogeneradas, tales como \emph{word embeddings} pueden contribuir a la propagación de sesgos contenidos en datos históricos~\parencite{bolukbasi2016man}.
-Luego, incluso cuando se trabaja con una colección de datos que no contiene explícitamente nada relacionado con genero o raza, por ejemplo, al utilizar \emph{word embeddings} clásicos para procesar datos en forma de texto pueden obtenerse decisiones sesgadas a causa de sesgos que se han probado contienen los \emph{word embeddings}.
+Luego, incluso cuando se trabaja con una colección de datos que no contiene explícitamente nada relacionado con género o raza, por ejemplo, al utilizar \emph{word embeddings} clásicos para procesar datos en forma de texto, pueden obtenerse decisiones sesgadas a causa de sesgos que, como se ha probado, contienen los \emph{word embeddings}.
 
 Es posible que los modelos de aprendizaje automático produzcan decisiones injustas incluso asumiendo que sus datos de entrenamiento no tenían sesgos.
-Es decir, el modelo de aprendizaje automático ha construido una hipótesis que no generaliza completamente a los datos no vistos durante el entrenamiento o incluso a los propios ejemplos entrenantes.
+Es decir, el modelo de aprendizaje automático ha construido una hipótesis que no generaliza completamente los datos no vistos durante el entrenamiento o incluso los propios ejemplos entrenantes.
 Luego, cuantificar los sesgos que un modelo de aprendizaje automático tiene respecto a un conjunto de datos es una tarea usual.
 Se hace imprescindible proveer una definición que permita capturar el concepto de equidad y analizar los sesgos que presenta un modelo de forma objetiva.
 
@@ -81,6 +84,7 @@ A continuación se exploran algunos de estos métodos que resultan sumamente rel
 Motivado por la versatilidad del ajuste de hiperparámetros, propone un enfoque basado en \emph{Optimizacion Bayesiana} (\emph{BO}) general restringida.
 La \emph{Optimizacion Bayesiana} es una metodología bien establecida para optimizar funciones de caja negra costosas de evaluar.
 La técnica propuesta por \emph{FBO} optimiza los hiperparámetros de una función de caja negra de forma agnóstica al modelo, mientras se satisfacen restricciones de equidad.
+\emph{FBO} se basa fundamentalmente en la hipótesis de que ajustar los hiperparámetros de un modelo es suficiente para encontrar un balance adecuado entre eficacia y equidad.
 
 \item[\emph{SMOTE} \parencite{chawla2002smote}]
 Propone un método de preprocesamiento para colecciones de datos desbalanceadas.
@@ -88,17 +92,17 @@ El enfoque de este método se basa fundamentalmente en el sobre-muestreo de los 
 Utiliza un algoritmo que genera nuevos ejemplos a partir de modificaciones en los ejemplos pertenecientes a dicha clase existentes en los datos.
 En muchas ocasiones los sesgos en los modelos vienen dado precisamente por un desbalance en la cantidad de individuos de los grupos protegidos que pertenecen a una clase determinada respecto a otras, por lo que técnicas como \emph{SMOTE} permiten mitigar este problema.
 
-\item[\emph{Fair Empirical Risk Minimization} (\emph{FERM}) \parencite{FERM}]
+\item[\emph{Fair Empirical Risk Minimization}~(\emph{FERM})~\parencite{FERM}.]
 Introduce una generalización de las diferentes nociones de equidad, las cuales restringen el \emph{riesgo condicional} de un clasificador de acuerdo a una función de perdida predeterminada y un parámetro de aproximación.
 Este intenta resolver el problema de minimizar el riesgo esperado para un conjunto predeterminado de funciones, utilizando una modificación de \emph{Empirical Risk Minimization} a la cual se refieren como \emph{Fair Empirical Risk Minimization}.
 Además, se proponen ejemplos concretos de algoritmos como \emph{Máquinas de Soporte Vectorial} mejorados para satisfacer estas restricciones de equidad.
 Finalmente se muestra como para el caso lineal de la restricción de equidad modificada, este enfoque se reduce a un paso de preprocesamiento sobre la colección de datos. %, haciendo cumplir las restricciones de equidad a cualquier modelo linear ajustado sobre los mismos.
 
-\item[\emph{Zafar et. al.} \parencite{zafar2017fairness}] El trabajo realizado por  los autores introduce una métrica para la equidad del umbral de decisión, la \emph{covarianza del umbral de decisión}.
+\item[\emph{Zafar et al.}~\parencite{zafar2017fairness}.] El trabajo realizado por  los autores introduce una métrica para la equidad del umbral de decisión, la \emph{covarianza del umbral de decisión}.
 Utilizando esta métrica como base, se definen dos problemas a resolver, la optimización de la equidad con restricciones sobre la precisión, y la optimización de la precisión con restricciones sobre la equidad.
 Los autores realizan modificaciones a \emph{Regresión Logística} y \emph{Maquinas de Soporte Vectorial} para utilizar estas restricciones y resolver estos problemas propuestos.
 
-\item[\emph{Mitigación de Sesgos mediante Aprendizaje Adversarial}~\parencite{zhang2018mitigating}] replantea el problema de mitigación de sesgos como un problema de aprendizaje profundo adversarial~\parencite{goodfellow2014adversarial}.
+\item[\emph{Mitigación de Sesgos mediante Aprendizaje Adversarial}~\parencite{zhang2018mitigating}.] Replantea el problema de mitigación de sesgos como un problema de aprendizaje profundo adversarial~\parencite{goodfellow2014adversarial}.
 Esto significa que la tarea se reduce a encontrar un modelo predictor que resuelva el problema de clasificación a la vez que intenta que un adversario no pueda inferir el valor de los atributos protegidos a partir de la predicción.
 
 \end{description}
@@ -183,12 +187,15 @@ Cada flujo es evaluado (lo cual consiste simplemente en entrenamiento y ejecuci�
 \begin{algorithm}[htb!]
     \caption{PGE\label{algorithm:pge}}
 
-    $N$ $\leftarrow$ tamaño de la población \\
-    $n$ $\leftarrow$ numero de individuos seleccionados en cada iteración \\
-    $\alpha$ $\leftarrow$ factor de aprendizaje \\
-    $G$ $\leftarrow$ gramática que describe los flujos de aprendizaje de maquina a explorar \\
-    $\theta_0$ $\leftarrow$ probabilidades iniciales (uniforme) \\
-    $f$ $\leftarrow$ función de \emph{fitness} (entrenamiento y evaluación de flujos) \\
+    \CommentSty{Input:}\\
+    \quad $N$ $\leftarrow$ tamaño de la población \\
+    \quad $n$ $\leftarrow$ numero de individuos seleccionados en cada iteración \\
+    \quad $\alpha$ $\leftarrow$ factor de aprendizaje \\
+    \quad $G$ $\leftarrow$ gramática que describe los flujos de aprendizaje de maquina a explorar \\
+    \quad $\theta_0$ $\leftarrow$ probabilidades iniciales (uniforme) \\
+    \quad $f$ $\leftarrow$ función de \emph{fitness} (entrenamiento y evaluación de flujos) \\
+    
+    \vspace{10pt}
 
     \SetKwData{best}{\textit{best}}
 

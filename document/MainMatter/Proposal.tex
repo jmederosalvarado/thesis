@@ -1,21 +1,21 @@
 \chapter{Propuesta}\label{chapter:proposal}
 
-En este capitulo se presenta un sistema que permite la resolución de problemas de clasificación arbitrarios.
+En este capítulo se presenta un sistema que permite la resolución automática de problemas de clasificación arbitrarios.
 Este sistema tiene entre sus objetivos fundamentales producir clasificadores que sean justos respecto a una o varias métricas de equidad, a la vez que minimizan una función de perdida determinada.
-Para ello se propone un enfoque basado en dos fases, que utiliza una combinación de técnicas de \emph{AutoML}, métodos de ensemble y optimización multiobjetivo.
+Para ello se propone un enfoque dividido en dos fases, que utiliza una combinación de técnicas de \emph{AutoML}, métodos de ensemble y optimización multiobjetivo.
 La sección~\ref{section:overview} provee una descripción general del sistema.
 Las secciones~\ref{section:first-phase} y~\ref{section:second-phase} detalla el funcionamiento de la primera y segunda fase del sistema respectivamente.
 
 \section{Descripción general}\label{section:overview}
 
-El sistema toma como entrada una colección de datos $D = \{(x_1, y_1), \dots , (x_n, y_n)\}$ y una función de pérdida $\mathcal{L}$ y una o varias métricas de equidad $F_1, F_2, \dots, F_n$.
+El sistema toma como entrada una colección de datos $D = \{(x_1, y_1), \dots , (x_n, y_n)\}$, una función de pérdida $\mathcal{L}$ y una o varias métricas de equidad $F_1, F_2, \dots, F_n$.
 El objetivo del sistema es producir un modelo de clasificación que es a la vez efectivo según $L$ y justo según $F_1, F_2, \dots, F_n$.
 El sistema consiste en dos fases fundamentales.
 La primera es responsable de generar una colección de modelos, cada uno llamado modelo base.
 Esta colección es construida optimizando la función de perdida $\mathcal{L}$, mientras se asegura \emph{diversidad} a lo largo de toda la población.
 La segunda fase es responsable de producir un conjunto de modelos de clasificación.
 Estos modelos son generados ensamblando la colección de modelos base de forma tal que optimice su efectividad según $L$, a la vez que es lo mas \emph{justo} posible según $F_1, F_2, \dots, F_n$.
-Las secciones \ref{section:first-phase} y \ref{section:second-phase} abordan con mas detalles la primera y segunda fase, respectivamente.
+Las secciones \ref{section:first-phase} y \ref{section:second-phase} abordan con más detalles la primera y segunda fase, respectivamente.
 
 \todo[inline]{Párrafo con la imagen del overview, y que describe la imagen.}
 
@@ -38,7 +38,7 @@ Asegurar diversidad en la colección de modelos base es importante porque los m�
 El procedimiento aplicado para generar la colección de modelos base esta resumido por la función \ref{code:generate-base-models}.
 El espacio de algoritmos e hiperparámetros es explorado utilizando una estrategia de búsqueda preseleccionada.
 Todo esto es capturado por la función \textbf{explore}.
-Luego de evaluar las arquitecturas generadas y estimar la diversidad entre los modelos actualmente seleccionados y la nueva generación de modelos, la colección de modelos base es actualizada para ajustarse a su capacidad $N$.
+Luego de (1) evaluar las arquitecturas generadas y (2) estimar la diversidad entre los modelos actualmente seleccionados y la nueva generación de modelos, la colección de modelos base es actualizada para ajustarse a su capacidad $N$.
 Todo esto es capturado por la función \ref{code:reselect}.
 
 \begin{function}[H]
@@ -70,8 +70,8 @@ El espacio de algoritmos y hiperparámetros utilizados es el utilizado por defec
 
 % TODO Linkear aqui a recomendaciones de como mejorar la seleccion del conjunto mas diverso
 Para reseleccionar la colección de modelos base, o sea, la colección de flujos de AutoGOAL, un enfoque goloso es utilizado.
-La función \textbf{reselect}~\ref{code:reselect} resume la estrategia propuesta.
-El algoritmo siempre incluye el modelo que mejor se desempeña de acuerdo a $L$ en la selección. Cada iteración siguiente añade el modelo, no todavía seleccionado, que maximiza la diversidad respecto a todos los modelos anteriormente seleccionados.
+La función \ref{code:reselect} resume la estrategia propuesta.
+El algoritmo siempre incluye el modelo que mejor se desempeña de acuerdo a $\mathcal{L}$ en la selección. Cada iteración siguiente añade el modelo, todavía no seleccionado, que maximiza la diversidad respecto a todos los modelos anteriormente seleccionados.
 El enfoque goloso no garantiza que la colección final logre la mejor posible diversidad respecto a $\mathcal{D}$.
 La precisión tampoco es tomada en cuenta, excepto para seleccionar el modelo de mejor desempeño.
 
@@ -90,12 +90,12 @@ La precisión tampoco es tomada en cuenta, excepto para seleccionar el modelo de
 
 Tres métodos \textit{reselect} de referencia fueron implementados para realizar comparaciones entre las métricas de diversidad \textit{disagreement} y \textit{double-fault}, las cuales son presentadas en la sección~\ref{section:diversity-meassures}.
 \begin{description}
-    \item[Shuffle.]
+    \item[Shuffle:]
     La colección de modelos base es construida barajando aleatoriamente la selecciona actual de modelos base y los nuevos encontrados.
     Los primeros $N$ modelos luego de barajar son seleccionados para la siguiente generación.
-    \item[Arbitrary.]
+    \item[Arbitrary:]
     La colección de modelos base es construida de la misma forma que con la estrategia \textit{shuffle}, pero el modelo de mejor rendimiento siempre es incluido en la colección de modelos base seleccionados.
-    \item[Best.]
+    \item[Best:]
     La colección de modelos base es construida a partir de seleccionar los modelos de mejor rendimiento entre los previamente seleccionados y los recién encontrados.
 \end{description}
 
@@ -110,7 +110,7 @@ La matriz de clasificaciones incorrectas se construye de la siguiente manera.
 \begin{equation}
     M_{i,j} =
     \begin{cases}
-        1 & \text{si el modelo j correctamente clasifica el ejemplo i ($D_valid$)} \\
+        1 & \text{si el modelo j correctamente clasifica el ejemplo i ($D_{valid}$)} \\
         -1 & \text{en otro caso}
     \end{cases}
 \end{equation}
@@ -121,7 +121,7 @@ Las siguientes métricas son computadas entre pares de modelos base para estimar
 
     \item[Disagreement.]
     Esta mide la frecuencia con la cual uno de los modelos falla cuando el otro no lo hace, y viceversa.
-    Mientras mas alto el valor de la métrica, mas diferentes son los modelos.
+    Mientras mas alto el valor de la métrica, más diferentes son los modelos.
 
     \begin{equation}
         \texttt{disagreement}(m^{(a)}, m^{(b)}) = \frac{\vert\{M_{i,a} \neq M{i,b} \vert s^{(i)} \in D^{(\star)}_{valid}\}\vert}{\vert D^{(\star)}_{valid} \vert}
@@ -155,8 +155,8 @@ En otras palabras, al sistema se le pide encontrar las mejores combinaciones de 
 Con el propósito de encontrar el ensemble que optimiza las funciones objetivos en cuestión, el sistema utiliza técnicas de AutoML para explorar un espacio de posibles soluciones.
 Este espacio de búsqueda esta conformado por las diferentes maneras de formar un ensemble a partir de los modelos base.
 Más específicamente, el espacio de búsqueda se forma a partir de tomar decisiones sobre una serie de hiperparámetros.
-Estos hiperparámetros son, la cantidad de modelos base que serán escogidos para formar el ensemble, el subconjunto de modelos base a partir de la cantidad escogida anteriormente y por ultimo el tipo de ensemble que será utilizada.
-Los diferentes tipos de ensemble se describen con mas detalle a continuación.
+Estos hiperparámetros son: (1) la cantidad de modelos base que serán escogidos para formar el ensemble, (2) el subconjunto de modelos base a partir de la cantidad escogida anteriormente y (3) el tipo de ensemble que será utilizado.
+Los diferentes tipos de ensemble se describen con más detalle a continuación.
 
 \begin{description}
 
@@ -190,7 +190,7 @@ El funcionamiento de nuestro algoritmo consiste fundamentalmente de tres proceso
 Primeramente, de forma similar a \emph{PGE}, un conjunto de $N$ flujos es generado a partir de tomar muestras de una gramática $G$ de acuerdo a las probabilidades $\theta$ asignadas a cada producción.
 Seguido de esto, cada flujo generado es evaluado en cada una de las funciones objetivos a optimizar y se procede a un proceso de selección en el cual se determinan los mejores candidatos en la población para pasar a la siguiente generación.
 Este proceso de selección es el que guía las direcciones en las que se explora el espacio de búsqueda, por tanto necesita tener en cuenta la evaluación de cada una de las funciones objetivo.
-Luego, dicho proceso se realiza utilizando \emph{Non-dominated Sorting}~(sección \ref{section:ndsorting}) y \emph{Crowding Distance}~(sección \ref{section:crowding-distance}).
+Dicho proceso se realiza utilizando \emph{Non-dominated Sorting}~(sección \ref{section:ndsorting}) y \emph{Crowding Distance}~(sección \ref{section:crowding-distance}).
 De la misma forma en que se utiliza en \emph{NSGA-II}, los $N$ individuos de la población son seleccionados según el orden que se obtiene de aplicar \emph{Non-dominated Sorting} y empleando \emph{Crowding Distance} como métrica para desambiguar entre individuos con el mismo \emph{pareto-orden}.
 Además, se mantiene en todo momento durante la ejecución del algoritmo la mejor aproximación del \emph{Frente Pareto} encontrada hasta ese instante.
 Para esto actualizamos al final de cada iteración este conjunto aproximación con las soluciones \emph{\textbf{no} pareto-dominadas} de la unión de aquellas que ya pertenecían al conjunto y las nuevas soluciones encontradas.
@@ -242,7 +242,7 @@ Esto significa que al terminar la ejecución, el sistema no da una única soluci
 Dar una única solución es problemático debido a que la naturaleza de estos problemas de optimización multiobjetivo implica que existe un conjunto de soluciones entre las cuales no hay manera general de determinar un orden.
 Cada una de dichas soluciones representa un balance diferente entre las diferentes métricas a optimizar.
 Nuestro sistema le provee al usuario un conjunto de soluciones óptimas entre sí, y el usuario puede posteriormente seleccionar la solución que mejor considere de acuerdo al problema en cuestión que se esta resolviendo y las restricciones del mismo.
-Por ejemplo, en determinados casos puede ser tolerable ceder en la justeza del modelo con el objetivo de ganar precisión, mientras que otros escenarios mas sensibles puede que la restricción sobre la equidad del modelo sea primordial y no pueda ser comprometida.
+Por ejemplo, en determinados casos puede ser tolerable ceder en la equidad del modelo con el objetivo de ganar precisión, mientras que otros escenarios mas sensibles puede que la restricción sobre la equidad del modelo sea primordial y no pueda ser comprometida.
 Luego, el usuario tiene a su disposición una serie de soluciones que representan diferentes balances entre los objetivos, cada una útil en escenarios con diferentes características, todo esto luego de una única ejecución de extremo a extremo de nuestro sistema.
 
 \todo[inline]{Hay todo un grupo de cosas que existen fuera de las 2 fases, que va de como integrarlas, que podría ir en una ultima sección de ejecución end to end. En general deberias revisar el codigo del Diversifier, Ensembler, y Mitigator, y ver qué cosas están y no están dichas en la propuesta, como eso mismo de los contraints, el detriment, etc.}

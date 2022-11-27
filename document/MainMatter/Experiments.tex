@@ -47,7 +47,7 @@ Los resultados que obtiene este ensemble, proveen una cota superior del mejor re
 
 \end{description}
 
-Primeramente se desea validar que nuestro sistema es capaz de generar modelos base en la primera fase que al ser ensamblados en la segunda fase dan lugar a un ensemble que obtiene mejores resultados sobre el conjunto de evaluación que cualquiera de los modelos base de los que se compone.
+En esta primera etapa experimental se desea validar que nuestro sistema es capaz de generar modelos base en la primera fase que al ser ensamblados en la segunda fase dan lugar a un ensemble que obtiene mejores resultados sobre el conjunto de evaluación que cualquiera de los modelos base de los que se compone.
 Para ello, los resultados obtenidos por el ensemble producido por nuestro sistema son comparados con los obtenidos por el mejor de los modelos base, y analizados respecto a los resultados obtenidos por el \emph{Oráculo Sobre-ajustado} descrito anteriormente.
 
 Además, en esta etapa experimental se desea también comprobar la influencia de las diferentes métricas de diversidad utilizadas en la capacidad del sistema para producir modelos base que generalicen luego de ser ensamblados.
@@ -58,7 +58,7 @@ Los resultados obtenidos por nuestro sistema son entonces comparados con aquello
 Finalmente, se analiza también en esta etapa el comportamiento del sistema bajo diferentes combinaciones de otros hiperparámetros como la cantidad de modelos base.
 La mejor configuración de dichos hiperparámetros, incluyendo la métrica de diversidad que mejores resultados proporciona al sistema, son utilizados en la segunda etapa experimental.
 
-La \textbf{segunda etapa experimental} consiste del estudio de la capacidad del sistema para lograr producir modelos de ensemble que son precisos de acuerdo a una función de perdida determinada y justos según una o varias métricas de equidad. 
+La \textbf{segunda etapa experimental} consiste en el estudio de la capacidad del sistema para lograr producir modelos de ensemble que son precisos de acuerdo a una función de perdida determinada y justos según una o varias métricas de equidad. 
 Con este fin se realiza una comparación entre los resultados obtenidos por nuestro sistema y los obtenidos por varios otros sistemas que resultan relevantes en la literatura para la solución de este problema.
 
 En el contexto de mitigación de sesgos, múltiples métodos \emph{ad-hoc} o dependientes del modelo han sido propuestos.
@@ -86,7 +86,7 @@ La función objetivo a optimizar en ambas fases del sistema es la precisión del
 Como parte de esta etapa se realizan múltiples ejecuciones con diferentes configuraciones de hiperparámetros.
 La configuración de hiperparámetros para la cual se observen los mejores resultados en esta etapa, sera la utilizada en la segunda etapa experimental, como se describe a continuación.
 
-Una segunda etapa experimental se lleva a cabo, la cual consiste de la ejecución de extremo a extremo de nuestro sistema, utilizando la colección de datos \emph{Adult}~\parencite{ucidata} como escenario de evaluación.
+La segunda etapa experimental consiste en la ejecución de extremo a extremo de nuestro sistema, utilizando la colección de datos \emph{Adult}~\parencite{ucidata} como escenario de evaluación.
 En esta etapa se utiliza la mejor configuración de hiperparámetros acorde a los resultados de la primera fase, es relevante destacar que entre estos hiperparámetros preseleccionados en la etapa anterior se encuentran la medida de diversificación a utilizar en la selección de modelos base y la cantidad máxima de estos.
 Ambas fases optimizan la precisión del modelo, en particular la segunda fase incorpora al proceso de optimización métricas de equidad, dígase \emph{Statistical Parity} y \emph{Equalized Opportunity}, como funciones objetivo adicionales a optimizar simultáneamente con la precisión.
 
@@ -96,10 +96,10 @@ Dos conjuntos de datos son utilizados para la evaluación del sistema en los exp
 
 \begin{description}
 
-\item[HAHA 2019]
+\item[HAHA 2019.]
 Colección de datos utilizada en la tarea \emph{HAHA 2019} (\emph{Humor Analysis based on Human Annotation}), con marco en \emph{IberLEF 2019} \parencite{chiruzzo2019overview}.
 El corpus contiene $30\,000$ tweets en Español clasificados manualmente, de los cuales $24\,000$ son para entrenamiento y $6\,000$ para evaluación.
-Cada uno de estos tweets es clasificado en \emph{humoroso} o \emph{no-humoroso}.
+Cada uno de estos tweets es clasificado en \emph{gracioso} o \emph{no-gracioso}.
 
 La colección de datos es anotada a partir de asignar una clasificación de \emph{gracioso} o \emph{no-gracioso} a cada tweet, en caso de ser \emph{gracioso} se da una puntuación de $[1,5]$ de cuan \emph{gracioso} es dicho tweet.
 
@@ -124,11 +124,12 @@ La colección de datos es anotada a partir de asignar una clasificación de \emp
     \label{table:haha2019info}
 \end{table}
 
-\item[Adult]
+\item[Adult.]
 La colección de datos \emph{Adult} \parencite{ucidata} presenta información extraída del censo de 1994 en los Estados Unidos por Barry Becker.
-Los datos contienen detalles personales de los individues, tales como nivel de educación, horas de trabajo a la semana, raza, sexo, etc., y el objetivo es predecir si el individuo ganará un salario mayor a \texttt{\$50K} al año.
+Los datos contienen detalles personales de los individues, tales como nivel de educación, horas de trabajo a la semana, raza, sexo, etc.
+El objetivo es predecir si el individuo ganará un salario mayor a \texttt{\$50K} al año.
 Hay un total de $48\,842$ filas de datos, y de estas, $3\,620$ contienen casillas con valores desconocidos, dejando $45\,222$ filas completas.
-Existen dos clases en las cuales clasificar a los individuos dependiendo de su salario anual, estas son, \texttt{<50K} o \texttt{$\leq$50K}.
+Existen dos clases en las cuales clasificar a los individuos dependiendo de su salario anual, estas son, \texttt{>50K} o \texttt{$\leq$50K}.
 Las clases están desbalanceadas, con una tendencia hacia la etiqueta \texttt{<50K}, la cual representa aproximadamente el $75\%$ de los ejemplos.
 
 \end{description}
@@ -150,7 +151,7 @@ Por ejemplo, flujos basados en \emph{Keras} y \emph{BERT} fueron excluidos y fun
 No incluir los algoritmos de aprendizaje profundo en la configuración experimental puede tener un impacto negativo en el rendimiento máximo que puede ser alcanzado por el sistema.
 Es decir, la precisión del sistema no puede ser comparada directamente con otras soluciones reportadas, en términos de magnitud, pues aquellas soluciones que utilizan técnicas de aprendizaje profundo tienen una ventaja inherente en problemas donde modelos más simples no son tan competitivos.
 Sin embargo, la ausencia de estos algoritmos no deberían afectar la capacidad del sistema de mejorar el rendimiento respecto a los modelos base encontrados en la primera fase.
-Por tanto, si el sistema es capaz de mejorar el rendimiento de los modelos base, entonces el rendimiento del sistema se espera que mejore un mas una vez que las arquitecturas de aprendizaje profundo sean compatibles.
+Por tanto, si el sistema es capaz de mejorar el rendimiento de los modelos base, entonces el rendimiento del sistema se espera que mejore aún más una vez que las arquitecturas de aprendizaje profundo sean compatibles.
 Esto se espera que ocurra no solo porque los modelos base ahora tendrían mejor rendimiento, sino también porque arquitecturas de ensemble mas poderosas serían añadidas al mismo tiempo sin esfuerzo alguno.
 AutoGOAL ya ha probado lograr resultados competitivos cuando es configurado correctamente \parencite{estevez2020automatic}.
 Además, es importante destacar que, en el caso en que se optimiza buscando un buen balance entre la precisión y las métricas de equidad, por ejemplo en la segunda fase de nuestro sistema, no necesariamente modelos mas poderosos (como los de aprendizaje profundo) implican mejores resultados en dicho balance.
@@ -510,7 +511,7 @@ Luego la sección~\ref{section:discussion-second-phase} realiza un análisis en 
 
 \subsection{Resultados}\label{section:results-second-phase}
 
-La tabla~\ref{table:second-phase-vs-all} muestra una comparativa de nuestro enfoque con los métodos agnósticos (ultimas tres filas) y los no agnósticos al modelo (primeras tres filas).
+La tabla~\ref{table:second-phase-vs-all} muestra una comparativa de nuestro enfoque con los métodos agnósticos (últimas tres filas), y los no agnósticos al modelo (primeras tres filas).
 La tabla~\ref{table:secod-phase-vs-fbo} muestra una comparativa con \emph{FBO} optimizando simultáneamente \emph{Statistical Parity}, \emph{Equal Oportunity} y \emph{Equalized Odds}.
 Por ultimo la tabla~\ref{table:second-phase-vs-mobo} contrasta los resultados obtenidos por nuestro sistema con los obtenidos por los métodos otros métodos de optimización multiobjetivo aplicados al problema de mitigación de sesgos.
 %Los métodos utilizados en las diferentes comparaciones son:
@@ -521,17 +522,17 @@ Por ultimo la tabla~\ref{table:second-phase-vs-mobo} contrasta los resultados ob
 
     \begin{tabular}{lcc}
     \toprule
-        Método & Error & statistical parity \\
+        Método & Error & Statistical Parity \\
         \midrule \midrule
-        FERM & $0.164 \pm 0.010$ & $\leq 0.1$ \\
-        Zafar~\parencite{zafar2017fairness} & $0.187 \pm 0.001$ & $\leq 0.1$ \\
+        \textbf{FERM} & $0.164 \pm 0.010$ & $\leq 0.1$ \\
+        Zafar & $0.187 \pm 0.001$ & $\leq 0.1$ \\
         Adversarial debiasing & $0.237 \pm 0.001$ & $\leq 0.1$ \\ 
         \midrule
         FERM Preprocesamiento & $0.228 \pm 0.013$ & $\leq 0.1$ \\
         SMOTE & $0.178 \pm 0.005$ & $\leq 0.1$ \\
         FairBO & $0.175 \pm 0.007$ & $\leq 0.1$ \\  
         \midrule
-        BFair (20) & $0.170$ & $0.087$ \\
+        \textbf{BFair (20)} & $0.170$ & $0.087$ \\
     \bottomrule
     \end{tabular}
 

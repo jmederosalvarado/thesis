@@ -8,131 +8,81 @@
 %(1) que ML está en todos lados
 
 En los últimos años, ha habido un creciente interés en aplicar técnicas de aprendizaje automático para resolver diferentes tipos de tareas.
-Análisis de emociones en textos, etiquetado de imágenes y traducción automática son algunos ejmplos de estas tareas~\todocite{jp}{11,26,2,36}.
-En general, los problemas de clasificacion son un de los problemas mas comunes para los cuales los algoritmos de aprendizaje automatico tienden a producir buenos resultados.
+Análisis de emociones en textos, etiquetado de imágenes y traducción automática son algunos ejemplos de estas tareas~\todocite{jp}{11,26,2,36}.
+En general, los problemas de clasificación son un de los problemas mas comunes para los cuales los algoritmos de aprendizaje automático tienden a producir buenos resultados.
 
 %(2) que aplicarlo a toma de decisiones de alto riesgo da lugar a el tema de los sesgos
 
-Con el uso cada vez maz de los metodos de aprendizaje autmatico en dominios tales como \emph{prestamos financieros}, \emph{contratacion}, \emph{justicia criminal}, y \emph{admisiones en las universidades}, ha habido una mayor preocupacion por el potencial de estas tecnicas de accidentalmente codificar sesgos sociales y resultar en una discriminacion sistematica~\todocite{fbo}{4-6,8,10}.
-Por ejemplo un clasificador que solamente es ajustado para maximizar la precision de las predicciones puede injustamente predecir un alto riesgo en el credito para algunos subgrupos de la poblacion aplicando a un prestamo.
+Con el uso cada vez mas de los métodos de aprendizaje automático en dominios tales como \emph{prestamos financieros}, \emph{contratación}, \emph{justicia criminal}, y \emph{admisiones en las universidades}, ha habido una mayor preocupación por el potencial de estas técnicas de accidentalmente codificar sesgos sociales y resultar en una discriminación sistemática~\todocite{fbo}{4-6,8,10}.
+Un clasificador que solamente es ajustado para maximizar la precisión de las predicciones puede injustamente predecir un alto riesgo en el crédito para algunos subgrupos de la población aplicando a un préstamo.
+Un ejemplo de tratamiento imparcial a grupos de la población puede ser encontrado en el \emph{software} \emph{COMPAS} (\emph{Correctional Offender Management Profiling for Alternative Sanctions}), utilizado por las cortes en los Estados Unidos para determinar los riesgos de un individuo de reincidir en un crimen.
+Los resultados que produce este sistema son utilizados para motivar decisiones respecto a si los defendidos deben ser liberados, en diferentes etapas del proceso de justicia.
+Problemáticamente, este software falsamente etiquetaba defendidos de raza no blanca con un mayor riesgo que los defendidos blancos~\todocite{survey}{2}.
 
-% ZAFAR {{{
-
-%However, as automated data analysis replaces human supervision in decision making, and the scale of the analyzed data becomes \big", there are growing concerns from civil organizations [Bhandari, 2016], governments [Podesta et al., 2014, Mu~noz et al., 2016], and researchers [Sweeney, 2013] about potential loss of transparency, accountability and fairness.
-
-%Anti-discrimination laws in many countries prohibit
-
-%unfair treatment of people based on certain attributes, also called sensitive attributes, such as gender or race [Civil Rights Act, 1964]. These laws typically evaluate the fairness of a decision making process by means of two distinct notions [Barocas and Selbst, 2016]: disparate treatment and disparate impact. A decision making process su ers from disparate treatment if its decisions are (partly) based on the subject's sensitive attribute information, and it has disparate impact if its outcomes disproportionately hurt (or, bene t) people with certain sensitive attribute values (e.g., females, blacks).
-
-%While it is desirable to design decision making systems
-%free of disparate treatment as well as disparate
-%impact, controlling for both forms of unfairness simul-
-%taneously is challenging. One could avoid disparate
-%treatment by ensuring that the decision making process
-%does not have access to sensitive attribute information
-%(and hence cannot make use of it). However,
-%ignoring the sensitive attribute information may still
-%lead to disparate impact in outcomes: since automated
-%decision-making systems are often trained on historical
-%data, if a group with a certain sensitive attribute
-%value was unfairly treated in the past, 1 this unfairness
-%may persist in future predictions through indi-
-%rect discrimination [Pedreschi et al., 2008], leading to
-%disparate impact. Similarly, avoiding disparate impact
-%in outcomes by using sensitive attribute information
-%while making decisions would constitute disparate
-%treatment, and may also lead to reverse discrimina-
-%tion [Ricci vs. DeStefano, 2009].
-
-%}}}
-
+%Leyes anti-discriminacion en muchos países prohíben el tratamiento injusto de las personas basado en determinadas características, tales como genero o raza~\todocite{zafar}{Civil Rights Act, 1964}.
 
 %(3) que si muchos approach existentes para mitigar son de optimización para alcanzar un trade off
 
-Cuantificar y mitigar los sesgos durante las diferentes etapas del ciclo de vida de los modelos de aprendizaje automatico ha sido objeto de estudio de numerosas investigaciones~\todocite{fbo}{5}
-Especificamente, un numero de metodos han sido propuestos recientemente para incrementar la equidad en los resultados producidos por estos modelos.
-La clave del diseño detras de todos estas métodos es maximizar la precisión de las predicciones, sujeto a restricciones de equidad sobre los resultados.
-Sin embargo, como consecuencia de mantener la tratabilidad computacional de estas tecnicas, estos métodos sufren de una o mas de las siguientes desventajas.
-La tecnica de mitigacion es
+Cuantificar y mitigar los sesgos durante las diferentes etapas del ciclo de vida de los modelos de aprendizaje automático ha sido objeto de estudio de numerosas investigaciones~\todocite{fbo}{5}
+Específicamente, un numero de métodos han sido propuestos recientemente para incrementar la equidad en los resultados producidos por estos modelos.
+La clave del diseño detrás de todos estas métodos es maximizar la precisión de las predicciones, sujeto a restricciones de equidad sobre los resultados.
+Sin embargo, como consecuencia de mantener la tratabilidad computacional de estas técnicas, estos métodos sufren de una o mas de las siguientes desventajas.
+La técnica de mitigación es
 (i) específica a la clase del modelo utilizado (p.e. solamente modelos lineares),
-(ii) limitiada a un conjunto especifico de definiciones de equidad,
-(iii) limitado a un unico atributo protegido binario,
-(iv) require acceso a informacion sensible en el momento de las predicciones
-
-%Specifically, a number of methods have been proposed in recent
-%years to reduce unfairness in the ML model outcomes. The
-%key design principle behind all of these fairness interventions is to
-%maximize prediction accuracy subject to some constraints on the
-%fairness of the outcomes while preserving computational tractability.
-%1 However, as an artefact of the need to preserve computational
-%tractability, these fairness interventions suffer from one or more
-%of the following drawbacks. The fairness intervention is (i) specific
-%to the model class (e.g., linear models only), (ii) limited to a
-%specific definition(s) of fairness, (iii) limited to a single, binary sensitive
-%feature, (iv) requires access to sensitive feature information
-%at prediction time, or (v) results in a randomized classifier that may
-%generate different prediction for the same input at different times.
-%These drawbacks limit the practitioners’ ability to deploy fair ML
-%solutions for arbitrary machine learning pipelines corresponding to
-%different practical goals and constraints.2 For instance, as a result of
-%limitation (i), any ensemble or hybrid learning solutions combining
-%different model classes and/or domain knowledge are ruled out. As
-%a drawback of limitation (iv), the corresponding fairness intervention
-%cannot be used when the sensitive feature information is not
-%available at prediction time, while limitation (v) may result in the
-%same model accepting and denying the loan to the same applicant
-%at different times.
-
+(ii) limitada a un conjunto especifico de definiciones de equidad,
+(iii) limitado a un único atributo protegido binario,
+(iv) requiere acceso a información sensible en el momento de las predicciones, o
+(v) resulta en un clasificador \emph{randomizado} que puede generar diferentes predicciones para la misma entrada en diferentes momentos.
+Estas desventajas limitan la habilidad de los profesionales de poner en funcionamiento modelos justos de aprendizaje automático para problemas de la practica con objetivos y restricciones arbitrarias.
+Por ejemplo, como resultado de la limitación (i), cualquier ensemble o solución de aprendizaje híbrido combinando diferentes clases de modelos y/o conocimiento del dominio son descartadas.
+Una consecuencia de (iv), es que se necesita información acerca de atributos sensibles en el momento de realizar las predicciones, lo cual puede traer problemas con las leyes que protegen la privacidad de los usuarios.
+Finalmente, (v) puede resultar en el mismo modelo, aceptando y denegando prestamos para el mismo individuo en diferentes ocasiones de forma arbitraria.
 
 %(4) que si AutoML es bueno para el tema de democratizar una tecnología y que ayuda a crear hipótesis automáticamente
+
+Recientemente, avances en \emph{AutoML} (del inglés \emph{Automatic Machine Learning}) han permitido el desarrollo de bibliotecas y herramientas efectivas para encontrar la mejor combinacion de algoritmos e hiperparametros para resolver un problema~\todocite{jp}{19}.
+Multples tecnologias han sido propuestas para resolver el problema de \emph{AutoML}, tales como \emph{AutoWeka}~\parencite{autoweka} o \emph{AutoKeras}~\parencite{autoKeras}.
+Estas herramientas son alternativas para reducir el tiempo empleado por investigadores resolviendo problemas bien estudiados.
+Incluso si las herramientas de \emph{AutoML} tienden a consumir mas tiempo y recursos que bibliotecas estándar de aprendizaje automático, no tener que razonar acerca de cual arquitectura podría ser la mas apropiada para el problema en cuestión vale el esfuerzo de desarrollarlas.
+Además, al ser aplicables a un rango amplio de problemas, aprender a utilizar estas herramientas puede ser mas sencillo que aprender a utilizar diferentes bibliotecas independientes de aprendizaje automático.
+Se podría decir entonces que uno de los objetivos de las técnicas de \emph{AutoML} es la \emph{democratización del Aprendizaje Automático}.
+
 %(5) que si AutoGoal tiene varias ventajas sobre el resto
+
+En este contexto se encuentra también \emph{AutoGOAL}~\parencite{autogoal} como un buen ejemplo de estas bibliotecas de \emph{AutoML}.
+\emph{AutoGOAL} es una propuesta reciente que utiliza técnicas que le permite explorar un espacio de búsqueda heterogéneo de modelos e hiperparámetros.
+A diferencia de otras tecnologías de \emph{AutoML} existentes, \emph{AutoGOAL} puede de forma automática construir flujos que le permitan combinar técnicas y algoritmos de diferentes bibliotecas, incluyendo clasificadores lineares, redes neuronales y herramientas de procesamiento del lenguaje.
+A pesar de que \emph{AutoGOAL} es capaz de combinar algoritmos de diferentes categorías para construir flujos, no tiene la habilidad de combinar múltiples flujos para generar una solución.
+Adicionalmente, su algoritmo de búsqueda le permite solamente optimizar una función objetivo y no permite atacar problemas que en su naturaleza son de múltiples objetivos.
+
 %(6) finalmente que a partir de combinar ciertas cosas se pueden resolver las limitaciones de otras propuestas actuales
+
+Las técnicas de \emph{AutoML} y en particular la estrategia que propone \emph{AutoGOAL} resulta sumamente útil para superar las limitación que tienen muchos de los enfoques de mitigación de sesgos al solo ser aplicables a determinadas clases de modelos y métricas.
+La idea es utilizar la capacidad \emph{AutoGOAL} de explorar un espacio de modelos heterogéneo y componer diferentes técnicas de aprendizaje automático, para poder encontrar una solución que cumpla con determinadas restricciones de equidad.
+Sin embargo, se mantiene la interrogante de como lograr mantener determinadas restricciones de equidad a la vez que el método se mantiene agnóstico al modelo de aprendizaje.
+Para ello resultaría muy útil poder utilizar \emph{AutoGOAL} en entornos multiobjetivo, donde se optimizan simultáneamente métricas de equidad y de efectividad del modelo, esto es precisamente lo que permite lograr una de las propuestas de este trabajo.
+Adicionalmente, se propone una solución al problema de \emph{AutoGOAL} de no poder combinar diferentes flujos de extremo a extremo en un flujo compuesto.
+Esto se logra a partir de la utilización de métodos de ensemble, los cuales permiten la combinación de las predicciones de diferentes modelos base para lograr modelos finales mas robustos~\parencite{polikar2006ensemble}.
 
 %De ahí caes en objetivos, contribuciones y organización
 
-% importante vender todas las contribuciones explícitamente (eran como 4, y las anotaste)
+\section*{Objetivo general}
 
+El objetivo de este trabajo es proponer y estudiar un sistema que permita la solución de problemas de clasificación arbitrarios de forma justa.
+Este sistema debe ser agnóstico al modelo de solucion y el proceso de optimización del mismo, asi como a las métricas de equidad y efectividad que se deseen utilizar.
+De esta forma contribuir a la democratización de las técnicas de solución de problemas de clasificación de forma justa.
 
+\section*{Objetivos específicos}
 
-%In recent years, there has been an increasing interest in applying machine learning techniques to solve several types of
-%complex tasks. Text sentiment analysis, image labeling, and machine translation are just a few well-known examples of
-%these tasks [1,26,2,36]. In general, classification problems are one of the most common problems for which machine learning
-%approaches tend to produce good results. Proof thereof is the fact that machine learning-based systems have been applied
-%even in high-risk decision-making contexts, e.g. hiring processes, applications for bank loans, health insurance, criminal
-%recidivism, among others [8,17,24,37].
+\begin{itemize}
+    \item Realizar un estudio de la literatura en los temas relacionados a la mitigación de sesgos y otros temas relevantes a la solución propuesta.
+    \item Concebir un método que permita atacar el problema de encontrar clasificadores justos y efectivos para problemas de clasificación arbitrarios de forma agnóstica a los modelos utilizados.
+    \item Implementar un prototipo computacional del método propuesto.
+    \item Diseñar un marco experimental donde evaluar los resultados del método de solución diseñado.
+    \item Comparar los resultados del sistema propuesto con otros métodos propuestos en la literatura.
+    \item Analizar en profundidad los resultados obtenidos y arribar a conclusiones.
+\end{itemize}
 
-%Recent advances in Automatic Machine Learning (Auto-ML) have enabled the development of libraries and other tools to
-%effectively find the best combination of algorithms and hyperparameters to solve a problem [19]. Several technologies have
-%been proposed to solve the Auto-ML problem, such as Auto-Weka [35], Auto-sklearn [16], and Auto-Keras [20]. These
-%libraries are alternatives for reducing the time spent by researchers in solving well-studied problems. Even if Auto-ML tools
-%tend to be more time and resource consuming than standard ML libraries, not having to think about which architecture
-%might be the best for solving a problem makes them worth developing. Also, by being applicable to a broad range of problems,
-%learning to use these tools may be easier than learning several independent libraries.
-%In this context, we find AutoGOAL1 to be a good example of the potential of Auto-ML libraries. AutoGOAL is a novel Auto-ML
-%system that uses heterogeneous techniques. In contrast with other existing Auto-ML technologies, AutoGOAL can automatically
-%build machine learning pipelines that combine techniques and algorithms from different frameworks, including shallow classifiers,
-%natural language processing tools, and neural networks [13,14]. AutoGOAL performs a Probabilistic Grammatical Evolution
-%Search to explore the space of available algorithms and their hyperparamenters to build pipelines [15]. At the end of the
-%search, the best performing pipeline found according to the input loss function is given as a solution for the problem.
-%Even though AutoGOAL is capable of combining algorithms from several different frameworks to build pipelines, it lacks
-%the ability to combine multiple end-to-end pipelines to generate a solution. This means that although multiple hypotheses
-%are tested while AutoGOAL is searching for the best configuration, the final solution comprises a single end-to-end hypothesis
-%and all intermediate pipelines found by AutoGOAL are discarded. However, we consider that these discarded pipelines
-%could be a great source of information, especially if the collection of pipelines is intelligently selected to maximize a desired
-%criteria.
-%One way of combining several hypothesis to produce a more robust solution, i.e. a solution that generalizes better to
-%unseen inputs, is through ensemble methods. There are several ensemble methods available in the literature, such as voting
-%and weighted-voting [10], boosting [32], and bagging [3]. However, depending on the problem, one ensemble method might
-%perform better than the other. This presents the aforementioned challenge of finding the best method to apply to fit a desired
-%criteria, a time-consuming task when done manually. This challenge can be overcome by intelligently exploring the space of
-%ensemble methods, with their respective hyperparameters, to find the best one to apply.
-%We believe that by ensembling the outputs of several pipelines, the single, biased hypothesis that AutoGOAL originally
-%generates can be improved, and therefore, a more robust solution can be provided. Also, by having a starting collection of
-%pre-trained models, we expect that more complex metrics can be better optimized. Solving problems in two phases to
-%enhance performance has been studied in the literature, providing good results [27,22]. Additionally, using ensembles to
-%merge multiple snapshots of a single neural network architecture along its optimization path has been proven to be an effective
-%technique referred to as snapshot ensembles [18]. By contrast with snapshot ensembles, this paper studies the ensemble
-%of several Auto-ML generated models instead of using a single neural network architecture.
 %This paper’s objective is to design and validate a system that takes advantage of all the different architectures that are
 %generated while solving classification problems with Auto-ML tools, particularly AutoGOAL, to produce more robust classifiers.
 %We propose a two-phase optimization system based on Automatic Machine Learning (Auto-ML) for solving classification
@@ -153,31 +103,21 @@ La tecnica de mitigacion es
 %Section 4 shows the results of evaluating the system. Section 5 discusses the implications of the results we obtained from
 %the experiments. Finally, Sections 6 presents the conclusions, along with future lines of work.
 
-En la actualidad los algoritmos de aprendizaje automático están siendo aplicados en disimilies areas de la vida humana. Es comun encontrarlos aplicados en sistemas de recomendacion de compras, aplicaciones de citas, solicitudes de prestamos, contratacion personal y muchas otras areas.  A raiz de ello, ha surgido un creciete interes en estudiar las potencialidades y limitaciones de los modelos de aprendizaje automatico, asi como las posibles implicaciones de confiar ciegamente en sus predicciones.
+% importante vender todas las contribuciones explícitamente (eran como 4, y las anotaste)
 
-En particular, su incorporacion a tareas de toma de decisiones de alto riesgo ha dirigido la atencion de muchos investigadores hacia una nueva interrogante: ¿estaran siendo "justos" los algoritmos de aprendizaje automatico al tomar sus decisiones?
-
-En este escenario, ha ganado popularidad el desarrollo de tecnicas para detectar y mitigar los sesgos en colecciones de datos y algoritmos de aprendizaje automatico. Tales herramientas son cruciales para desarrollar sistemas de toma de decisiones mas justos. Los estudios orientados hacia la equidad en algoritmos de aprendizaje automatico se enfocan principalmente en desarrollar tecnicas que consideren tanto la precision como la equidad de los modelos.
-
-\section*{Motivación}
-
-Un modelo de aprendizaje de maquina se entrena con el objetivo de optimizar una unica metrica, en la mayoria de los casos la precision. Esto significa que los modelos aprenden muy bien los patrones que se presentan en los datos de entrenamiento, incluyendo aquellos patrones que representan sesgos y prejuicios que estan desafortunadamente presente en la sociedad y por ende en los datos recopilados, en algunos casos incluso amplifican estos patrones negativos. Son varias la tecnicas que se han explorado para resolver este problema, algunas se enfocan en un preprocesamiento de los datos para eliminar aquellos elementos que puedan inducir un sesgo en el modelo, otras realizan variacinoes en el metodo de entrenamiento con el mismo objetivo. Sin embargo permanece relativamente poco explorado el uso de tecnicas de optimizacion multiobjetivo que permitan al modelo optimizar hasta encontrar un buen balance entre cuan justo es y cuan preciso.
-
-Otra tecnica que ha demostrado ser de gran utilidad en la prevencion de los sesgos en los modelos de aprendizaje de maquina es la construccion de ensamblados de multiples modelos que maximizan la varianza entre si, por lo que se minimiza el sesgo del ensamblado final.
-
-\section*{Problematica}
-
-A pesar de que existe AutoGOAL, una biblioteca de AutoML, que permite obtener modelos para resolver problemas arbitrarios utilizando entre otras tecnicas aprendizaje de maquina. No existe una biblioteca o herramienta que permita resolver de principio a fin un problema de clasificacion utilizando aprendizaje de maquina y donde exita alguna garantia de que el modelo aprendido sea justo.
-
-\section*{Objetivo general}
-
-Proponer una herramienta que permita resolver problemas de clasificacion utilizando aprendizaje de maquina y que permita garantizar que el modelo aprendido sea justo.
-
-\section*{Objetivos especifico}
+\section*{Contribuciones}
 
 \begin{itemize}
-    \item Encontrar modelos que maximicen la varianza para minimizar el sesgo.
-    \item Metodos basados en metaheuristicas para optimizar los modelos utilizando simultaneamente metricas de equidad y precision.
-    \item Explorar adicion de optimizacion multiobjetivo a AutoGOAL para que el modelo aprendido sea justo.
-    \item Metodos basados en la combinacion de diferentes metricas en una sola, para poder aprovechar los multiples metodos de optimizacion que existen.
+    \item Se propone un sistema, cuya implementación queda disponible a la comunidad, que permite resolver problemas de clasificación arbitrarios con control sobre la equidad.
+    \item Este sistema permite al usuario especificar diferentes funciones de equidad a optimizar.
+    \item Adicionalmente, trabaja sobre colecciones de datos heterogéneas
+    \item El sistema es agnóstico al modelo y no requiere conocimiento especifico del dominio del problema para utilizarlo satisfactoriamente.
 \end{itemize}
+
+\section*{Organización del trabajo}
+
+El resto de este trabajo esta organizado de la siguiente forma.
+El capítulo~\ref{chapter:state-of-the-art} realiza una revisión de la literatura y el estado del arte en los tópicos relacionados con el problema a resolver.
+Luego el capítulo~\ref{chapter:proposal} describe detalladamente el método de solución propuesto.
+El capítulo~\ref{chapter:experiments} describe la experimentación realizada, los resultados obtenidos y un análisis en profundidad de los mismos.
+Finalmente se arriban a conclusiones y se discuten las líneas de investigación futuras.

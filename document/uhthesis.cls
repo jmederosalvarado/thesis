@@ -88,14 +88,14 @@
   {\multicitedelim}
   {\usebibmacro{postnote}}
 
-\DeclareCiteCommand{\parencite}[\mkbibparens]
+\DeclareCiteCommand{\parencite}[\mkbibbrackets]
   {\usebibmacro{prenote}}
   {\usebibmacro{citeindex}%
     \printtext[bibhyperref]{\usebibmacro{cite}}}
   {\multicitedelim}
   {\usebibmacro{postnote}}
 
-\DeclareCiteCommand*{\parencite}[\mkbibparens]
+\DeclareCiteCommand*{\parencite}[\mkbibbrackets]
   {\usebibmacro{prenote}}
   {\usebibmacro{citeindex}%
     \printtext[bibhyperref]{\usebibmacro{citeyear}}}

@@ -1,10 +1,8 @@
 \chapter{Estado del Arte}\label{chapter:state-of-the-art}
 
-\todo[inline]{comienza demasiado duro. falta llegar primero a qué son los sesgos y que tiene que ver eso con ML. o sea, faltan uno o dos parráfos antes de caer que pueden venir de diferentes fuentes. En un paper no lo harías, pero es que el capítulo del estado del arte tiene comenzar lo más arriba posible.}
-Los métodos de aprendizaje automático se han vuelto cada vez mas populares en los ultimos años, tanto en la diversidad como en la importancia de sus aplicaciones~\parencite{}
-% FROM SURVEY
-% Machine Learning (ML) has been increasingly popular in recent years, both in the diversity and importance of applications [1]. ML is used in a variety of critical decision- making applications including justice risk assessments [2], [3] and job recommendations [4].
-%While ML systems have the advantage to relieve humans from tedious tasks and are able to perform complex calcu- lations at a higher speed [5], they are only as good as the data on which they are trained [6]. ML algorithms, which are never designed to intentionally incorporate bias, run the risk of replicating or even amplifying bias present in real-world data [6], [7], [8]. This may cause unfair treatment in which some individuals or groups of people are privileged (i.e., receive a favourable treatment) and others are unprivileged (i.e., receive an unfavourable treatment). In this context, a fair treatment of individuals constitutes that decisions are made independent of sensitive attributes such as gender or race, such that individuals are treated based on merit [9], [10], [11]. For example, one can aim for an equal probability of population groups to receive a positive treatment, or an equal treatment of individuals that only differ in sensitive attributes.
+Los métodos de aprendizaje automático se han vuelto cada vez mas populares en los últimos años, tanto en la diversidad como en la importancia de sus aplicaciones~\todocite{survey}{1}.
+El aprendizaje automático es utilizado en una variedad de aplicaciones críticas de toma de decisiones.
+Una de las mayores preocupaciones de esta situación es el hecho de que estos algoritmos pudieran estar tomando decisiones de forma sesgada y por tanto afectando a determinados grupos de individuos, lo cual se mostró era lo que estaba sucediendo~\todocite{survey}{2}.
 
 Los sesgos que muestran los algoritmos de aprendizaje automático provienen de diversas fuentes.
 Una de las más comunes son las colecciones de datos, de las cuales los modelos de aprendizaje automático implícitamente aprenden a expresar tales sesgos.
@@ -198,7 +196,7 @@ Cada flujo es evaluado (lo cual consiste simplemente en entrenamiento y ejecuci�
     
     \vspace{10pt}
 
-    \SetKwData{best}{\textit{best}}
+    \SetKwData{best}{\textit{resultado}}
 
     $\best \leftarrow none$
 
@@ -325,6 +323,14 @@ Por tanto, aquellas soluciones con elevado \emph{crowding distance} son preferid
 \section{Discusión}\label{discussion}
 % - discusion. Aqui donde se explica como se usa todo lo q acabo de explicar.
 
+Una de las mayores limitaciones de los métodos de mitigación de sesgos estudiados anteriormente es que son específicos al tipo de modelo que utilizan.
+Además muchos de ellos solamente pueden utilizar una única métrica predeterminada de equidad.
+Estas limitaciones hacen que estos métodos no puedan ser ampliamente adoptados a lo largo del campo del aprendizaje automático, entre otras cosas porque requiere de expertos en el tema para su aplicación satisfactoria.
+
 El método propuesto en este trabajo explora la utilización de AutoGOAL como vía para obtener un conjunto de modelos \emph{diversos} base que puedan ser posteriormente ensamblados.
 El proceso de construir el ensemble a partir de estos modelos base se realiza mediante una modificación del algoritmo de optimización de AutoGOAL, la cual permite explorar el espacio de búsqueda optimizando simultáneamente varias métricas, como por ejemplo la precisión y una o varias métricas de equidad.
-Para la modificación de AutoGOAL este trabajo se inspira en los metodos de selección propuestos por \emph{NSGA-II}, estos son, \emph{Non-dominated Sorting} y \emph{Crowding Distance}.
+Para la modificación de AutoGOAL este trabajo se inspira en los métodos de selección propuestos por \emph{NSGA-II}, estos son, \emph{Non-dominated Sorting} y \emph{Crowding Distance}.
+
+El enfoque que se presenta en este trabajo no presenta las limitaciones expuestas anteriormente.
+Este se apoya en técnicas de \emph{AutoML} para mantenerse agnóstico al problema, modelo de aprendizaje y su método de entrenamiento.
+Además, acepta simultáneamente diferentes métricas de equidad a partir de la utilización de técnicas de optimización multiobjetivo en el proceso de optimización de \emph{AutoGOAL}.

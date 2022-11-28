@@ -103,7 +103,7 @@ Cada uno de estos tweets es clasificado en \emph{gracioso} o \emph{no-gracioso}.
 
 La colección de datos es anotada a partir de asignar una clasificación de \emph{gracioso} o \emph{no-gracioso} a cada tweet, en caso de ser \emph{gracioso} se da una puntuación de $[1,5]$ de cuan \emph{gracioso} es dicho tweet.
 
-\begin{table}[h]
+\begin{table}[H]
     \centering
     \begin{tabular}{lccc}
     \toprule
@@ -120,7 +120,7 @@ La colección de datos es anotada a partir de asignar una clasificación de \emp
         Votos 5             &  1\,305       &    275     &  1\,580 \\
     \bottomrule
     \end{tabular}
-    \caption{Composición de los datos según la cantidad de votos para cada clase.}
+    \caption{Composición de la colección de datos de la tarea \emph{HAHA 2019} en términos de cantidad de votos para cada clase.}
     \label{table:haha2019info}
 \end{table}
 
@@ -513,7 +513,8 @@ Luego la sección~\ref{section:discussion-second-phase} realiza un análisis en 
 
 La tabla~\ref{table:second-phase-vs-all} muestra una comparativa de nuestro enfoque con los métodos agnósticos (últimas tres filas), y los no agnósticos al modelo (primeras tres filas).
 La tabla~\ref{table:secod-phase-vs-fbo} muestra una comparativa con \emph{FBO} optimizando simultáneamente \emph{Statistical Parity}, \emph{Equal Oportunity} y \emph{Equalized Odds}.
-Por ultimo la tabla~\ref{table:second-phase-vs-mobo} contrasta los resultados obtenidos por nuestro sistema con los obtenidos por los métodos otros métodos de optimización multiobjetivo aplicados al problema de mitigación de sesgos.
+La tabla~\ref{table:second-phase-vs-mobo} contrasta los resultados obtenidos por nuestro sistema con los obtenidos por los métodos otros métodos de optimización multiobjetivo aplicados al problema de mitigación de sesgos.
+Por último la figura~\ref{fig:pareto-dsp-vs-acc} permite visualizar la aproximación del \emph{Frente Pareto} encontrado por nuestro sistema.
 %Los métodos utilizados en las diferentes comparaciones son:
 %(i) \emph{FERM}~\parencite{FERM} (ii) \emph{Zafar}, los mecanismos propuestos por \emph{Zafar et. al.}~\parencite{zafar2017fairness} (iii) \emph{Adversarial}~\parencite{zhang2018mitigating} (iv) \emph{SMOTE}
 
@@ -641,6 +642,7 @@ Una vez mas nuestro sistema muestra ser competitivo en este ámbito, encontrando
 En todos los casos nuestro sistema supera los sistemas alternativos.
 Además se puede observar como nuestro sistema es capaz de encontrar soluciones que a pesar de que ceden de forma mínima sus valores de equidad son capaces de lograr significativamente mejores valores de precisión.
 Esto habla entre otras cosas de la habilidad de nuestro enfoque para cubrir diferentes regiones del \emph{Frente Pareto}.
+La figura~\ref{fig:pareto-dsp-vs-acc} permite verificar visualmente que en efecto nuestro modelo encuentra una aproximación del \emph{Frente Pareto} que contiene soluciones con diferentes balances de precisión y equidad.
 
 De forma general, como se ha podido observar, el sistema muestra un elevada capacidad para encontrar balances satisfactorios entre las métricas de equidad deseadas y la pérdida de los modelos.
 Todo esto mientras se mantiene extremadamente versátil, siendo agnóstico al modelo que se utilice, a las métricas que se desean optimizar, incluso a la naturaleza del problema que se desea resolver.

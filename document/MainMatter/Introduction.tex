@@ -7,11 +7,11 @@
 
 En los últimos años, ha habido un creciente interés en aplicar técnicas de aprendizaje automático para resolver diferentes tipos de tareas.
 Análisis de emociones en textos, etiquetado de imágenes y traducción automática son algunos ejemplos de estas tareas~\parencite{bahdanau2014neural,ucidata,mnih2013machine,yavuz2022comparison}.
-En general, los problemas de clasificación son un de los problemas mas comunes para los cuales los algoritmos de aprendizaje automático tienden a producir buenos resultados.
+En general, los problemas de clasificación son uno de los problemas más comunes para los cuales los algoritmos de aprendizaje automático tienden a producir buenos resultados.
 
 %(2) que aplicarlo a toma de decisiones de alto riesgo da lugar a el tema de los sesgos
 
-Con el uso cada vez mas frecuente de los métodos de aprendizaje automático en dominios tales como \emph{prestamos financieros}, \emph{contratación}, \emph{justicia criminal}, y \emph{admisiones en las universidades}, ha habido una mayor preocupación por el potencial de estas técnicas de accidentalmente codificar sesgos sociales y resultar en una discriminación sistemática~\parencite{prorepublica2016bias,barocas-hardt-narayanan,NIPS2016_a486cd07,Buolamwini2018GenderSI,caliskan2017semantics}.
+Con el uso cada vez más frecuente de los métodos de aprendizaje automático en dominios tales como \emph{prestamos financieros}, \emph{contratación}, \emph{justicia criminal}, y \emph{admisiones en las universidades}, ha habido una mayor preocupación por el potencial de estas técnicas de accidentalmente codificar sesgos sociales y resultar en una discriminación sistemática~\parencite{prorepublica2016bias,barocas-hardt-narayanan,NIPS2016_a486cd07,Buolamwini2018GenderSI,caliskan2017semantics}.
 Un clasificador que solamente es ajustado para maximizar la precisión de las predicciones puede injustamente predecir un alto riesgo en el crédito para algunos subgrupos de la población aplicando a un préstamo.
 Un ejemplo de tratamiento imparcial a grupos de la población puede ser encontrado en el \emph{software} \emph{COMPAS} (\emph{Correctional Offender Management Profiling for Alternative Sanctions}), utilizado por las cortes en los Estados Unidos para determinar los riesgos de un individuo de reincidir en un crimen.
 Los resultados que produce este sistema son utilizados para motivar decisiones respecto a si los defendidos deben ser liberados, en diferentes etapas del proceso de justicia.
@@ -20,34 +20,34 @@ Problemáticamente, este software falsamente etiquetaba defendidos de raza no bl
 %(3) que si muchos approach existentes para mitigar son de optimización para alcanzar un trade off
 
 Cuantificar y mitigar los sesgos durante las diferentes etapas del ciclo de vida de los modelos de aprendizaje automático ha sido objeto de estudio de numerosas investigaciones~\parencite{barocas-hardt-narayanan}.
-Específicamente, un numero de métodos han sido propuestos recientemente para incrementar la equidad en los resultados producidos por estos modelos.
-La clave del diseño detrás de todos estas métodos es maximizar la precisión de las predicciones, sujeto a restricciones de equidad sobre los resultados.
-Sin embargo, como consecuencia de mantener la tratabilidad computacional de estas técnicas, estos métodos sufren de una o mas de las siguientes desventajas.
+Específicamente, un número de métodos han sido propuestos recientemente para incrementar la equidad en los resultados producidos por estos modelos.
+La clave del diseño detrás de todos estos métodos es maximizar la precisión de las predicciones, sujeto a restricciones de equidad sobre los resultados.
+Sin embargo, como consecuencia de mantener la tratabilidad computacional de estas técnicas, estos métodos sufren de una o más de las siguientes desventajas.
 La técnica de mitigación es
-(i) específica a la clase del modelo utilizado (p.e. solamente modelos lineares),
-(ii) limitada a un conjunto especifico de definiciones de equidad,
+(i) específica a la clase del modelo utilizado (p.e. solamente modelos lineales),
+(ii) limitada a un conjunto específico de definiciones de equidad,
 (iii) limitado a un único atributo protegido binario,
 (iv) requiere acceso a información sensible en el momento de las predicciones, o
 (v) resulta en un clasificador \emph{randomizado} que puede generar diferentes predicciones para la misma entrada en diferentes momentos.
-Estas desventajas limitan la habilidad de los profesionales de poner en funcionamiento modelos justos de aprendizaje automático para problemas de la practica con objetivos y restricciones arbitrarias.
+Estas desventajas limitan la habilidad de los profesionales de poner en funcionamiento modelos justos de aprendizaje automático para problemas de la práctica con objetivos y restricciones arbitrarias.
 Por ejemplo, como resultado de la limitación (i), cualquier ensemble o solución de aprendizaje híbrido combinando diferentes clases de modelos y/o conocimiento del dominio son descartadas.
 Una consecuencia de (iv) es que se necesita información acerca de atributos sensibles en el momento de realizar las predicciones, lo cual puede traer problemas con las leyes que protegen la privacidad de los usuarios.
-Finalmente, (v) puede resultar en el mismo modelo, aceptando y denegando prestamos para el mismo individuo en diferentes ocasiones de forma arbitraria.
+Finalmente, (v) puede resultar en el mismo modelo, aceptando y denegando préstamos para el mismo individuo en diferentes ocasiones de forma arbitraria.
 
 %(4) que si AutoML es bueno para el tema de democratizar una tecnología y que ayuda a crear hipótesis automáticamente
 
 Recientemente, avances en \emph{AutoML} (del inglés \emph{Automatic Machine Learning}) han permitido el desarrollo de bibliotecas y herramientas efectivas para encontrar la mejor combinación de algoritmos e hiperparametros para resolver un problema.
 Múltiples tecnologías han sido propuestas para resolver el problema de \emph{AutoML}, tales como \emph{AutoWeka}~\parencite{autoweka} o \emph{AutoKeras}~\parencite{autoKeras}.
 Estas herramientas son alternativas para reducir el tiempo empleado por investigadores resolviendo problemas bien estudiados.
-Incluso si las herramientas de \emph{AutoML} tienden a consumir mas tiempo y recursos que bibliotecas estándar de aprendizaje automático, no tener que razonar acerca de cual arquitectura podría ser la mas apropiada para el problema en cuestión vale el esfuerzo de desarrollarlas.
-Además, al ser aplicables a un rango amplio de problemas, aprender a utilizar estas herramientas puede ser mas sencillo que aprender a utilizar diferentes bibliotecas independientes de aprendizaje automático.
+Incluso si las herramientas de \emph{AutoML} tienden a consumir más tiempo y recursos que bibliotecas estándar de aprendizaje automático, no tener que razonar acerca de cual arquitectura podría ser la más apropiada para el problema en cuestión vale el esfuerzo de desarrollarlas.
+Además, al ser aplicables a un rango amplio de problemas, aprender a utilizar estas herramientas puede ser más sencillo que aprender a utilizar diferentes bibliotecas independientes de aprendizaje automático.
 Se podría decir entonces que uno de los objetivos de las técnicas de \emph{AutoML} es la \emph{democratización del Aprendizaje Automático}.
 
 %(5) que si AutoGoal tiene varias ventajas sobre el resto
 
 En este contexto se encuentra también \emph{AutoGOAL}~\parencite{autogoal} como un buen ejemplo de estas bibliotecas de \emph{AutoML}.
 \emph{AutoGOAL} es una propuesta reciente que utiliza técnicas que le permite explorar un espacio de búsqueda heterogéneo de modelos e hiperparámetros.
-A diferencia de otras tecnologías de \emph{AutoML} existentes, \emph{AutoGOAL} puede de forma automática construir flujos que le permitan combinar técnicas y algoritmos de diferentes bibliotecas, incluyendo clasificadores lineares, redes neuronales y herramientas de procesamiento del lenguaje.
+A diferencia de otras tecnologías de \emph{AutoML} existentes, \emph{AutoGOAL} puede de forma automática construir flujos que le permitan combinar técnicas y algoritmos de diferentes bibliotecas, incluyendo clasificadores lineales, redes neuronales y herramientas de procesamiento del lenguaje.
 A pesar de que \emph{AutoGOAL} es capaz de combinar algoritmos de diferentes categorías para construir flujos, no tiene la habilidad de combinar múltiples flujos para generar una solución.
 Adicionalmente, su algoritmo de búsqueda le permite solamente optimizar una función objetivo y no permite atacar problemas que en su naturaleza son de múltiples objetivos.
 
@@ -58,14 +58,14 @@ La idea es utilizar la capacidad \emph{AutoGOAL} de explorar un espacio de model
 Sin embargo, se mantiene la interrogante de como lograr mantener determinadas restricciones de equidad a la vez que el método se mantiene agnóstico al modelo de aprendizaje.
 Para ello resultaría muy útil poder utilizar \emph{AutoGOAL} en entornos multiobjetivo, donde se optimizan simultáneamente métricas de equidad y de efectividad del modelo, esto es precisamente lo que permite lograr una de las propuestas de este trabajo.
 Adicionalmente, se propone una solución al problema de \emph{AutoGOAL} de no poder combinar diferentes flujos de extremo a extremo en un flujo compuesto.
-Esto se logra a partir de la utilización de métodos de ensemble, los cuales permiten la combinación de las predicciones de diferentes modelos base para lograr modelos finales mas robustos~\parencite{polikar2006ensemble}.
+Esto se logra a partir de la utilización de métodos de ensemble, los cuales permiten la combinación de las predicciones de diferentes modelos base para lograr modelos finales más robustos~\parencite{polikar2006ensemble}.
 
 %De ahí caes en objetivos, contribuciones y organización
 
 \section*{Objetivo general}
 
 El objetivo de este trabajo es proponer y estudiar un sistema que permita la solución de problemas de clasificación arbitrarios de forma justa.
-Este sistema debe ser agnóstico al modelo de solucion y el proceso de optimización del mismo, asi como a las métricas de equidad y efectividad que se deseen utilizar.
+Este sistema debe ser agnóstico al modelo de solución y el proceso de optimización del mismo, así como a las métricas de equidad y efectividad que se deseen utilizar.
 De esta forma contribuir a la democratización de las técnicas de solución de problemas de clasificación de forma justa.
 
 \section*{Objetivos específicos}
@@ -107,7 +107,7 @@ De esta forma contribuir a la democratización de las técnicas de solución de 
     \item Se propone un sistema, cuya implementación queda disponible a la comunidad, que permite resolver problemas de clasificación arbitrarios con control sobre la equidad.
     \item Este sistema permite al usuario especificar diferentes funciones de equidad a optimizar.
     \item Adicionalmente, trabaja sobre colecciones de datos heterogéneas.
-    \item El sistema es agnóstico al modelo y no requiere conocimiento especifico del dominio del problema para utilizarlo satisfactoriamente.
+    \item El sistema es agnóstico al modelo y no requiere conocimiento específico del dominio del problema para utilizarlo satisfactoriamente.
 \end{itemize}
 
 \section*{Organización del trabajo}

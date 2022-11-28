@@ -40,7 +40,7 @@ A continuación se presentan algunas de las definiciones más utilizadas.
      Esto significa que la probabilidad de que a una persona en la clase positiva le sea asignada correctamente una predicción positiva y la probabilidad de que a una persona en la clase negativa le sea incorrectamente asignada una predicción positiva debería ser la misma para miembros de grupos protegidos y no protegidos~\parencite{verma2018fairness}.
  \end{itemize}
 
-Las concesiones inherentes a utilizar cada noción de equidad han sido estudiados extensamente \parencite{dwork2012fairness, friedler2016possibility, kleinberg2018inherent}.
+Las concesiones inherentes a utilizar cada noción de equidad han sido estudiados extensamente~\parencite{dwork2012fairness, friedler2016possibility, kleinberg2018inherent}.
 Escoger la definición correcta para un problema determinado es difícil, y en la práctica no puede ser delegado a un agente automático.
 En su lugar, una decisión humana es preferida para asegurar una decisión informada.
 
@@ -54,8 +54,8 @@ Luego, estas métricas pueden ser utilizadas como funciones de pérdida a emplea
 
 Las técnicas de mitigación de sesgos pueden ser divididas fundamentalmente en técnicas de pre-procesamiento, post-procesamiento y técnicas durante el procesamiento. Adicionalmente un conjunto de técnicas llamadas meta-algoritmos han surgido recientemente, presentando muy buenos resultados.
 
-Las técnicas de pre-procesamiento logran equidad modificando la representación de los datos, es decir, pre-procesando los datos y luego adoptando una solución de aprendizaje automático estándar \parencite{nips2017preproc, Kamiran2011DataPT, zemel2013learning}.
-Un ejemplo de esto es: aprender una representación a partir de resolver un problema de optimización con dos objetivos, codificar la información preservando la mayor cantidad de información posible y ofuscar al mismo tiempo la pertenencia al conjunto de atributos protegidos \parencite{zemel2013learning}.
+Las técnicas de pre-procesamiento logran equidad modificando la representación de los datos, es decir, pre-procesando los datos y luego adoptando una solución de aprendizaje automático estándar~\parencite{nips2017preproc, Kamiran2011DataPT, zemel2013learning}.
+Un ejemplo de esto es: aprender una representación a partir de resolver un problema de optimización con dos objetivos, codificar la información preservando la mayor cantidad de información posible y ofuscar al mismo tiempo la pertenencia al conjunto de atributos protegidos~\parencite{zemel2013learning}.
 Una ventaja de los métodos de pre-procesamiento es que son agnósticos al modelo.
 Sin embargo, sus hiperparámetros, así como los del modelos de aprendizaje automático seleccionado, todavía necesitan ser ajustados para mejor rendimiento.
 
@@ -70,9 +70,9 @@ Adicionalmente, estas técnicas no son utilizables si la información sensible n
 El conocimiento de información sensible de los individuos reales por parte del sistema en el momento de realizar las predicciones puede llevar a problemas legales~\parencite{MacCarthy2018StandardsOF}.
 
 Finalmente, resultan relevantes los llamados meta-algoritmos, una clase de métodos recientemente propuesta para tareas de clasificación justa.
-Estos reducen la tarea de clasificación justa a una secuencia de problemas de clasificación con costo asociado a sus errores de predicción \parencite{agarwal2018reductions, agarwal2019fair, kearns2018preventing}.
+Estos reducen la tarea de clasificación justa a una secuencia de problemas de clasificación con costo asociado a sus errores de predicción~\parencite{agarwal2018reductions, agarwal2019fair, kearns2018preventing}.
 Las soluciones a estos problemas suelen producir un clasificador \emph{randomizado}. Contrario a los métodos que funcionan durante el procesamiento, los meta-algoritmos no dependen del tipo de los modelos que se utilizan en el clasificador, sino en la capacidad de los mismos para ser reentrenados repetidamente.
-En el contexto de algoritmos de Minimización del Riesgo Empírico (\emph{ERM} por sus siglas en inglés), estos métodos son agnósticos al modelo de aprendizaje automático, pero aun necesitan implementaciones específicas basadas en la definición de equidad seleccionada y necesitan producir un ensemble de modelos. Limitaciones similares caracterizan un número de enfoques que utilizan optimización \parencite{chiappa2018causal,Dimitrakakis_Liu_Parkes_Radanovic_2019} o inferencia bayesiana \parencite{kearns2018preventing,thomas2019preventing}, sus implementaciones tienen que estar diseñadas específicamente para ciertas definiciones de equidad.
+En el contexto de algoritmos de Minimización del Riesgo Empírico (\emph{ERM} por sus siglas en inglés), estos métodos son agnósticos al modelo de aprendizaje automático, pero aun necesitan implementaciones específicas basadas en la definición de equidad seleccionada y necesitan producir un ensemble de modelos. Limitaciones similares caracterizan un número de enfoques que utilizan optimización~\parencite{chiappa2018causal,Dimitrakakis_Liu_Parkes_Radanovic_2019} o inferencia bayesiana \parencite{kearns2018preventing,thomas2019preventing}, sus implementaciones tienen que estar diseñadas específicamente para ciertas definiciones de equidad.
 
 Varios algoritmos han sido propuestos en la literatura, que se acogen a uno de los enfoques anteriormente descritos o combinan varios de ellos.
 A continuación se exploran algunos de estos métodos que resultan sumamente relevantes para el presente trabajo.
@@ -85,7 +85,7 @@ La \emph{Optimizacion Bayesiana} es una metodología bien establecida para optim
 La técnica propuesta por \emph{FBO} optimiza los hiperparámetros de una función de caja negra de forma agnóstica al modelo, mientras se satisfacen restricciones de equidad.
 \emph{FBO} se basa fundamentalmente en la hipótesis de que ajustar los hiperparámetros de un modelo es suficiente para encontrar un balance adecuado entre eficacia y equidad.
 
-\item[\emph{SMOTE} \parencite{chawla2002smote}]
+\item[\emph{SMOTE}~\parencite{chawla2002smote}]
 Propone un método de preprocesamiento para colecciones de datos desbalanceadas.
 El enfoque de este método se basa fundamentalmente en el sobre-muestreo de los datos pertenecientes a las clases menos representadas en la colección.
 Utiliza un algoritmo que genera nuevos ejemplos a partir de modificaciones en los ejemplos pertenecientes a dicha clase existente en los datos.
@@ -108,10 +108,10 @@ Esto significa que la tarea se reduce a encontrar un modelo predictor que resuel
 
 \section{Métodos de ensemble}\label{section:ensembles}
 
-Los métodos de ensemble están diseñados para intentar resolver el problema de bajo~\emph{bias}~/~alta~varianza que muestran la mayoría de los modelos de aprendizaje automático, haciéndolos apropiados para generar modelos de clasificación más robustos \parencite{polikar2006ensemble}.
+Los métodos de ensemble están diseñados para intentar resolver el problema de bajo~\emph{bias}~/~alta~varianza que muestran la mayoría de los modelos de aprendizaje automático, haciéndolos apropiados para generar modelos de clasificación más robustos~\parencite{polikar2006ensemble}.
 Un modelo de ensemble está diseñado a partir de muchos modelos con bajo~\emph{bias} cuyas predicciones son combinadas para producir una predicción final.
 Se asume fundamentalmente que la combinación de varias predicciones de bajo nivel producirá una salida con baja varianza mientras mantiene un bajo~\emph{bias}.
-Tener un conjunto diverso de modelos de bajo nivel es una característica fundamental para lograr esto \parencite{polikar2006ensemble}.
+Tener un conjunto diverso de modelos de bajo nivel es una característica fundamental para lograr esto~\parencite{polikar2006ensemble}.
 Sin embargo, esto requiere que clasificadores individuales cometan errores en diferentes instancias.
 La intuición es que si cada clasificador comete errores diferentes, entonces una combinación estratégica de estos clasificadores puede reducir el error total. Luego, es necesario lograr que cada clasificador sea lo más único posible, particularmente con respecto a ejemplos erróneamente clasificados.
 
@@ -128,10 +128,10 @@ Alternativamente, \textit{feature bagging} funciona de forma similar, selecciona
 Las capacidad de los métodos de ensemble para construir modelos más robustos los ha hecho apropiados para múltiples aplicaciones.
 El dominio de la salud es uno de los ejemplos donde estos métodos han sido aplicados con gran éxito.
 Por ejemplo, una aplicación híbrida de métodos de ensemble con redes neuronales en un entorno de aprendizaje por reforzamiento ha sido presentada para la predicción de infección de COVID-19 con gran precisión~\parencite{JIN2022105560}.
-De forma similar, un método de toma de decisión multicriterio basado en ensembles ha sido propuesto para la detección de COVID-19 a partir del sonido de la tos en pacientes \parencite{CHOWDHURY2022105405}.
+De forma similar, un método de toma de decisión multicriterio basado en ensembles ha sido propuesto para la detección de COVID-19 a partir del sonido de la tos en pacientes~\parencite{CHOWDHURY2022105405}.
 Existen ejemplos también no relacionados a la medicina, por ejemplo, \emph{Livieris et al.}~\parencite{livieris2020ensemble} emplea estrategias de ensemble como \textit{ensemble-averaging}, \textit{bagging} y \textit{stacking} con metodologías avanzadas de aprendizaje profundo para predecir los precios, a nivel de hora, de criptomonedas como \textit{Ethereum}, \textit{Bitcoin} y \textit{Ripple}.
 
-Una simple pero poderosa técnica en el contexto de los métodos de ensemble es la llamada \textit{snapshot ensemble} \parencite{huang17snapshot}. Esta técnica genera múltiples clasificadores base, entrenando una sola red neuronal mientras la hace converger de forma rápida y repetida a múltiples óptimos locales, y salvando, en cada uno de dichos puntos, los parámetros del modelo. Todas las redes neuronales son luego ensambladas para producir el clasificador final. Estos \textit{snapshot ensemble} son más robustos y precisos que las redes individuales dada su naturaleza de ensemble, sin ningún costo adicional de entrenamiento.
+Una simple pero poderosa técnica en el contexto de los métodos de ensemble es la llamada \textit{snapshot ensemble}~\parencite{huang17snapshot}. Esta técnica genera múltiples clasificadores base, entrenando una sola red neuronal mientras la hace converger de forma rápida y repetida a múltiples óptimos locales, y salvando, en cada uno de dichos puntos, los parámetros del modelo. Todas las redes neuronales son luego ensambladas para producir el clasificador final. Estos \textit{snapshot ensemble} son más robustos y precisos que las redes individuales dada su naturaleza de ensemble, sin ningún costo adicional de entrenamiento.
 
 Como se puede observar, los métodos de ensemble son muy poderosos.
 Estos son capaces de construir sistemas que a partir de las predicciones de un conjunto de modelos (quizás no lo suficientemente expresivos) generalizan bien y obtienen resultados satisfactorios.
@@ -141,7 +141,7 @@ Luego, resulta sumamente interesante explorar enfoques que permitan obtener esto
 \section{Métodos de AutoML}\label{section:automl}
 
 \emph{AutoML} (del inglés \textit{Automated Machine Learning}) es el proceso de automatizar la solución de problemas del mundo real a través de técnicas de aprendizaje automático.
-El proceso intenta eliminar la necesidad de humanos expertos en aprendizaje automático para seleccionar apropiadamente las características, flujos, paradigmas, algoritmos y sus hiperparámetros para resolver un problema \parencite{Dimitrakakis_Liu_Parkes_Radanovic_2019}.
+El proceso intenta eliminar la necesidad de humanos expertos en aprendizaje automático para seleccionar apropiadamente las características, flujos, paradigmas, algoritmos y sus hiperparámetros para resolver un problema~\parencite{Dimitrakakis_Liu_Parkes_Radanovic_2019}.
 Las principales ventajas de las tecnologías de \emph{AutoML} incluyen:
 (1) reducir el tiempo empleado en resolver problemas bien estudiados; y,
 (2) eliminar la necesidad de conocimiento experto.
@@ -167,7 +167,7 @@ Ambos sistemas proveen una interfaz para encontrar la mejor arquitectura de apre
 Una diferencia fundamental entre ellos es la forma en que sus espacios de búsqueda son definidos.
 Mientras AutoSkLearn explora espacio de búsqueda condicional, es decir, un espacio con algunos hiperparámetros condicionados a otros, AutoKeras realiza una \emph{Búsqueda de Arquitectura Neuronal (NAS)}~\parencite{NAS}, la cual implica explorar espacios jerárquicos de complejidad arbitraria.
 
-AutoGOAL \parencite{autogoal, estevez2020general} es una de las más recientes contribuciones al campo del AutoML. AutoGOAL es un sistema que utiliza técnicas heterogéneas para resolver el problema CASH.
+AutoGOAL~\parencite{autogoal, estevez2020general} es una de las más recientes contribuciones al campo del AutoML. AutoGOAL es un sistema que utiliza técnicas heterogéneas para resolver el problema CASH.
 AutoGOAL se refiere a los modelos que construye como flujos, dado que cada uno de ellos esta formado por algoritmos interconectados.
 La esencia de AutoGOAL radica en su espacio personalizable de flujos y su conjunto de algoritmos de búsqueda, que son usados para encontrar la mejor configuración para resolver un problema.
 Cada flujo está definido como un conjunto de algoritmos interconectados que traducen una entrada predefinida a su salida correspondiente.
@@ -177,7 +177,7 @@ Múltiples fuentes de algoritmos están incluidos en el espacio de AutoGOAL, tal
 Sin embargo, AutoGOAL carece de la habilidad de combinar múltiples flujos de extremo a extremo para generar una solución.
 Esta limitación puede ser superada con la utilización de ensembles.
 
-El proceso fundamental de optimización utilizado en AutoGOAL en estos momentos esta basado en una técnica de optimización con Evolución Gramatical para gramáticas probabilistas libres del contexto \parencite{megane2021probabilistic}.
+El proceso fundamental de optimización utilizado en AutoGOAL en estos momentos esta basado en una técnica de optimización con Evolución Gramatical para gramáticas probabilistas libres del contexto~\parencite{megane2021probabilistic}.
 El proceso consiste de un ciclo de generación y evaluación, utilizando una gramática $G$ apropiada para describir el problema de aprendizaje de máquina que se intenta resolver.
 En cada iteración un conjunto de $N$ flujos es generado a partir de tomar muestras de la gramática $G$ de acuerdo a las probabilidades $\theta$ asignadas a cada producción.
 Estas probabilidades son inicializadas con una distribución uniforme $\theta_0$ para todas las producciones.
@@ -255,19 +255,19 @@ Estas técnicas consisten en de alguna forma combinar todas las funciones objeti
 Varias técnicas existen en este contexto. \textit{Linear Weighting} es una de estas, en la cual se construye una nueva función objetivo a partir de la combinación lineal de las funciones objetivo del problema original, esto es $min \sum w_i f_i(x), x \in X$.
 Este enfoque tiene un problema fundamental y es que si el \emph{frente pareto} no es convexo, no es posible encontrar soluciones en esta zona, no importa los pesos $w_i$ que se utilicen.
 Otra forma de escalarización es \textit{$\epsilon$-constrain}, esta técnica selecciona una función como la \textit{principal} y las demás se establecen como restricciones al conjunto de soluciones factibles, exigiendo que sean menores que un $\epsilon$.
-\emph{Random Scalarization} \parencite{paria2020flexible} propone una estrategia basada en escalarizaciones aleatorias de las funciones objetivo.
+\emph{Random Scalarization}~\parencite{paria2020flexible} propone una estrategia basada en escalarizaciones aleatorias de las funciones objetivo.
 En lugar de optimizar una única escalarización de las funciones objetivos, este enfoque itera sobre un conjunto de escalarizaciones durante un proceso de \emph{Optimización Bayesiana}.
-Finalmente, \emph{ParEGO} \parencite{knowles2006parego} es una extensión de \emph{EGO} \parencite{jones1998ego} para la utilización en escenarios multiobjetivos.
+Finalmente, \emph{ParEGO}~\parencite{knowles2006parego} es una extensión de \emph{EGO} \parencite{jones1998ego} para la utilización en escenarios multiobjetivos.
 Utiliza un enfoque que combina las diferentes funciones objetivo en una sola a partir de una escalarización utilizando un vector de pesos parametrizado, utilizando diferentes parámetros para dicho vector de pesos el \emph{Frente Pareto} es construído de forma gradual.
 
-Existen métodos numéricos que intentan resolver el problema haciendo cumplir las condiciones de \emph{Karush-Kuhn-Tucker} \parencite{kuhn2014nonlinear}.
+Existen métodos numéricos que intentan resolver el problema haciendo cumplir las condiciones de \emph{Karush-Kuhn-Tucker}~\parencite{kuhn2014nonlinear}.
 La idea va de encontrar al menos una solución del sistema de ecuaciones que se produce al tratar el problema de \textit{KKT}.
-Es posible utilizar métodos de continuación y homotopía para obtener todas las soluciones \parencite{hillermeier2001nonlinear, schutze2005continuation}.
+Es posible utilizar métodos de continuación y homotopía para obtener todas las soluciones~\parencite{hillermeier2001nonlinear, schutze2005continuation}.
 Estos métodos requiere que las soluciones satisfagan condiciones de convexidad local y diferenciabilidad.
 
-Los algoritmos genéticos utilizan paradigmas basados en procesos evolutivos naturales, como \textit{selección natural}, \textit{mutación} y \textit{recombinación} para mover una población (conjunto de vectores de decisión) a soluciones óptimas o casi óptimas \parencite{back1996evolutionary}.
+Los algoritmos genéticos utilizan paradigmas basados en procesos evolutivos naturales, como \textit{selección natural}, \textit{mutación} y \textit{recombinación} para mover una población (conjunto de vectores de decisión) a soluciones óptimas o casi óptimas~\parencite{back1996evolutionary}.
 Los algoritmos genéticos multiobjetivo generalizan esta idea y son diseñados para en cada iteración acercarse más al frente pareto.
-En este contexto destaca \emph{NSGA-II} \parencite{deb2002nsgaii}, el cual se explica en mayor detalle a continuación.
+En este contexto destaca \emph{NSGA-II}~\parencite{deb2002nsgaii}, el cual se explica en mayor detalle a continuación.
 
 \subsection*{NSGA-II}
 

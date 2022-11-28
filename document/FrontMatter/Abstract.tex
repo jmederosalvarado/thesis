@@ -1,7 +1,35 @@
 \begin{resumen}
-	Resumen en español
+
+En los últimos años ha habido un incremento notable en la aplicación de técnicas de aprendizaje automático en la solución de numerosos problemas.
+En particular, estas técnicas han sido empleadas para remplazar o asistir a los humanos en escenarios de toma de decisión como los sistemas de admisión de individuos a ciertos puestos de trabajo, los sistemas que asisten en la evaluación del riesgo de reincidencia criminal, entre otros.
+El empleo de estos sistemas en escenarios tan críticos y con tanta influencia sobre el futuro de los individuos sobre los cuales toma las decisiones, ha despertado preocupaciones acerca de la imparcialidad y la justeza de estos sistemas.
+Varios estudios han sido realizados con el objetivo de estudiar los posibles sesgos que los diferentes sistemas de aprendizaje podrían presentar, y, en efecto, se ha observado que varios de estos sistemas que son actualmente utilizados no son justos al decidir sobre determinados grupos de individuos.
+Con el propósito de mitigar los sesgos de estos sistemas han surgido diferentes métodos, muchos de ellos muy efectivos.
+Sin embargo la mayoría de estos métodos presenta una seria de limitaciones, entre las que resalta el solo ser aplicables a determinadas clases de modelos o problemas.
+
+En este trabajo se propone un sistema para la solución de problemas de clasificación arbitrarios de forma justa.
+Este sistema es agnóstico a los modelos de clasificación en cuestión y al método de entrenamiento del mismo.
+Nuestro sistema esta dividido en dos fases, una primera fase se encarga de generar una colección de modelos base diversos entre sí y una segunda fase encargada de ensamblar los modelos base obtenidos con el propósito de optimizar múltiples métricas simultáneamente, por ejemplo una métrica de precisión y varias métricas de equidad.
+Se realizan experimentos con diferentes métricas para lograr diversidad entre los clasificadores base para arribar a conclusiones acerca de las ventajas y limitaciones de cada una.
+Por último se compara nuestro enfoque con múltiples métodos propuestos en la literatura para la solución del problema de mitigación de sesgos y se observa que este, además de ser mas versátil, es sumamente competitivo.
+Una implementación del sistema propuesto en este trabajo se encuentra disponible a la comunidad en una biblioteca de \emph{Python} llamada \emph{BFair}.
+
 \end{resumen}
 
 \begin{abstract}
-	Resumen en inglés
+
+In recent years there has been a notable increase in the application of machine learning techniques to the solution of numerous problems.
+Particularly, these techniques have been employed to replace or assist humans in decision making scenarios  such as applicant acceptance for certain jobs and criminal recidivism systems.
+The employment of these systems in such critical scenarios with so much influence over the future of the individuals have raised concerns about the impartiality and fairness of these systems.
+Several studies have been conducted with the goal of studying the possible bias that the different machine learning systems could present, and indeed, it has been observed that several of these systems are not fair when judging certain subgroups of the population.
+With the purpose of mitigating the bias in these systems, different methods have come up and many of them have proved to be very effective.
+However, most of these methods present several limitations, particularly relevant, the majority these methods are only applicable to certain classes of models and problems.
+
+This work proposes a system for the solution of arbitrary classification problems in a fair manner.
+This system is agnostic to both the classification model and the method used to train it.
+Our approach is separated in two phases, a first phase takes care of generating a collection of base models that are diverse among them and a second phase is in charge of assembling the base models obtained, with the purpose of optimizing multiple metrics simultaneously, for instance a performance metric and several fairness metrics.
+Experiments are performed using different metrics to achieve diversity among the base classifiers in order to come to conclusions regarding advantages and disadvantages of each one of them.
+Lastly, our approach is compared to multiple methods proposed in the literature for the solution of the bias mitigation problem, and we observe that, on top of being more versatile, it is extremely competitive.
+An implementation of the proposed system is available to the community in a \emph{Python} library called \emph{BFair}.
+
 \end{abstract}

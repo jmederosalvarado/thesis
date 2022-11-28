@@ -1,3 +1,28 @@
 \begin{conclusions}
 
+Este trabajo presenta un sistema de optimización de dos fases para resolver problemas de clasificación arbitrarios de forma justa.
+Los principales objetivos de este sistema son (1) sacar provecho de todas las soluciones que fueron producidas mientras se resuelve un problema de \emph{AutoML}, y (2) utilizar estos modelos para construir una solución que además de efectiva sea justa en la toma de decisiones.
+La evaluación en los conjuntos de datos \emph{Adult} y de la tarea \emph{HAHA 2019} probaron que el utilizando la estrategia de diversificación \texttt{double-fault} y el método de optimización aquí propuesto, se pueden construir modelos que tengan un buen rendimiento a la vez que mantienen un alto nivel de equidad.
+Luego, nuestro trabajo confirma la hipótesis de que una solución efectiva y justa puede ser construida a partir de ensamblar de forma inteligente un subconjunto de los modelos generados mientras se resuelve el problema de \emph{AutoML}.
+
+Dos métricas de diversidad tomadas de la literatura fueron estudiadas: la métrica de \texttt{disagreement} y \texttt{double-fault}.
+Para cuantificar la calidad de los resultados obtenidos a partir de utilizar estas métricas, dos métricas adicionales, basadas en el concepto de \emph{ensembles oráculo}, son presentadas en este trabajo.
+Los resultados permiten observar como el proceso de selección de modelos base influencia el rendimiento de las técnicas de ensemble.
+La métrica de \emph{disagreement} asegura el máximo cubrimiento de los datos, sin embargo, las colecciones construidas utilizando esta estrategia no necesariamente proveen salidas consistentes.
+La métrica de \emph{double-fault} brinda los mejores resultados en general.
+
+Una modificación al algoritmo de búsqueda de \emph{AutoGOAL} fue propuesta para aceptar múltiples funciones objetivos.
+La capacidad de este para optimizar métricas de equidad y precisión simultáneamente fue evaluada en el conjunto de datos \emph{Adult} y los resultados comparados con otros métodos de la literatura.
+Como era de esperarse, nuestra propuesta mostró ser sumamente competitiva y obtener resultados satisfactorios.
+En particular este sistema mostró tener la capacidad no solo de encontrar resultados que cumplan con determinadas restricciones de equidad, sino de encontrar diferentes balances entre equidad y precisión.
+
+Los resultados de este trabajo son resumidos a continuación:
+
+\begin{itemize}
+    \item Al utilizar técnicas de \emph{AutoML} combinadas con métodos de ensemble y algoritmos multiobjetivo se logra un sistema que de forma agnóstica al modelo logra resolver problemas de clasificación arbitrarios de manera justa.
+    \item Se mostró la influencia de las diferentes métricas de diversidad en la formación de modelos base que den lugar a ensembles mas robustos.
+    \item Al utilizar un método multiobjetivo para ensamblar un conjunto clasificadores base se logra encontrar modelos \textbf{justos} con alto rendimiento.
+    \item Este método permite además trabaja con múltiples métricas de equidad simultáneamente.
+\end{itemize}
+
 \end{conclusions}

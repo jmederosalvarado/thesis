@@ -13,7 +13,7 @@ En general, los problemas de clasificación son un de los problemas mas comunes 
 
 %(2) que aplicarlo a toma de decisiones de alto riesgo da lugar a el tema de los sesgos
 
-Con el uso cada vez mas de los métodos de aprendizaje automático en dominios tales como \emph{prestamos financieros}, \emph{contratación}, \emph{justicia criminal}, y \emph{admisiones en las universidades}, ha habido una mayor preocupación por el potencial de estas técnicas de accidentalmente codificar sesgos sociales y resultar en una discriminación sistemática~\todocite{fbo}{4-6,8,10}.
+Con el uso cada vez mas frecuente de los métodos de aprendizaje automático en dominios tales como \emph{prestamos financieros}, \emph{contratación}, \emph{justicia criminal}, y \emph{admisiones en las universidades}, ha habido una mayor preocupación por el potencial de estas técnicas de accidentalmente codificar sesgos sociales y resultar en una discriminación sistemática~\todocite{fbo}{4-6,8,10}.
 Un clasificador que solamente es ajustado para maximizar la precisión de las predicciones puede injustamente predecir un alto riesgo en el crédito para algunos subgrupos de la población aplicando a un préstamo.
 Un ejemplo de tratamiento imparcial a grupos de la población puede ser encontrado en el \emph{software} \emph{COMPAS} (\emph{Correctional Offender Management Profiling for Alternative Sanctions}), utilizado por las cortes en los Estados Unidos para determinar los riesgos de un individuo de reincidir en un crimen.
 Los resultados que produce este sistema son utilizados para motivar decisiones respecto a si los defendidos deben ser liberados, en diferentes etapas del proceso de justicia.
@@ -35,13 +35,13 @@ La técnica de mitigación es
 (v) resulta en un clasificador \emph{randomizado} que puede generar diferentes predicciones para la misma entrada en diferentes momentos.
 Estas desventajas limitan la habilidad de los profesionales de poner en funcionamiento modelos justos de aprendizaje automático para problemas de la practica con objetivos y restricciones arbitrarias.
 Por ejemplo, como resultado de la limitación (i), cualquier ensemble o solución de aprendizaje híbrido combinando diferentes clases de modelos y/o conocimiento del dominio son descartadas.
-Una consecuencia de (iv), es que se necesita información acerca de atributos sensibles en el momento de realizar las predicciones, lo cual puede traer problemas con las leyes que protegen la privacidad de los usuarios.
+Una consecuencia de (iv) es que se necesita información acerca de atributos sensibles en el momento de realizar las predicciones, lo cual puede traer problemas con las leyes que protegen la privacidad de los usuarios.
 Finalmente, (v) puede resultar en el mismo modelo, aceptando y denegando prestamos para el mismo individuo en diferentes ocasiones de forma arbitraria.
 
 %(4) que si AutoML es bueno para el tema de democratizar una tecnología y que ayuda a crear hipótesis automáticamente
 
-Recientemente, avances en \emph{AutoML} (del inglés \emph{Automatic Machine Learning}) han permitido el desarrollo de bibliotecas y herramientas efectivas para encontrar la mejor combinacion de algoritmos e hiperparametros para resolver un problema~\todocite{jp}{19}.
-Multples tecnologias han sido propuestas para resolver el problema de \emph{AutoML}, tales como \emph{AutoWeka}~\parencite{autoweka} o \emph{AutoKeras}~\parencite{autoKeras}.
+Recientemente, avances en \emph{AutoML} (del inglés \emph{Automatic Machine Learning}) han permitido el desarrollo de bibliotecas y herramientas efectivas para encontrar la mejor combinación de algoritmos e hiperparametros para resolver un problema~\todocite{jp}{19}.
+Múltiples tecnologías han sido propuestas para resolver el problema de \emph{AutoML}, tales como \emph{AutoWeka}~\parencite{autoweka} o \emph{AutoKeras}~\parencite{autoKeras}.
 Estas herramientas son alternativas para reducir el tiempo empleado por investigadores resolviendo problemas bien estudiados.
 Incluso si las herramientas de \emph{AutoML} tienden a consumir mas tiempo y recursos que bibliotecas estándar de aprendizaje automático, no tener que razonar acerca de cual arquitectura podría ser la mas apropiada para el problema en cuestión vale el esfuerzo de desarrollarlas.
 Además, al ser aplicables a un rango amplio de problemas, aprender a utilizar estas herramientas puede ser mas sencillo que aprender a utilizar diferentes bibliotecas independientes de aprendizaje automático.
@@ -110,7 +110,7 @@ De esta forma contribuir a la democratización de las técnicas de solución de 
 \begin{itemize}
     \item Se propone un sistema, cuya implementación queda disponible a la comunidad, que permite resolver problemas de clasificación arbitrarios con control sobre la equidad.
     \item Este sistema permite al usuario especificar diferentes funciones de equidad a optimizar.
-    \item Adicionalmente, trabaja sobre colecciones de datos heterogéneas
+    \item Adicionalmente, trabaja sobre colecciones de datos heterogéneas.
     \item El sistema es agnóstico al modelo y no requiere conocimiento especifico del dominio del problema para utilizarlo satisfactoriamente.
 \end{itemize}
 

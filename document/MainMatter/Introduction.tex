@@ -6,22 +6,20 @@
 %(1) que ML está en todos lados
 
 En los últimos años, ha habido un creciente interés en aplicar técnicas de aprendizaje automático para resolver diferentes tipos de tareas.
-Análisis de emociones en textos, etiquetado de imágenes y traducción automática son algunos ejemplos de estas tareas~\todocite{jp}{11,26,2,36}.
+Análisis de emociones en textos, etiquetado de imágenes y traducción automática son algunos ejemplos de estas tareas~\parencite{bahdanau2014neural,ucidata,mnih2013machine,yavuz2022comparison}.
 En general, los problemas de clasificación son un de los problemas mas comunes para los cuales los algoritmos de aprendizaje automático tienden a producir buenos resultados.
 
 %(2) que aplicarlo a toma de decisiones de alto riesgo da lugar a el tema de los sesgos
 
-Con el uso cada vez mas frecuente de los métodos de aprendizaje automático en dominios tales como \emph{prestamos financieros}, \emph{contratación}, \emph{justicia criminal}, y \emph{admisiones en las universidades}, ha habido una mayor preocupación por el potencial de estas técnicas de accidentalmente codificar sesgos sociales y resultar en una discriminación sistemática~\todocite{fbo}{4-6,8,10}.
+Con el uso cada vez mas frecuente de los métodos de aprendizaje automático en dominios tales como \emph{prestamos financieros}, \emph{contratación}, \emph{justicia criminal}, y \emph{admisiones en las universidades}, ha habido una mayor preocupación por el potencial de estas técnicas de accidentalmente codificar sesgos sociales y resultar en una discriminación sistemática~\parencite{prorepublica2016bias,barocas-hardt-narayanan,NIPS2016_a486cd07,Buolamwini2018GenderSI,caliskan2017semantics}.
 Un clasificador que solamente es ajustado para maximizar la precisión de las predicciones puede injustamente predecir un alto riesgo en el crédito para algunos subgrupos de la población aplicando a un préstamo.
 Un ejemplo de tratamiento imparcial a grupos de la población puede ser encontrado en el \emph{software} \emph{COMPAS} (\emph{Correctional Offender Management Profiling for Alternative Sanctions}), utilizado por las cortes en los Estados Unidos para determinar los riesgos de un individuo de reincidir en un crimen.
 Los resultados que produce este sistema son utilizados para motivar decisiones respecto a si los defendidos deben ser liberados, en diferentes etapas del proceso de justicia.
-Problemáticamente, este software falsamente etiquetaba defendidos de raza no blanca con un mayor riesgo que los defendidos blancos~\todocite{survey}{2}.
-
-%Leyes anti-discriminacion en muchos países prohíben el tratamiento injusto de las personas basado en determinadas características, tales como genero o raza~\todocite{zafar}{Civil Rights Act, 1964}.
+Problemáticamente, este software falsamente etiquetaba defendidos de raza no blanca con un mayor riesgo que los defendidos blancos~\parencite{prorepublica2016bias}.
 
 %(3) que si muchos approach existentes para mitigar son de optimización para alcanzar un trade off
 
-Cuantificar y mitigar los sesgos durante las diferentes etapas del ciclo de vida de los modelos de aprendizaje automático ha sido objeto de estudio de numerosas investigaciones~\todocite{fbo}{5}
+Cuantificar y mitigar los sesgos durante las diferentes etapas del ciclo de vida de los modelos de aprendizaje automático ha sido objeto de estudio de numerosas investigaciones~\parencite{barocas-hardt-narayanan}.
 Específicamente, un numero de métodos han sido propuestos recientemente para incrementar la equidad en los resultados producidos por estos modelos.
 La clave del diseño detrás de todos estas métodos es maximizar la precisión de las predicciones, sujeto a restricciones de equidad sobre los resultados.
 Sin embargo, como consecuencia de mantener la tratabilidad computacional de estas técnicas, estos métodos sufren de una o mas de las siguientes desventajas.
@@ -38,7 +36,7 @@ Finalmente, (v) puede resultar en el mismo modelo, aceptando y denegando prestam
 
 %(4) que si AutoML es bueno para el tema de democratizar una tecnología y que ayuda a crear hipótesis automáticamente
 
-Recientemente, avances en \emph{AutoML} (del inglés \emph{Automatic Machine Learning}) han permitido el desarrollo de bibliotecas y herramientas efectivas para encontrar la mejor combinación de algoritmos e hiperparametros para resolver un problema~\todocite{jp}{19}.
+Recientemente, avances en \emph{AutoML} (del inglés \emph{Automatic Machine Learning}) han permitido el desarrollo de bibliotecas y herramientas efectivas para encontrar la mejor combinación de algoritmos e hiperparametros para resolver un problema.
 Múltiples tecnologías han sido propuestas para resolver el problema de \emph{AutoML}, tales como \emph{AutoWeka}~\parencite{autoweka} o \emph{AutoKeras}~\parencite{autoKeras}.
 Estas herramientas son alternativas para reducir el tiempo empleado por investigadores resolviendo problemas bien estudiados.
 Incluso si las herramientas de \emph{AutoML} tienden a consumir mas tiempo y recursos que bibliotecas estándar de aprendizaje automático, no tener que razonar acerca de cual arquitectura podría ser la mas apropiada para el problema en cuestión vale el esfuerzo de desarrollarlas.

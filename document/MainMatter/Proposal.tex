@@ -14,7 +14,7 @@ El sistema consiste en dos fases fundamentales.
 La primera es responsable de generar una colección de modelos, cada uno llamado modelo base.
 Esta colección es construida optimizando la función de perdida $\mathcal{L}$, mientras se asegura \emph{diversidad} a lo largo de toda la población.
 La segunda fase es responsable de producir un conjunto de modelos de clasificación.
-Estos modelos son generados ensamblando la colección de modelos base de forma tal que optimice su efectividad según $L$, a la vez que es lo mas \emph{justo} posible según $F_1, F_2, \dots, F_n$.
+Estos modelos son generados ensamblando la colección de modelos base de forma tal que optimice su efectividad según $L$, a la vez que es lo más \emph{justo} posible según $F_1, F_2, \dots, F_n$.
 Las secciones \ref{section:first-phase} y \ref{section:second-phase} abordan con más detalles la primera y segunda fase, respectivamente.
 
 \todo[inline]{Párrafo con la imagen del overview, y que describe la imagen.}
@@ -64,11 +64,11 @@ Todo esto es capturado por la función \ref{code:reselect}.
 \end{function}
 
 % TODO Probablemente la parte de PGE queremos pasarla para el estado del arte
-Para explorar inteligentemente  el espacio de algoritmos y hiperparámetros, es decir, para resolver el problema \textit{CASH} modificado, se utiliza la implementación de \emph{Probabilistic Grammatical Evolution Search}~(algoritmo \ref{algorithm:pge}) presente en AutoGOAL.
+Para explorar inteligentemente  el espacio de algoritmos e hiperparámetros, es decir, para resolver el problema \textit{CASH} modificado, se utiliza la implementación de \emph{Probabilistic Grammatical Evolution Search}~(algoritmo \ref{algorithm:pge}) presente en AutoGOAL.
 La búsqueda comienza con una estrategia de muestreo aleatorio, pero según evalúa más flujos, modifica el modelo de muestreo probabilístico para que flujos similares a los mejores encontrados hasta el momento, sean generados con mayor frecuencia.
-El espacio de algoritmos y hiperparámetros utilizados es el utilizado por defecto en AutoGOAL, el cual incluye varios algoritmos clásicos de aprendizaje automático presentes en las diferentes bibliotecas utilizadas por AutoGOAL.
+El espacio de algoritmos e hiperparámetros empleado es el utilizado por defecto en AutoGOAL, el cual incluye varios algoritmos clásicos de aprendizaje automático presentes en las diferentes bibliotecas utilizadas por AutoGOAL.
 
-% TODO Linkear aqui a recomendaciones de como mejorar la seleccion del conjunto mas diverso
+% TODO Linkear aqui a recomendaciones de como mejorar la seleccion del conjunto más diverso
 Para reseleccionar la colección de modelos base, o sea, la colección de flujos de AutoGOAL, un enfoque goloso es utilizado.
 La función \ref{code:reselect} resume la estrategia propuesta.
 El algoritmo siempre incluye el modelo que mejor se desempeña de acuerdo a $\mathcal{L}$ en la selección. Cada iteración siguiente añade el modelo, todavía no seleccionado, que maximiza la diversidad respecto a todos los modelos anteriormente seleccionados.
@@ -77,7 +77,7 @@ La precisión tampoco es tomada en cuenta, excepto para seleccionar el modelo de
 
 \begin{function}[htb!]
     \caption{reselect($M,\ scores,\ diversity,\ N$)\label{code:reselect}}
-    \SetKwData{init}{\bf set}
+    \SetKwData{init}{\bf inicializar}
 
     \init $R \leftarrow \emptyset$ \\
     \init $R^{(0)} \leftarrow \underset{m^{(j)} \in M}{argmin}$ $scores^{(j)}$ \\
@@ -93,7 +93,7 @@ Estas servirán para establecer comparaciones con implementaciones en las cuales
 
 \begin{description}
     \item[Shuffle:]
-    La colección de modelos base es construida barajando aleatoriamente la selecciona actual de modelos base y los nuevos encontrados.
+    La colección de modelos base es construida barajando aleatoriamente la selección actual de modelos base y los nuevos encontrados.
     Los primeros $N$ modelos luego de barajar son seleccionados para la siguiente generación.
     \item[Arbitrary:]
     La colección de modelos base es construida de la misma forma que con la estrategia \textit{shuffle}, pero el modelo de mejor rendimiento siempre es incluido en la colección de modelos base seleccionados.
@@ -117,13 +117,13 @@ La matriz de clasificaciones incorrectas se construye de la siguiente manera.
     \end{cases}
 \end{equation}
 
-Las siguientes métricas son computadas entre pares de modelos base para estimar cuando diferentes son sus hipótesis, y por tanto la diversidad de la colección incluyendo a ambos a la vez.
+Las siguientes métricas son computadas entre pares de modelos base para estimar cuan diferentes son sus hipótesis, y por tanto la diversidad de la colección incluyendo a ambos a la vez.
 
 \begin{description}
 
     \item[Disagreement.]
     Esta mide la frecuencia con la cual uno de los modelos falla cuando el otro no lo hace, y viceversa.
-    Mientras mas alto el valor de la métrica, más diferentes son los modelos.
+    Mientras más alto el valor de la métrica, más diferentes son los modelos.
 
     \begin{equation}
         \texttt{disagreement}(m^{(a)}, m^{(b)}) = \frac{\vert\{M_{i,a} \neq M{i,b} \vert s^{(i)} \in D^{(\star)}_{valid}\}\vert}{\vert D^{(\star)}_{valid} \vert}
@@ -131,7 +131,7 @@ Las siguientes métricas son computadas entre pares de modelos base para estimar
 
     \item[Double Fault.]
     Esta mide cuan a menudo ambos modelos fallan a la vez.
-    Mientras mas alta esta medida mayor la diferencia entre ambos.
+    Mientras más alta esta medida mayor la diferencia entre ambos.
 
     \begin{equation}
         \texttt{double-fault}(m^{(a)}, m^{(b)}) = 1 - \frac{\vert\{M_{i,a} = M{i,b} = -1 \vert s^{(i)} \in D^{(\star)}_{valid}\}\vert}{\vert D^{(\star)}_{valid} \vert}
@@ -163,12 +163,12 @@ Los diferentes tipos de ensemble se describen con más detalle a continuación.
 \begin{description}
 
     \item[Voting Classifiers.]
-    Asigna la etiqueta mas común entre las predichas por los modelos base.
-    En caso de empate, se selecciona la etiqueta producida por el modelo mas preciso entre los modelos base.
+    Asigna la etiqueta más común entre las predichas por los modelos base.
+    En caso de empate, se selecciona la etiqueta producida por el modelo más preciso entre los modelos base.
     
     \item[Overfitted Voting Classifiers.]
     Asigna a cada combinación de salida de los modelos base la etiqueta que asegura el mejor desempeño en $D_{train}^e$.
-    En el momento de predicción, si una combinación no antes vista es encontrada, este selecciona la etiqueta predicha por el modelo base mas preciso (ignorando si esta fue la etiqueta mas votada).
+    En el momento de predicción, si una combinación no antes vista es encontrada, este selecciona la etiqueta predicha por el modelo base más preciso (ignorando si esta fue la etiqueta más votada).
     
     \item[ML Voting Classifiers.]
     Ajusta un modelo de aprendizaje automático sobre $D_{train}^e$ para optimizar $\mathcal{L}$.
@@ -184,7 +184,7 @@ Los diferentes tipos de ensemble se describen con más detalle a continuación.
 
 \emph{Probabilistic Grammatical Evolution}~(\ref{algorithm:pge}) es un algoritmo que a pesar de ser sumamente sencillo, permite explorar espacios de búsqueda muy variados.
 Adicionalmente, su utilización en AutoGOAL ha mostrado que puede brindar excelentes resultados en la tarea de encontrar modelos capaces de aprendizaje automático.
-Sin embargo una de las limitaciones fundamentales de este algoritmo es la estrategia de selección de los individuos mas aptos dentro población, dado que solamente considera una métrica como objetivo de la optimización.
+Sin embargo una de las limitaciones fundamentales de este algoritmo es la estrategia de selección de los individuos más aptos dentro población, dado que solamente considera una métrica como objetivo de la optimización.
 Nuestra propuesta realiza una modificación en este proceso de selección, el cual define la forma en que se explora el espacio, para acomodar más de una métrica en el mismo.
 Esto nos permitirá explorar el espacio de posibles ensembles e hiperparámetros de los mismos, mientras simultáneamente se dirige la búsqueda en direcciones que optimicen tanto métricas de equidad como de efectividad.
 
@@ -243,8 +243,8 @@ Una de las ventajas de nuestra propuesta es que mantiene en todo momento un conj
 Esto significa que al terminar la ejecución, el sistema no da una única solución al usuario.
 Dar una única solución es problemático debido a que la naturaleza de estos problemas de optimización multiobjetivo implica que existe un conjunto de soluciones entre las cuales no hay manera general de determinar un orden.
 Cada una de dichas soluciones representa un balance diferente entre las diferentes métricas a optimizar.
-Nuestro sistema le provee al usuario un conjunto de soluciones óptimas entre sí, y el usuario puede posteriormente seleccionar la solución que mejor considere de acuerdo al problema en cuestión que se esta resolviendo y las restricciones del mismo.
-Por ejemplo, en determinados casos puede ser tolerable ceder en la equidad del modelo con el objetivo de ganar precisión, mientras que otros escenarios mas sensibles puede que la restricción sobre la equidad del modelo sea primordial y no pueda ser comprometida.
+Nuestro sistema le provee al usuario un conjunto de soluciones óptimas entre sí, y el usuario puede posteriormente seleccionar la solución que mejor considere de acuerdo al problema en cuestión que se está resolviendo y las restricciones del mismo.
+Por ejemplo, en determinados casos puede ser tolerable ceder en la equidad del modelo con el objetivo de ganar precisión, mientras que otros escenarios más sensibles puede que la restricción sobre la equidad del modelo sea primordial y no pueda ser comprometida.
 Luego, el usuario tiene a su disposición una serie de soluciones que representan diferentes balances entre los objetivos, cada una útil en escenarios con diferentes características, todo esto luego de una única ejecución de extremo a extremo de nuestro sistema.
 Adicionalmente, el sistema presentado, permite establecer restricciones sobre el conjunto de soluciones factibles.
 Por ejemplo, es posible especificar que determinada métrica de equidad no supere un valor $X$ determinado, y nuestro sistema se encargará de desechar de forma inmediata durante el proceso de entrenamiento soluciones que no cumplan estas restricciones.

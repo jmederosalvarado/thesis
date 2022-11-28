@@ -1,6 +1,6 @@
 \chapter{Estado del Arte}\label{chapter:state-of-the-art}
 
-Los métodos de aprendizaje automático se han vuelto cada vez mas populares en los últimos años, tanto en la diversidad como en la importancia de sus aplicaciones~\parencite{chouldechova2018frontiers}.
+Los métodos de aprendizaje automático se han vuelto cada vez más populares en los últimos años, tanto en la diversidad como en la importancia de sus aplicaciones~\parencite{chouldechova2018frontiers}.
 El aprendizaje automático es utilizado en una variedad de aplicaciones críticas de toma de decisiones.
 Una de las mayores preocupaciones de esta situación es el hecho de que estos algoritmos pudieran estar tomando decisiones de forma sesgada y por tanto afectando a determinados grupos de individuos, lo cual se mostró era lo que estaba sucediendo~\parencite{prorepublica2016bias}.
 
@@ -9,7 +9,7 @@ Una de las más comunes son las colecciones de datos, de las cuales los modelos 
 Los sesgos contenidos en las colecciones de datos pueden ser a veces el resultado de errores durante su construcción, pero es usual que tengan su origen en procesos históricos.
 Cuando estos sesgos son utilizados para realizar una predicción, puede dar lugar a decisiones injustas acerca de los individuos.
 
-Los sesgos pueden incluso provenir de fuentes mas difíciles de detectar para el usuario.
+Los sesgos pueden incluso provenir de fuentes más difíciles de detectar para el usuario.
 Por ejemplo, la popularización de representaciones semánticas autogeneradas, tales como \emph{word embeddings} pueden contribuir a la propagación de sesgos contenidos en datos históricos~\parencite{bolukbasi2016man}.
 Luego, incluso cuando se trabaja con una colección de datos que no contiene explícitamente nada relacionado con género o raza, por ejemplo, al utilizar \emph{word embeddings} clásicos para procesar datos en forma de texto, pueden obtenerse decisiones sesgadas a causa de sesgos que, como se ha probado, contienen los \emph{word embeddings}.
 
@@ -22,8 +22,8 @@ Se hace imprescindible proveer una definición que permita capturar el concepto 
 
 Múltiples definiciones han sido propuestas para capturar diferentes criterios de equidad.
 No existe en estos momentos una única definición ampliamente aceptada de lo que es \textit{equidad}, sino que diferentes definiciones codifican diferentes características que se muestran útiles en diferentes contextos.
-Incluso, algunas de las definiciones más comunes presentan conflictos entre si.
-A continuación se presentan algunas de las definiciones mas utilizadas. 
+Incluso, algunas de las definiciones más comunes presentan conflictos entre sí.
+A continuación se presentan algunas de las definiciones más utilizadas. 
 
 % Our system is designed to work with any selection of one or more fairness definitions.
 % The only constraint tied to the fairness definition is that it should only depend on: the protected attribute, the predicted class, and the gold class, of each individual in the collection, since those three are the parameters used in the standard fairness definitions.
@@ -46,7 +46,7 @@ En su lugar, una decisión humana es preferida para asegurar una decisión infor
 
 Es posible transformar las definiciones de equidad presentadas anteriormente para obtener métricas que de cuantifiquen el sesgo de un clasificador.
 Por ejemplo, \emph{Differential Statistical Parity} (\texttt{DSP}) puede ser obtenida utilizando la definición de \emph{Statistical Parity} para obtener una medida de la diferencia entre la cantidad de resultados positivos entre los diferentes grupos protegidos.
-Luego, estas métricas pueden ser utilizadas como funciones de perdida a emplear en algoritmos de optimización que permitirán mitigar los sesgos de los modelos.
+Luego, estas métricas pueden ser utilizadas como funciones de pérdida a emplear en algoritmos de optimización que permitirán mitigar los sesgos de los modelos.
 
 \section{Mitigación de sesgos}\label{section:mitigation}
 
@@ -88,11 +88,11 @@ La técnica propuesta por \emph{FBO} optimiza los hiperparámetros de una funci�
 \item[\emph{SMOTE} \parencite{chawla2002smote}]
 Propone un método de preprocesamiento para colecciones de datos desbalanceadas.
 El enfoque de este método se basa fundamentalmente en el sobre-muestreo de los datos pertenecientes a las clases menos representadas en la colección.
-Utiliza un algoritmo que genera nuevos ejemplos a partir de modificaciones en los ejemplos pertenecientes a dicha clase existentes en los datos.
+Utiliza un algoritmo que genera nuevos ejemplos a partir de modificaciones en los ejemplos pertenecientes a dicha clase existente en los datos.
 En muchas ocasiones los sesgos en los modelos vienen dado precisamente por un desbalance en la cantidad de individuos de los grupos protegidos que pertenecen a una clase determinada respecto a otras, por lo que técnicas como \emph{SMOTE} permiten mitigar este problema.
 
 \item[\emph{Fair Empirical Risk Minimization}~(\emph{FERM})~\parencite{FERM}.]
-Introduce una generalización de las diferentes nociones de equidad, las cuales restringen el \emph{riesgo condicional} de un clasificador de acuerdo a una función de perdida predeterminada y un parámetro de aproximación.
+Introduce una generalización de las diferentes nociones de equidad, las cuales restringen el \emph{riesgo condicional} de un clasificador de acuerdo a una función de pérdida predeterminada y un parámetro de aproximación.
 Este intenta resolver el problema de minimizar el riesgo esperado para un conjunto predeterminado de funciones, utilizando una modificación de \emph{Empirical Risk Minimization} a la cual se refieren como \emph{Fair Empirical Risk Minimization}.
 Además, se proponen ejemplos concretos de algoritmos como \emph{Máquinas de Soporte Vectorial} mejorados para satisfacer estas restricciones de equidad.
 Finalmente se muestra como para el caso lineal de la restricción de equidad modificada, este enfoque se reduce a un paso de preprocesamiento sobre la colección de datos. %, haciendo cumplir las restricciones de equidad a cualquier modelo linear ajustado sobre los mismos.
@@ -123,20 +123,20 @@ En un problema de clasificación, \emph{voting} produce como salida la etiqueta 
 Durante este proceso, a cada submodelo le es también asignado un peso que marca la importancia de su predicción.
 \textit{Bagging} entrena cada submodelo en una selección diferente (con reemplazo) de los ejemplos entrenantes originales.
 %De esta forma, un modelo con una alta varianza debería producir modelos entrenados con alta diversidad.
-Alternativamente, \textit{feature bagging} funciona de forma similar, seleccionando un subconjunto de características en lugar de los ejemplos entrenantes, causando que características correlacionados sean analizados de forma separada en algunos submodelos.
+Alternativamente, \textit{feature bagging} funciona de forma similar, seleccionando un subconjunto de características en lugar de los ejemplos entrenantes, causando que características correlacionadas sean analizadas de forma separada en algunos submodelos.
 
 Las capacidad de los métodos de ensemble para construir modelos más robustos los ha hecho apropiados para múltiples aplicaciones.
 El dominio de la salud es uno de los ejemplos donde estos métodos han sido aplicados con gran éxito.
-Por ejemplo, una aplicación híbrida de métodos de ensemble con redes neuronales en un entorno de aprendizaje por reforzamiento ha sido presentada para al predicción de infección de COVID-19 con gran precisión~\parencite{JIN2022105560}.
+Por ejemplo, una aplicación híbrida de métodos de ensemble con redes neuronales en un entorno de aprendizaje por reforzamiento ha sido presentada para la predicción de infección de COVID-19 con gran precisión~\parencite{JIN2022105560}.
 De forma similar, un método de toma de decisión multicriterio basado en ensembles ha sido propuesto para la detección de COVID-19 a partir del sonido de la tos en pacientes \parencite{CHOWDHURY2022105405}.
 Existen ejemplos también no relacionados a la medicina, por ejemplo, \emph{Livieris et al.}~\parencite{livieris2020ensemble} emplea estrategias de ensemble como \textit{ensemble-averaging}, \textit{bagging} y \textit{stacking} con metodologías avanzadas de aprendizaje profundo para predecir los precios, a nivel de hora, de criptomonedas como \textit{Ethereum}, \textit{Bitcoin} y \textit{Ripple}.
 
-Una simple pero poderosa técnica en el contexto de los métodos de ensemble es la llamada \textit{snapshot ensemble} \parencite{huang17snapshot}. Esta técnica genera múltiples clasificadores base, entrenando una sola red neuronal mientras la hace converger de forma rápida y repetida a múltiples óptimos locales y salvando en cada uno de dichos puntos los parámetros del modelo. Todas las redes neuronales son luego ensambladas para producir el clasificador final. Estos \textit{snapshot ensemble} son mas robustos y precisos que las redes individuales dada su naturaleza de ensemble, sin ningún costo adicional de entrenamiento.
+Una simple pero poderosa técnica en el contexto de los métodos de ensemble es la llamada \textit{snapshot ensemble} \parencite{huang17snapshot}. Esta técnica genera múltiples clasificadores base, entrenando una sola red neuronal mientras la hace converger de forma rápida y repetida a múltiples óptimos locales, y salvando, en cada uno de dichos puntos, los parámetros del modelo. Todas las redes neuronales son luego ensambladas para producir el clasificador final. Estos \textit{snapshot ensemble} son más robustos y precisos que las redes individuales dada su naturaleza de ensemble, sin ningún costo adicional de entrenamiento.
 
 Como se puede observar, los métodos de ensemble son muy poderosos.
 Estos son capaces de construir sistemas que a partir de las predicciones de un conjunto de modelos (quizás no lo suficientemente expresivos) generalizan bien y obtienen resultados satisfactorios.
 Sin embargo, es necesario para la construcción de estos ensembles se debe partir de un conjunto de modelos base previamente obtenidos, que cumplan determinadas características.
-Luego, resulta sumamente interesante explorar enfoques que permitan obtener estos modelos base de forma automática para un problema determinado, de forma tal que no sea necesario manualmente tomar decisiones acerca de el tipo de modelos a utilizar, lo hiperparámetros de los mismos, etc. 
+Luego, resulta sumamente interesante explorar enfoques que permitan obtener estos modelos base de forma automática para un problema determinado, de forma tal que no sea necesario manualmente tomar decisiones acerca de el tipo de modelos a utilizar, los hiperparámetros de los mismos, etc. 
 
 \section{Métodos de AutoML}\label{section:automl}
 
@@ -153,8 +153,8 @@ Esta solución está basada en el software \emph{Weka}~\parencite{weka}, un soft
 \begin{definition}
 \label{definition:cash}
     Sea $A = \{A^{(1)}, \dots, A^{(R)}\}$ un conjunto de algoritmos, y sea $\Lambda^{(j)}$ el dominio de los hiperparámetros del algoritmo $A^{(j)}$.
-    Sea, $D = \{(x_1, y_1), \dots, (x_n, y_n)\}$ el conjunto de entrenamiento, el cual es dividido en $K$ \emph{cross-validation folds} de la forma $\{D_{valid}^{(1)}, \dots, D_{valid}^{(K)}\}$ y $\{D_{train}^{(1)}, \dots, D_{train}^{(K)}\}$ tal que $D_{train}^{(i)} = D \setminus D_{valid}^{(i)}$ para todo $i = 1, \dots, K$. Finalmente, denótese $L(A_{\lambda}^{(j)}, D_{train}^{(i)},D_{valid}^{(i)})$ la perdida del algoritmo $A^{(j)}$ en $D_{valid}^{(i)}$ con hiperparámetros $\lambda$.
-    Entonces, el problema de \textit{Selección de Algoritmo y Optimización de Hiperparámetros Combinado (CASH)} es encontrar la configuración conjunta de algoritmo e hiperparámetros que minimiza la perdida:
+    Sea, $D = \{(x_1, y_1), \dots, (x_n, y_n)\}$ el conjunto de entrenamiento, el cual es dividido en $K$ \emph{cross-validation folds} de la forma $\{D_{valid}^{(1)}, \dots, D_{valid}^{(K)}\}$ y $\{D_{train}^{(1)}, \dots, D_{train}^{(K)}\}$ tal que $D_{train}^{(i)} = D \setminus D_{valid}^{(i)}$ para todo $i = 1, \dots, K$. Finalmente, denótese $L(A_{\lambda}^{(j)}, D_{train}^{(i)},D_{valid}^{(i)})$ la pérdida del algoritmo $A^{(j)}$ en $D_{valid}^{(i)}$ con hiperparámetros $\lambda$.
+    Entonces, el problema de \textit{Selección de Algoritmo y Optimización de Hiperparámetros Combinado (CASH)} es encontrar la configuración conjunta de algoritmo e hiperparámetros que minimiza la pérdida:
 
     \begin{equation}
         A^{\star}, \lambda_{\star} \in argmin_{A^{(j)}, \lambda \in \Lambda^(j)} \frac{1}{K} \sum_{i=1}^K L(A_{\lambda}^{(j)}, D_{train}^{(i)},D_{valid}^{(i)})
@@ -178,7 +178,7 @@ Sin embargo, AutoGOAL carece de la habilidad de combinar múltiples flujos de ex
 Esta limitación puede ser superada con la utilización de ensembles.
 
 El proceso fundamental de optimización utilizado en AutoGOAL en estos momentos esta basado en una técnica de optimización con Evolución Gramatical para gramáticas probabilistas libres del contexto \parencite{megane2021probabilistic}.
-El proceso consiste de un ciclo de generación y evaluación, utilizando una gramática $G$ apropiada para describir el problema de aprendizaje de maquina que se intenta resolver.
+El proceso consiste de un ciclo de generación y evaluación, utilizando una gramática $G$ apropiada para describir el problema de aprendizaje de máquina que se intenta resolver.
 En cada iteración un conjunto de $N$ flujos es generado a partir de tomar muestras de la gramática $G$ de acuerdo a las probabilidades $\theta$ asignadas a cada producción.
 Estas probabilidades son inicializadas con una distribución uniforme $\theta_0$ para todas las producciones.
 Cada flujo es evaluado (lo cual consiste simplemente en entrenamiento y ejecución), y los de mejor desempeño son utilizados para modificar $\theta$, con el objetivo de maximizar la probabilidad de que estos sean generados. Este proceso se ilustra en el algoritmo 
@@ -188,9 +188,9 @@ Cada flujo es evaluado (lo cual consiste simplemente en entrenamiento y ejecuci�
 
     \CommentSty{Input:}\\
     \quad $N$ $\leftarrow$ tamaño de la población \\
-    \quad $n$ $\leftarrow$ numero de individuos seleccionados en cada iteración \\
+    \quad $n$ $\leftarrow$ número de individuos seleccionados en cada iteración \\
     \quad $\alpha$ $\leftarrow$ factor de aprendizaje \\
-    \quad $G$ $\leftarrow$ gramática que describe los flujos de aprendizaje de maquina a explorar \\
+    \quad $G$ $\leftarrow$ gramática que describe los flujos de aprendizaje automático a explorar \\
     \quad $\theta_0$ $\leftarrow$ probabilidades iniciales (uniforme) \\
     \quad $f$ $\leftarrow$ función de \emph{fitness} (entrenamiento y evaluación de flujos) \\
     
@@ -307,7 +307,7 @@ El orden de una solución esta dado por el subíndice $k$ del $R_k$ en el cual q
 
 \subsubsection{Crownding distance}\label{section:crowding-distance}
 
-Si más de una solución quedan en el mismo subconjunto de la población $R_k$ luego de realizar la ordenación anterior, se procede a ordenar las soluciones dentro de dichos subconjunto a partir de su \emph{crowding distance}.
+Si más de una solución queda en el mismo subconjunto de la población $R_k$ luego de realizar la ordenación anterior, se procede a ordenar las soluciones dentro de dichos subconjunto a partir de su \emph{crowding distance}.
 Esta es calculada para una solución $x$ como la suma de las contribuciones $c_i$ a la i~-~ésima función objetivo:
 
 \begin{align}
@@ -317,7 +317,7 @@ Esta es calculada para una solución $x$ como la suma de las contribuciones $c_i
     c(x)   = \frac{1}{m} \sum_{i=1}^m c_i(x), x \in R
 \end{align}
 
-Intuitivamente mientras mas \textit{espacio} exista alrededor de una solución, mayor sera el \emph{crowding distance} de la misma.
+Intuitivamente mientras más \textit{espacio} exista alrededor de una solución, mayor será el \emph{crowding distance} de la misma.
 Por tanto, aquellas soluciones con elevado \emph{crowding distance} son preferidas a aquellas con baja distancia, con el propósito de mantener la diversidad en la población.
 
 \section{Discusión}\label{discussion}

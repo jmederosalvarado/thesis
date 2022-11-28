@@ -7,7 +7,7 @@ Finalmente, se estudia si el algoritmo propuesto permite encontrar formas de ens
 
 \section{Marco Experimental}\label{section:experimental-framework}
 
-Las dos etapas en las que queda divida nuestra experimentación se describen a continuación
+Las dos etapas en las que queda divida nuestra experimentación se describen a continuación.
 
 La \textbf{primera etapa experimental} tiene como objetivo estudiar la capacidad del sistema de producir un conjunto de modelos base que, al ser ensamblado, pueda generalizar y obtener mejores resultados que dichos modelos base.
 Adicionalmente, se desea estudiar que influencia tienen las distintas métricas de diversidad utilizadas en esta capacidad del sistema.
@@ -33,7 +33,7 @@ O_{optimista}^{(i)}(M) =
 Los resultados alcanzados por este ensemble reflejan el grado de cobertura de los modelos base sobre la colección de evaluación, esto es, cuantos ejemplos son correctamente predichos por al menos uno de los clasificadores base.
 
 \item[Oráculo Sobre-ajustado.]
-Este modelo oráculo computa todas las combinaciones de salidas de los modelos base y asigna a cada combinación la etiqueta mas frecuente encontrada en el conjunto correspondiente de etiquetas correctas.
+Este modelo oráculo computa todas las combinaciones de salidas de los modelos base y asigna a cada combinación la etiqueta más frecuente encontrada en el conjunto correspondiente de etiquetas correctas.
 Este modelo falla cuando la misma combinación de modelos base tiene que producir diferentes etiquetas para que todas las posibles entradas sean clasificadas correctamente.
 
 \begin{equation*}
@@ -41,7 +41,7 @@ O_{sobreajustado}^{(i)}(M) =
     \textbf{max\_count}\left(\left\{\, y_k \,\middle\vert\, (x_k, y_k) \in D, \, \underset{m^{(j)} \in M}{\forall} y^{(j)}_k = y^{(j)}_i \,\right\}\right)
 \end{equation*}
 
-La función \textbf{max\_count} devuelve el elemento mas frecuente de la colección (en caso de un empate, siempre devuelve el primero que encuentra).
+La función \textbf{max\_count} devuelve el elemento más frecuente de la colección (en caso de un empate, siempre devuelve el primero que encuentra).
 
 Los resultados que obtiene este ensemble, proveen una cota superior del mejor rendimiento que puede ser obtenido utilizando un conjunto de reglas \textbf{consistente} para ensamblar la colección de modelos base.
 
@@ -58,7 +58,7 @@ Los resultados obtenidos por nuestro sistema son entonces comparados con aquello
 Finalmente, se analiza también en esta etapa el comportamiento del sistema bajo diferentes combinaciones de otros hiperparámetros como la cantidad de modelos base.
 La mejor configuración de dichos hiperparámetros, incluyendo la métrica de diversidad que mejores resultados proporciona al sistema, son utilizados en la segunda etapa experimental.
 
-La \textbf{segunda etapa experimental} consiste en el estudio de la capacidad del sistema para lograr producir modelos de ensemble que son precisos de acuerdo a una función de perdida determinada y justos según una o varias métricas de equidad. 
+La \textbf{segunda etapa experimental} consiste en el estudio de la capacidad del sistema para lograr producir modelos de ensemble que son precisos de acuerdo a una función de pérdida determinada y justos según una o varias métricas de equidad. 
 Con este fin se realiza una comparación entre los resultados obtenidos por nuestro sistema y los obtenidos por varios otros sistemas que resultan relevantes en la literatura para la solución de este problema.
 
 En el contexto de mitigación de sesgos, múltiples métodos \emph{ad-hoc} o dependientes del modelo han sido propuestos.
@@ -81,7 +81,7 @@ Para ello nuestro sistema es comparado con otros métodos de optimización multi
 
 La primera etapa experimental evalúa el sistema en la tarea \emph{HAHA 2019}(\textit{Humor Analysis based on Human Annotation}), con marco en el evento \textit{IberLEF 2019} \parencite{chiruzzo2019overview}.
 El proceso de evaluación consiste primero de la ejecución de la primera fase de nuestro sistema, esto es, la exploración del espacio de modelos y obtención del conjunto de modelos base a ser ensamblados.
-Posteriormente la segunda fase de nuestro sistema es ejecutada, utilizando como única función objetivo la función de perdida que fue utilizada en la obtención de los modelos base.
+Posteriormente la segunda fase de nuestro sistema es ejecutada, utilizando como única función objetivo la función de pérdida que fue utilizada en la obtención de los modelos base.
 La función objetivo a optimizar en ambas fases del sistema es la precisión del sistema.
 Como parte de esta etapa se realizan múltiples ejecuciones con diferentes configuraciones de hiperparámetros.
 La configuración de hiperparámetros para la cual se observen los mejores resultados en esta etapa, sera la utilizada en la segunda etapa experimental, como se describe a continuación.
@@ -126,7 +126,7 @@ La colección de datos es anotada a partir de asignar una clasificación de \emp
 
 \item[Adult.]
 La colección de datos \emph{Adult} \parencite{ucidata} presenta información extraída del censo de 1994 en los Estados Unidos por Barry Becker.
-Los datos contienen detalles personales de los individues, tales como nivel de educación, horas de trabajo a la semana, raza, sexo, etc.
+Los datos contienen detalles personales de los individuos, tales como nivel de educación, horas de trabajo a la semana, raza, sexo, etc.
 El objetivo es predecir si el individuo ganará un salario mayor a \texttt{\$50K} al año.
 Hay un total de $48\,842$ filas de datos, y de estas, $3\,620$ contienen casillas con valores desconocidos, dejando $45\,222$ filas completas.
 Existen dos clases en las cuales clasificar a los individuos dependiendo de su salario anual, estas son, \texttt{>50K} o \texttt{$\leq$50K}.
@@ -152,9 +152,9 @@ No incluir los algoritmos de aprendizaje profundo en la configuración experimen
 Es decir, la precisión del sistema no puede ser comparada directamente con otras soluciones reportadas, en términos de magnitud, pues aquellas soluciones que utilizan técnicas de aprendizaje profundo tienen una ventaja inherente en problemas donde modelos más simples no son tan competitivos.
 Sin embargo, la ausencia de estos algoritmos no deberían afectar la capacidad del sistema de mejorar el rendimiento respecto a los modelos base encontrados en la primera fase.
 Por tanto, si el sistema es capaz de mejorar el rendimiento de los modelos base, entonces el rendimiento del sistema se espera que mejore aún más una vez que las arquitecturas de aprendizaje profundo sean compatibles.
-Esto se espera que ocurra no solo porque los modelos base ahora tendrían mejor rendimiento, sino también porque arquitecturas de ensemble mas poderosas serían añadidas al mismo tiempo sin esfuerzo alguno.
+Esto se espera que ocurra no solo porque los modelos base ahora tendrían mejor rendimiento, sino también porque arquitecturas de ensemble más poderosas serían añadidas al mismo tiempo sin esfuerzo alguno.
 AutoGOAL ya ha probado lograr resultados competitivos cuando es configurado correctamente \parencite{estevez2020automatic}.
-Además, es importante destacar que, en el caso en que se optimiza buscando un buen balance entre la precisión y las métricas de equidad, por ejemplo en la segunda fase de nuestro sistema, no necesariamente modelos mas poderosos (como los de aprendizaje profundo) implican mejores resultados en dicho balance.
+Además, es importante destacar que, en el caso en que se optimiza buscando un buen balance entre la precisión y las métricas de equidad, por ejemplo en la segunda fase de nuestro sistema, no necesariamente modelos más poderosos (como los de aprendizaje profundo) implican mejores resultados en dicho balance.
 Por tanto, la comparativa con otros métodos de mitigación no debería verse afectada significativamente.
 
 \subsubsection{Biblioteca}\label{section:library}
@@ -162,7 +162,7 @@ Por tanto, la comparativa con otros métodos de mitigación no debería verse af
 El sistema propuesto en este trabajo es parte de la biblioteca en desarrollo \texttt{BFair}\footnote{https://github.com/bfair-ml/bfair}
 La biblioteca tiene como objetivo atacar los problemas de sesgos que emergen de entrenar modelos de \emph{Aprendizaje Automático} que en datos que muestran sesgos de los humanos.
 
-\todo[inline]{Aquí quizas puedes poner un ejemplo de cómo queda un llamado a la interfaz para resolver Adult. En plan, la parte de cargar los datos la pones como una funcion maquica y abajo lo que pones es el código de python con los hiperparámetros que tocan.}
+% \todo[inline]{Aquí quizas puedes poner un ejemplo de cómo queda un llamado a la interfaz para resolver Adult. En plan, la parte de cargar los datos la pones como una funcion maquica y abajo lo que pones es el código de python con los hiperparámetros que tocan.}
 
 \subsubsection{Hardware}\label{section:hardware}
 
@@ -320,12 +320,12 @@ Algunos de estos patrones son presentados a continuación:
 \begin{itemize}
     \item 
     La métrica \emph{disagreement} asegura la máxima cobertura del conjunto de entrenamiento sin importar el número de clasificadores base seleccionado.
-    Esto tiene sentido dado que la medida de \emph{disagreement} premia la reselección de modelos que tienen predicciones con conflictos entre si.
+    Esto tiene sentido dado que la medida de \emph{disagreement} premia la reselección de modelos que tienen predicciones con conflictos entre sí.
     Observando el rendimiento del oráculo sobreajustado, se puede notar que a pesar de que provee un cubrimiento máximo, no hay un conjunto de reglas \textbf{consistente} que pueda ser aplicado para explotar dicho cubrimiento.
     
     \item
-    La métrica \emph{double-fault} provee el rendimiento mas consistente para ambos el oráculo optimista y sobreajustado, en especial cuando el numero de clasificadores es bajo.
-    Esto sugiere que la estrategia de diversificación basada en \emph{double-fault} puede proveer el mejor rendimiento en el subsecuente fase de ensamblado, dado que obtiene una mayor puntuación cuando se utiliza un conjunto de reglas consistente. 
+    La métrica \emph{double-fault} provee el rendimiento más consistente para ambos el oráculo optimista y sobreajustado, en especial cuando el número de clasificadores es bajo.
+    Esto sugiere que la estrategia de diversificación basada en \emph{double-fault} puede proveer el mejor rendimiento en la subsecuente fase de ensamblado, dado que obtiene una mayor puntuación cuando se utiliza un conjunto de reglas consistente. 
     
     \item
     El cubrimiento mostrado por los ensembles oráculo se incrementa significativamente según se incrementa el número de clasificadores base, independientemente de la estrategia de reselección.
@@ -358,20 +358,20 @@ Algunos de estos patrones son presentados a continuación:
     \bottomrule
     \end{tabular}
 
-    \caption{Resumen de las métricas en los oráculos para cada estrategia de selección de modelos base según el numero máximo de clasificadores base se incrementa.}
+    \caption{Resumen de las métricas en los oráculos para cada estrategia de selección de modelos base según el número máximo de clasificadores base se incrementa.}
     \label{table:oracle}
 \end{table}
 
 La tabla~\ref{table:delta} resume las diferencias entre el rendimiento logrado por el mejor ensemble encontrado $E^*$ y el mejor modelo base $A^*$, en ambas la colección de entrenamiento y de evaluación.
-Es notable que los modelos de ensemble son capaces de sobrepasar a sus modelos base en la colección de entrenamiento, incluso cuando algunas estrategias requieren un mayor numero de modelos base para lograr esto.
-La estrategia de \emph{double-fault} es capaz de mejorar el rendimiento incluso con un numero bajo de clasificadores base.
+Es notable que los modelos de ensemble son capaces de sobrepasar a sus modelos base en la colección de entrenamiento, incluso cuando algunas estrategias requieren un mayor número de modelos base para lograr esto.
+La estrategia de \emph{double-fault} es capaz de mejorar el rendimiento incluso con un número bajo de clasificadores base.
 Esto tiene sentido dado que esta estrategia penaliza al sistema por construir una colección en la cual todos los modelos base fallen en los mismos ejemplos.
 Por tanto, estos resulta en una colección de modelos base, en la cual cada modelo arregla los fallos del otro.
 Este comportamiento es diferente al que muestra la estrategia de \emph{disagreement}, esta premia a los modelos base por tener diferentes predicciones independientemente de si estas eran correctas o incorrectas.
-Esto puede llevar a situaciones en las cuales es difícil para el ensemble decidir en cual de los modelos base confiar, especialmente si el numero de modelos base es muy bajo.
+Esto puede llevar a situaciones en las cuales es difícil para el ensemble decidir en cual de los modelos base confiar, especialmente si el número de modelos base es muy bajo.
 
-Aun mas importante, la tabla~\ref{table:delta} también muestra que la optimización de ensemble es capaz de producir ensembles que generalizan mejor que sus modelos base, es decir, los ensembles tienen mejor rendimiento en el conjunto de evaluación.
-Esto es particularmente cierto cuando el numero de clasificadores base no es muy grande. Según incrementa el numero de clasificadores base, también lo hace el numero de diferentes combinaciones, y por tanto, el ensemble es mas susceptible a sobre-ajustar el conjunto de entrenamiento.
+Aún más importante, la tabla~\ref{table:delta} también muestra que la optimización de ensemble es capaz de producir ensembles que generalizan mejor que sus modelos base, es decir, los ensembles tienen mejor rendimiento en el conjunto de evaluación.
+Esto es particularmente cierto cuando el número de clasificadores base no es muy grande. Según incrementa el número de clasificadores base, también lo hace el número de diferentes combinaciones, y por tanto, el ensemble es más susceptible a sobre-ajustar el conjunto de entrenamiento.
 
 \begin{table}[H]
     \centering
@@ -398,7 +398,7 @@ Esto es particularmente cierto cuando el numero de clasificadores base no es muy
     \bottomrule
     \end{tabular}
 
-    \caption{Resumen de la diferencia en rendimiento entre el mejor modelo base encontrado ($A^*$) y el ensemble correspondiente ($E^*$), para cada estrategia de selección de modelo base según incrementa el numero de clasificadores base.}
+    \caption{Resumen de la diferencia en rendimiento entre el mejor modelo base encontrado ($A^*$) y el ensemble correspondiente ($E^*$), para cada estrategia de selección de modelo base según incrementa el número de clasificadores base.}
     \label{table:delta}
 \end{table}
 
@@ -406,21 +406,21 @@ Algunas otras ideas que resaltan de la tabla~\ref{table:delta} se resumen a cont
 
 \begin{itemize}
     \item
-    Las métricas de diversidad, dígase \emph{disagreement} y \emph{double-fault}, tienen un mayor impacto en el rendimiento del ensemble en el conjunto de entrenamiento cuando el numero de clasificadores base es bajo.
-    Esto tiene sentido dado que mientras menor cantidad de modelos en la colección de modelos base, mas difícil será encontrar una \textit{buena} selección de forma arbitraria.
+    Las métricas de diversidad, dígase \emph{disagreement} y \emph{double-fault}, tienen un mayor impacto en el rendimiento del ensemble en el conjunto de entrenamiento cuando el número de clasificadores base es bajo.
+    Esto tiene sentido dado que mientras menor cantidad de modelos en la colección de modelos base, más difícil será encontrar una \textit{buena} selección de forma arbitraria.
     Sin embargo, las medidas de diversidad no parecen tener un impacto en las capacidades de generalización del ensemble.
     
     \item
     A la estrategia de \emph{disagreement} le resulta difícil mejorar el rendimiento, tanto en el conjunto de entrenamiento como en el de evaluación.
-    Esto es particularmente cierto cuando el numero de clasificadores base es bajo.
+    Esto es particularmente cierto cuando el número de clasificadores base es bajo.
     Esta estrategia no penaliza a los modelos por realizar predicciones erróneas y en su lugar los premia si sus predicciones son diferentes a la del resto de los clasificadores.
     Luego, es usual que el ensemble simplemente decida confiar en la predicción de solo uno de los clasificadores base, y por tanto el ensemble produce los mismos resultados que su mejor modelo base.
     Esto muestra que lograr el mejor cubrimiento de acuerdo al oráculo optimista, como lo logra la medida de \emph{disagreement}, no es necesariamente útil.
 \end{itemize}
 
-La tabla~\ref{table:performance} resume el rendimiento obtenido por el ensemble $E^*$ según el numero de clasificadores base y las estrategias de reselección cambian.
-La estrategia de \emph{double-fault} siempre logra los mejores resultados, excepto en el ultimo escenario, en el cual el numero de clasificadores es el más alto.
-En ese caso, aunque el ensemble obtuvo un mejor rendimiento que sus modelos base en la colección de entrenamiento, el numero alto de votantes puede haber afectado sus capacidades de generalización. dado que el espacio de posibles combinaciones de votantes es mayor.
+La tabla~\ref{table:performance} resume el rendimiento obtenido por el ensemble $E^*$ según el número de clasificadores base y las estrategias de reselección cambian.
+La estrategia de \emph{double-fault} siempre logra los mejores resultados, excepto en el ultimo escenario, en el cual el número de clasificadores es el más alto.
+En ese caso, aunque el ensemble obtuvo un mejor rendimiento que sus modelos base en la colección de entrenamiento, el número alto de votantes puede haber afectado sus capacidades de generalización. dado que el espacio de posibles combinaciones de votantes es mayor.
 
 \begin{table}[H]
     \centering
@@ -447,14 +447,14 @@ En ese caso, aunque el ensemble obtuvo un mejor rendimiento que sus modelos base
     \bottomrule
     \end{tabular}
 
-    \caption{Resumen del rendimiento obtenido por el ensemble ($E^*$) en el conjunto de entrenamiento y evaluación, para cada estrategia de selección de modelos base según el numero maximo de clasificadores incrementa.}
+    \caption{Resumen del rendimiento obtenido por el ensemble ($E^*$) en el conjunto de entrenamiento y evaluación, para cada estrategia de selección de modelos base según el número máximo de clasificadores incrementa.}
     \label{table:performance}
 \end{table}
 
 Como es de esperarse, la ausencia de algoritmos de aprendizaje profundo en el conjunto de métodos disponibles tuvo un impacto negativo en el mayor rendimiento alcanzado.
 % Our best performing architecture achieves $0.767$ $F_1$ while the best solution reported in the official HAHA 2019 challenge is $0.821$~\cite{chiruzzo2019overview}.
 La arquitectura obtenida con mayor rendimiento logra alcanzar $0.767$ $F_1$, mientras que la mejor solución reportada por AutoGOAL en la tarea \emph{HAHA 2019} es $0.789$~\parencite{estevez2020automatic}, la cual utiliza algoritmos de aprendizaje profundo - una estrategia de pre-procesamiento utilizando BERT~\parencite{devlin2018bert} y una red neuronal con 2 nodos recurrentes (una capa \emph{BiLSTM} y una \emph{LSTM}) seguidas de dos capas densas distribuidas en tiempo -.
-En comparación, la mejor arquitectura obtenida en estos experimentos consiste de un \emph{Voting Classifier} que ensambla un conjunto de simples modelos de \emph{ScikitLearn} - una estrategia de pre-procesamiento utilizando tokenización (\emph{BlanklineTokenizer}, \emph{TreebankWordTokenizer}, etc.) y algoritmos de vectorizacion (\emph{TfIdfVectorizer}, \emph{CountVectorizer}, etc.) seguidos de una capa de clasificacion (\emph{Perceptron}, \emph{LinearSVC}, \emph{NearestCentroid}, \emph{MultinomialNB}, etc.) -.
+En comparación, la mejor arquitectura obtenida en estos experimentos consiste de un \emph{Voting Classifier} que ensambla un conjunto de simples modelos de \emph{ScikitLearn} - una estrategia de pre-procesamiento utilizando tokenización (\emph{BlanklineTokenizer}, \emph{TreebankWordTokenizer}, etc.) y algoritmos de vectorización (\emph{TfIdfVectorizer}, \emph{CountVectorizer}, etc.) seguidos de una capa de clasificación (\emph{Perceptron}, \emph{LinearSVC}, \emph{NearestCentroid}, \emph{MultinomialNB}, etc.) -.
 A pesar de utilizar una arquitectura mucho más simple, resultados competitivos son alcanzados.
 
 Adicionalmente, como se muestra en la tabla~\ref{table:delta}, la optimización utilizando ensembles es capaz de producir ensembles que generalizan mejor que sus modelos base.
@@ -462,8 +462,8 @@ Luego, se espera que el rendimiento de los modelos producidos por nuestro sistem
 
 Las tablas~\ref{table:types} y~\ref{table:types-count} resumen los diferentes tipos de ensemble que fueron encontrados como óptimos en cada experimento.
 La técnica de ensemble ``ML Voting Classifier'' no parece ser utilizada por ninguna estrategia de reselección de forma consistente.
-La técnica de ensemble ``Voting Classifier'' es utilizada consistentemente en las estrategias basadas en \emph{double-fault}, y también parece ser utilizada frecuentemente cuando el numero de clasificadores base es bajo.
-Además, la técnica de ensemble ``Overfitted Voting Classifier'' parece ser utilizada mas cuando el numero de clasificadores es bajo.
+La técnica de ensemble ``Voting Classifier'' es utilizada consistentemente en las estrategias basadas en \emph{double-fault}, y también parece ser utilizada frecuentemente cuando el número de clasificadores base es bajo.
+Además, la técnica de ensemble ``Overfitted Voting Classifier'' parece ser utilizada más cuando el número de clasificadores es bajo.
 
 \begin{table}[H]
     \centering
@@ -478,7 +478,7 @@ Además, la técnica de ensemble ``Overfitted Voting Classifier'' parece ser uti
     \bottomrule
     \end{tabular}
     
-    \caption{Resume la estrategia de ensemble utilizada por la mejor configuracion de ensemble encontrada ($E^*$) para cada estrategia de seleccion de modelos base segun el numero maximo de clasificadores base incrementa.
+    \caption{Resume la estrategia de ensemble utilizada por la mejor configuración de ensemble encontrada ($E^*$) para cada estrategia de selección de modelos base según el número máximo de clasificadores base incrementa.
     Tipos de ensemble: \emph{voting}, \emph{overfit}, y \emph{learning}, representan \emph{``Voting Classifier''}, \emph{``Overfitted Voting Classifier''}, y \emph{``ML Voting Classifier''}, respectivamente.
     }
     \label{table:types}
@@ -497,12 +497,12 @@ Además, la técnica de ensemble ``Overfitted Voting Classifier'' parece ser uti
     \bottomrule
     \end{tabular}
 
-    \caption{Frecuencia de uso de cada tecnica de ensemble.
+    \caption{Frecuencia de uso de cada técnica de ensemble.
     Las columnas \emph{voting}, \emph{overfit}, y \emph{learning}, representan \emph{``Voting Classifier''}, \emph{``Overfitted Voting Classifier''}, y \emph{``ML Voting Classifier''}, respectivamente.}
     \label{table:types-count}
 \end{table}
 
-Para concluir, se muestra que el sistema brinda los resultados mas prometedores cuando es configurado para realizar la búsqueda sobre una colección de $20$ o $50$ modelos base y utilizando la estrategia de selección de modelos base \emph{double-fault}.
+Para concluir, se muestra que el sistema brinda los resultados más prometedores cuando es configurado para realizar la búsqueda sobre una colección de $20$ o $50$ modelos base y utilizando la estrategia de selección de modelos base \emph{double-fault}.
 
 \section{Segunda Etapa Experimental}\label{section:experiments-second-phase}
 
@@ -513,7 +513,7 @@ Luego la sección~\ref{section:discussion-second-phase} realiza un análisis en 
 
 La tabla~\ref{table:second-phase-vs-all} muestra una comparativa de nuestro enfoque con los métodos agnósticos (últimas tres filas), y los no agnósticos al modelo (primeras tres filas).
 La tabla~\ref{table:secod-phase-vs-fbo} muestra una comparativa con \emph{FBO} optimizando simultáneamente \emph{Statistical Parity}, \emph{Equal Oportunity} y \emph{Equalized Odds}.
-La tabla~\ref{table:second-phase-vs-mobo} contrasta los resultados obtenidos por nuestro sistema con los obtenidos por los métodos otros métodos de optimización multiobjetivo aplicados al problema de mitigación de sesgos.
+La tabla~\ref{table:second-phase-vs-mobo} contrasta los resultados obtenidos por nuestro sistema con los obtenidos por otros métodos de optimización multiobjetivo aplicados al problema de mitigación de sesgos.
 Por último la figura~\ref{fig:pareto-dsp-vs-acc} permite visualizar la aproximación del \emph{Frente Pareto} encontrado por nuestro sistema.
 %Los métodos utilizados en las diferentes comparaciones son:
 %(i) \emph{FERM}~\parencite{FERM} (ii) \emph{Zafar}, los mecanismos propuestos por \emph{Zafar et. al.}~\parencite{zafar2017fairness} (iii) \emph{Adversarial}~\parencite{zhang2018mitigating} (iv) \emph{SMOTE}
@@ -624,7 +624,7 @@ Esto ratifica el potencial de nuestro enfoque multiobjetivo para encontrar model
 Particularmente interesante es el hecho de que se obtienen resultados competitivos, incluso superiores a las estrategias que son \emph{ad-hoc} y directamente modifican el método de optimización del modelo en cuestión.
 Solo el caso de \emph{FERM} obtiene resultados mejores a los nuestros como se esperaba inicialmente dado que las restricciones de equidad son mantenidas durante el proceso de optimización.
 Sin embargo la diferencia es modesta y nuestro sistema logra ser muy competitivo mientras que es mucho más versátil al mantenerse agnóstico al modelo y método de entrenamiento.
-Adicionalmente es importante destacar que \emph{Adversarial debiasing} (tercera fila) utiliza métodos de aprendizaje profundo, dígase \emph{Redes Neuronales Adversariales}, mientras que nuestro sistema no incluye este tipo de modelos que sabemos son mas poderosos en muchos escenarios.
+Adicionalmente es importante destacar que \emph{Adversarial debiasing} (tercera fila) utiliza métodos de aprendizaje profundo, dígase \emph{Redes Neuronales Adversariales}, mientras que nuestro sistema no incluye este tipo de modelos que sabemos son más poderosos en muchos escenarios.
 
 La tabla~\ref{table:secod-phase-vs-fbo} compara nuestra propuesta con \emph{Fair Bayesian Optimization}.
 \emph{FBO} consiste en un proceso de ajuste de hiperparámetros mediante optimización bayesiana para lograr los resultados de equidad requeridos.
@@ -638,7 +638,7 @@ Esto quiere decir que nuestro sistema es capaz de mostrar resultados sumamente s
 Una vez más, la configuración que obtiene mejores resultados que los nuestros no supera nuestro modelo significativamente, además, se conoce que el algoritmo utilizado por este modelo (\emph{XGBoost}) no forma parte del conjunto de algoritmos disponibles a AutoGOAL en nuestra configuración, lo que sugiere que la comparativa podría haber sido similar al resto de los casos de haber tenido acceso al mismo.
 
 La tabla~\ref{table:second-phase-vs-mobo} muestra una comparación con otros métodos de optimización multiobjetivo que han sido aplicados en la literatura al problema de mitigación de sesgos.
-Una vez mas nuestro sistema muestra ser competitivo en este ámbito, encontrando diferentes balances entre precisión y equidad.
+Una vez más nuestro sistema muestra ser competitivo en este ámbito, encontrando diferentes balances entre precisión y equidad.
 En todos los casos nuestro sistema supera los sistemas alternativos.
 Además se puede observar como nuestro sistema es capaz de encontrar soluciones que a pesar de que ceden de forma mínima sus valores de equidad son capaces de lograr significativamente mejores valores de precisión.
 Esto habla entre otras cosas de la habilidad de nuestro enfoque para cubrir diferentes regiones del \emph{Frente Pareto}.

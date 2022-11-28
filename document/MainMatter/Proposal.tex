@@ -41,7 +41,7 @@ Todo esto es capturado por la función \textbf{explore}.
 Luego de (1) evaluar las arquitecturas generadas y (2) estimar la diversidad entre los modelos actualmente seleccionados y la nueva generación de modelos, la colección de modelos base es actualizada para ajustarse a su capacidad $N$.
 Todo esto es capturado por la función \ref{code:reselect}.
 
-\begin{function}[H]
+\begin{algorithm}[!ht]
     \caption{GenerateBaseModels($N, D, A, \Lambda, \mathcal{L}, \mathcal{D}$)\label{code:generate-base-models}}
     \SetKwData{output}{base\_models}
     \SetKwData{score}{scores}
@@ -61,7 +61,7 @@ Todo esto es capturado por la función \ref{code:reselect}.
         $\output \leftarrow \reselect(\output \frown \generation,\,\score,\,\diversity,\,N$)
     }
     \Return{\output}
-\end{function}
+\end{algorithm}
 
 % TODO Probablemente la parte de PGE queremos pasarla para el estado del arte
 Para explorar inteligentemente  el espacio de algoritmos e hiperparámetros, es decir, para resolver el problema \textit{CASH} modificado, se utiliza la implementación de \emph{Probabilistic Grammatical Evolution Search}~(algoritmo \ref{algorithm:pge}) presente en AutoGOAL.
@@ -75,7 +75,7 @@ El algoritmo siempre incluye el modelo que mejor se desempeña de acuerdo a $\ma
 El enfoque goloso no garantiza que la colección final logre la mejor posible diversidad respecto a $\mathcal{D}$.
 La precisión tampoco es tomada en cuenta, excepto para seleccionar el modelo de mejor desempeño.
 
-\begin{function}[htb!]
+\begin{algorithm}[!ht]
     \caption{reselect($M,\ scores,\ diversity,\ N$)\label{code:reselect}}
     \SetKwData{init}{\bf inicializar}
 
@@ -86,7 +86,7 @@ La precisión tampoco es tomada en cuenta, excepto para seleccionar el modelo de
     }
 
     \Return{$R^{(0)} \cdots R^{(N)}$}
-\end{function}
+\end{algorithm}
 
 Utilizando el enfoque goloso presentado anteriormente, tres implementaciones de referencia del método~\ref{code:reselect} son descritas a continuación.
 Estas servirán para establecer comparaciones con implementaciones en las cuales se utiliza el método goloso presentado anteriormente, variando la métrica de equidad del mismo para utilizar \textit{disagreement} y \textit{double-fault}, las cuales serán presentadas en la sección~\ref{section:diversity-meassures}.

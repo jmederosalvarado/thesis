@@ -15,9 +15,16 @@ La primera es responsable de generar una colección de modelos, cada uno llamado
 Esta colección es construida optimizando la función de perdida $\mathcal{L}$, mientras se asegura \emph{diversidad} a lo largo de toda la población.
 La segunda fase es responsable de producir un conjunto de modelos de clasificación.
 Estos modelos son generados ensamblando la colección de modelos base de forma tal que optimice su efectividad según $L$, a la vez que es lo más \emph{justo} posible según $F_1, F_2, \dots, F_n$.
+La figura~\ref{fig:overview} resume la arquitectura del sistema.
 Las secciones \ref{section:first-phase} y \ref{section:second-phase} abordan con más detalles la primera y segunda fase, respectivamente.
 
-\todo[inline]{Párrafo con la imagen del overview, y que describe la imagen.}
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[width=0.9\textwidth]{Graphics/overview.png}
+    \end{center}
+    \caption{Descripción general del funcionamiento de extremo a extremo del sistema.}
+    \label{fig:overview}
+\end{figure}
 
 % TODO
 % Figure 1 summarizes the architecture of the system.
